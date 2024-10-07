@@ -1,11 +1,12 @@
 import tkinter as tk
-from tkinter import ttk, scrolledtext, Menu
+from tkinter import ttk, scrolledtext, Menu, filedialog
 import ply.lex as lex
 import ply.yacc as yacc
+from anytree import Node, RenderTree
 
 # Define the lexer
 tokens = [
-    'PROGRAM', 'INT', 'FLOAT', 'BOOL', 'IDENTIFIER', 'NUMBER', 'FLOAT_NUMBER', 'BOOL_VALUE',
+    'MAIN', 'INT', 'FLOAT', 'BOOL', 'IDENTIFIER', 'NUMBER', 'FLOAT_NUMBER', 'BOOL_VALUE',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'ASSIGN', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
     'COMMA', 'SEMICOLON', 'COMMENT', 'MULTILINE_COMMENT', 'IF', 'THEN', 'ELSE', 'WHILE', 'DO',
     'FI', 'WRITE', 'AND', 'OR', 'EQUALS', 'NOTEQUALS', 'LESS', 'LESSEQUAL', 'GREATER', 'GREATEREQUAL',
@@ -37,8 +38,8 @@ t_ignore = ' \t'
 # Symbol table
 symbol_table = {}
 
-def t_PROGRAM(t):
-    r'program'
+def t_MAIN(t):
+    r'main'
     return t
 
 def t_INT(t):
@@ -128,30 +129,39 @@ def t_error(t):
 lexer = lex.lex()
 
 # Define the parser
-def p_program(p):
-    'program : PROGRAM LBRACE declarations statements RBRACE'
-    pass
+def p_main(p):
+    'main : MAIN LBRACE declarations statements RBRACE'
+    p[0] = Node('main', children=[p[3], p[4]])
 
 def p_declarations(p):
     '''declarations : declarations declaration
                     | empty'''
-    pass
+    if len(p) == 3:
+        p[0] = Node('declarations', children=[p[1], p[2]])
+    else:
+        p[0] = Node('declarations')
 
 def p_declaration(p):
     '''declaration : INT var_list SEMICOLON
                    | FLOAT var_list SEMICOLON
                    | BOOL var_list SEMICOLON'''
-    pass
+    p[0] = Node('declaration', children=[Node(p[1]), p[2]])
 
 def p_var_list(p):
     '''var_list : var_list COMMA IDENTIFIER
                 | IDENTIFIER'''
-    pass
+    if len(p) == 4:
+        p[0] = Node('var_list', children=[p[1], Node(p[3])])
+    else:
+        p[0] = Node('var_list', children=[Node(p[1])])
 
 def p_statements(p):
     '''statements : statements statement
                   | empty'''
-    pass
+    if len(p) == 3:
+        p[0] = Node('statements', children=[p[1], p[2]])
+    else:
+        p[0] = Node('statements')
 
 def p_statement(p):
     '''statement : assignment
@@ -159,51 +169,73 @@ def p_statement(p):
                  | write_statement
                  | do_statement
                  | while_statement'''
-    pass
+    p[0] = p[1]
 
 def p_assignment(p):
     'assignment : IDENTIFIER ASSIGN expression SEMICOLON'
     if p[1] not in symbol_table:
         print(f"Error: Variable '{p[1]}' not declared.")
-    elif p[1] in symbol_table and symbol_table[p[1]] == 'bool' and p[3] not in ['true', 'false']:
-        print(f"Error: Cannot assign non-boolean value '{p[3]}' to boolean variable '{p[1]}'.")
-    pass
+    elif (symbol_table[p[1]] == 'int' and not p[3].isdigit()) or \
+         (symbol_table[p[1]] == 'float' and not is_float(p[3])):
+        print(f"Error: Type mismatch in assignment to variable '{p[1]}'.")
+    p[0] = Node('assignment', children=[Node(p[1]), Node(p[2]), p[3]])
+
+def is_float(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
 
 def p_if_statement(p):
     '''if_statement : IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
                     | IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI'''
-    pass
+    if len(p) == 13:
+        p[0] = Node('if_statement', children=[p[3], p[7], p[11]])
+    else:
+        p[0] = Node('if_statement', children=[p[3], p[7]])
 
 def p_write_statement(p):
     'write_statement : WRITE expression SEMICOLON'
-    pass
+    p[0] = Node('write_statement', children=[p[2]])
 
 def p_do_statement(p):
-    'do_statement : DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON'
-    pass
+    '''do_statement : DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON'''
+    if p[7] == 'empty':
+        print(f"Error: Incomplete 'while' condition at line {p.lineno}.")
+    p[0] = Node('do_statement', children=[p[3], p[7]])
 
 def p_while_statement(p):
     'while_statement : WHILE LPAREN condition RPAREN LBRACE statements RBRACE'
-    pass
+    p[0] = Node('while_statement', children=[p[3], p[6]])
 
 def p_expression(p):
     '''expression : expression PLUS term
                   | expression MINUS term
                   | term'''
-    pass
+    if len(p) == 4:
+        p[0] = Node('expression', children=[p[1], Node(p[2]), p[3]])
+    else:
+        p[0] = p[1]
 
 def p_term(p):
     '''term : term TIMES factor
             | term DIVIDE factor
             | factor'''
-    pass
+    if len(p) == 4:
+        p[0] = Node('term', children=[p[1], Node(p[2]), p[3]])
+    else:
+        p[0] = p[1]
 
 def p_factor(p):
     '''factor : LPAREN expression RPAREN
               | NUMBER
               | FLOAT_NUMBER
               | IDENTIFIER'''
-    pass
+    if len(p) == 4:
+        p[0] = Node('factor', children=[p[2]])
+    else:
+        p[0] = Node('factor', children=[Node(p[1])])
 
 def p_condition(p):
     '''condition : expression EQUALS expression
@@ -214,17 +246,28 @@ def p_condition(p):
                  | expression GREATEREQUAL expression
                  | expression AND expression
                  | expression OR expression'''
-    pass
+    if len(p) < 4:
+        print(f"Error: Incomplete condition in line {p.lineno}.")
+    p[0] = Node('condition', children=[p[1], Node(p[2]), p[3]])
 
 def p_empty(p):
     'empty :'
-    pass
+    p[0] = Node('empty')
 
 def p_error(p):
     global errors
-    line = p.lineno if p else 'EOF'
-    error_msg = f' Unexpected token: {p.value if p else "end of file"}'
+    if p:
+        error_msg = f'Unexpected token: {p.value}'
+        line = p.lineno
+    else:
+        error_msg = 'Unexpected end of input'
+        line = 'EOF'
     errors.append((line, error_msg))
+
+def p_expression_incomplete(p):
+    '''expression : expression PLUS empty
+                  | expression MINUS empty'''
+    print(f"Error: Incomplete expression at line {p.lineno}.")
 
 parser = yacc.yacc()
 
@@ -234,6 +277,7 @@ class Application(tk.Tk):
         super().__init__()
         self.title("Compilador R++")
         self.geometry("1000x600")
+        self.file_path = None  # To track the current file path
         
         # Create a menu bar
         menubar = Menu(self)
@@ -245,6 +289,7 @@ class Application(tk.Tk):
         file_menu.add_command(label="Nuevo", command=self.new_file)
         file_menu.add_command(label="Abrir", command=self.open_file)
         file_menu.add_command(label="Guardar", command=self.save_file)
+        file_menu.add_command(label="Guardar como", command=self.save_file_as)
         file_menu.add_separator()
         file_menu.add_command(label="Salir", command=self.quit)
 
@@ -257,45 +302,84 @@ class Application(tk.Tk):
         edit_menu.add_command(label="Copiar", command=self.copy)
         edit_menu.add_command(label="Pegar", command=self.paste)
 
-        format_menu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Formato", menu=format_menu)
-
         compile_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Compilar", menu=compile_menu)
         compile_menu.add_command(label="Compilar", command=self.run_analysis)
 
-        help_menu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Ayuda", menu=help_menu)
+        # Layout
+        self.frame_code = tk.Frame(self, borderwidth=2, relief=tk.GROOVE)
+        self.frame_code.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        self.source_code = scrolledtext.ScrolledText(self, width=60, height=20)
-        self.source_code.pack(side=tk.LEFT, padx=10, pady=10)
+        self.label_code = tk.Label(self.frame_code, text="Código a compilar")
+        self.label_code.pack(anchor='nw')
+
+        self.source_code = scrolledtext.ScrolledText(self.frame_code, width=60, height=20)
+        self.source_code.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
         self.source_code.bind("<KeyRelease>", self.on_key_release)
         
-        self.token_table = ttk.Treeview(self, columns=("Type", "Value"), show="headings")
-        self.token_table.heading("Type", text="Token Type")
-        self.token_table.heading("Value", text="Token Value")
-        self.token_table.pack(side=tk.LEFT, padx=10, pady=10, fill=tk.BOTH, expand=True)
+        self.notebook = ttk.Notebook(self.frame_code)
+        self.notebook.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        self.tab_lexico = scrolledtext.ScrolledText(self.notebook)
+        self.tab_sintactico = scrolledtext.ScrolledText(self.notebook)
+        self.tab_semantico = scrolledtext.ScrolledText(self.notebook)
+
+        # Tab para el código intermedio con un Treeview
+        self.frame_codigo_intermedio = tk.Frame(self.notebook)
+        self.tree_codigo_intermedio = ttk.Treeview(self.frame_codigo_intermedio)
+        self.tree_codigo_intermedio.pack(fill=tk.BOTH, expand=True)
+
+        self.notebook.add(self.tab_lexico, text="Lexico")
+        self.notebook.add(self.tab_sintactico, text="Sintactico")
+        self.notebook.add(self.tab_semantico, text="Semantico")
+        self.notebook.add(self.frame_codigo_intermedio, text="Codigo Intermedio")
         
-        self.error_table = ttk.Treeview(self, columns=("Line", "Error"), show="headings")
-        self.error_table.heading("Line", text="Line")
-        self.error_table.heading("Error", text="Error")
-        self.error_table.pack(side=tk.LEFT, padx=10, pady=10, fill=tk.BOTH, expand=True)
+        self.frame_errors = tk.Frame(self, borderwidth=2, relief=tk.GROOVE)
+        self.frame_errors.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        self.run_button = tk.Button(self, text="Analizar", command=self.run_analysis)
-        self.run_button.pack(side=tk.BOTTOM, padx=10, pady=10)
-        
-        # Configurar colores de los tokens
-        self.source_code.tag_configure("blue", foreground="blue")
-        self.source_code.tag_configure("yellow", foreground="yellow")
+        self.notebook_errors = ttk.Notebook(self.frame_errors)
+        self.notebook_errors.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        self.tab_errors = scrolledtext.ScrolledText(self.notebook_errors)
+        self.tab_results = scrolledtext.ScrolledText(self.notebook_errors)
+
+        self.notebook_errors.add(self.tab_errors, text="Errores")
+        self.notebook_errors.add(self.tab_results, text="Resultados")
     
     def new_file(self):
         self.source_code.delete('1.0', tk.END)
+        self.file_path = None
     
     def open_file(self):
-        pass  # Aquí se implementaría la funcionalidad para abrir un archivo
+        file_path = filedialog.askopenfilename(
+            defaultextension=".txt",
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
+        )
+        if file_path:
+            with open(file_path, 'r') as file:
+                content = file.read()
+                self.source_code.delete('1.0', tk.END)
+                self.source_code.insert(tk.END, content)
+            self.file_path = file_path
     
     def save_file(self):
-        pass  # Aquí se implementaría la funcionalidad para guardar un archivo
+        if self.file_path:
+            with open(self.file_path, 'w') as file:
+                content = self.source_code.get('1.0', tk.END)
+                file.write(content)
+        else:
+            self.save_file_as()
+
+    def save_file_as(self):
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".txt",
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
+        )
+        if file_path:
+            with open(file_path, 'w') as file:
+                content = self.source_code.get('1.0', tk.END)
+                file.write(content)
+            self.file_path = file_path
 
     def undo(self):
         self.source_code.edit_undo()
@@ -322,7 +406,7 @@ class Application(tk.Tk):
     
     def perform_lexical_analysis(self):
         # Clear previous results
-        self.token_table.delete(*self.token_table.get_children())
+        self.tab_lexico.delete('1.0', tk.END)
         self.source_code.tag_remove("blue", '1.0', tk.END)
         self.source_code.tag_remove("yellow", '1.0', tk.END)
         
@@ -332,7 +416,7 @@ class Application(tk.Tk):
         # Lexical analysis
         lexer.input(source_code)
         for token in lexer:
-            self.token_table.insert("", "end", values=(token.type, token.value))
+            self.tab_lexico.insert(tk.END, f'{token.type}: {token.value}\n')
             
             # Pintar tokens
             start = self.source_code.index(f"{token.lineno}.{lexer.lexpos - len(token.value)}")
@@ -344,7 +428,10 @@ class Application(tk.Tk):
     
     def perform_syntax_analysis(self):
         # Clear previous error results
-        self.error_table.delete(*self.error_table.get_children())
+        self.tab_sintactico.delete('1.0', tk.END)
+        self.tab_errors.delete('1.0', tk.END)
+        self.tab_results.delete('1.0', tk.END)
+        self.clear_tree(self.tree_codigo_intermedio)  # Clear previous tree
         
         # Get the source code from the text widget
         source_code = self.source_code.get('1.0', tk.END)
@@ -352,9 +439,30 @@ class Application(tk.Tk):
         # Syntax analysis
         global errors
         errors = []
-        parser.parse(source_code)
-        for line, error_msg in errors:
-            self.error_table.insert("", "end", values=(line, error_msg))
+        result = parser.parse(source_code)
+        if errors:
+            for line, error_msg in errors:
+                self.tab_errors.insert(tk.END, f'Line {line}: {error_msg}\n')
+            self.tab_sintactico.insert(tk.END, 'Syntax analysis completed with errors.\n')
+        else:
+            self.tab_sintactico.insert(tk.END, 'Syntax analysis completed without errors.\n')
+            self.display_syntax_tree(result)
+    
+    def clear_tree(self, tree):
+        """Helper function to clear all items from a Treeview."""
+        for item in tree.get_children():
+            tree.delete(item)
+    
+    def display_syntax_tree(self, tree):
+        """Display the syntax tree in the Treeview."""
+        def add_node_to_tree(node, parent=''):
+            tree_id = self.tree_codigo_intermedio.insert(parent, 'end', text=node.name)
+            for child in node.children:
+                add_node_to_tree(child, tree_id)
+
+        if tree:
+            add_node_to_tree(tree)
+
 
 if __name__ == "__main__":
     app = Application()
