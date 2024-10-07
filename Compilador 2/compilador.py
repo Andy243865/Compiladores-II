@@ -123,7 +123,7 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
-    print(f"Illegal character '{t.value[0]}'")
+    # Ignorar caracteres ilegales sin imprimir errores
     t.lexer.skip(1)
 
 lexer = lex.lex()
@@ -144,7 +144,7 @@ def p_declarations(p):
 def p_declaration(p):
     '''declaration : INT var_list SEMICOLON
                    | FLOAT var_list SEMICOLON
-                   | BOOL var_list SEMICOLON'''
+                   | BOOL var_list SEMICOLON'''  # Añadido BOOL para variables booleanas
     p[0] = Node('declaration', children=[Node(p[1]), p[2]])
 
 def p_var_list(p):
@@ -154,6 +154,11 @@ def p_var_list(p):
         p[0] = Node('var_list', children=[p[1], Node(p[3])])
     else:
         p[0] = Node('var_list', children=[Node(p[1])])
+
+def p_do_until_statement(p):
+    '''do_until_statement : DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON'''
+    # Aquí puedes agregar una validación de errores si lo deseas.
+    p[0] = Node('do_until_statement', children=[p[3], p[7]])
 
 def p_statements(p):
     '''statements : statements statement
@@ -168,16 +173,18 @@ def p_statement(p):
                  | if_statement
                  | write_statement
                  | do_statement
-                 | while_statement'''
+                 | while_statement
+                 | do_until_statement'''  # Nueva opción
     p[0] = p[1]
 
 def p_assignment(p):
     'assignment : IDENTIFIER ASSIGN expression SEMICOLON'
     if p[1] not in symbol_table:
-        print(f"Error: Variable '{p[1]}' not declared.")
+        print(f"Error: Variable '{p[1]}' no declarada.")
     elif (symbol_table[p[1]] == 'int' and not p[3].isdigit()) or \
-         (symbol_table[p[1]] == 'float' and not is_float(p[3])):
-        print(f"Error: Type mismatch in assignment to variable '{p[1]}'.")
+         (symbol_table[p[1]] == 'float' and not is_float(p[3])) or \
+         (symbol_table[p[1]] == 'bool' and p[3].name not in ['true', 'false']):  # Validación para booleanos
+        print(f"Error: Mismatch en la asignación a la variable '{p[1]}'.")
     p[0] = Node('assignment', children=[Node(p[1]), Node(p[2]), p[3]])
 
 def is_float(value):
@@ -231,11 +238,13 @@ def p_factor(p):
     '''factor : LPAREN expression RPAREN
               | NUMBER
               | FLOAT_NUMBER
-              | IDENTIFIER'''
+              | IDENTIFIER
+              | BOOL_VALUE'''  # Añadido BOOL_VALUE para valores true/false
     if len(p) == 4:
         p[0] = Node('factor', children=[p[2]])
     else:
         p[0] = Node('factor', children=[Node(p[1])])
+
 
 def p_condition(p):
     '''condition : expression EQUALS expression
@@ -246,8 +255,9 @@ def p_condition(p):
                  | expression GREATEREQUAL expression
                  | expression AND expression
                  | expression OR expression'''
-    if len(p) < 4:
-        print(f"Error: Incomplete condition in line {p.lineno}.")
+    # Validación opcional para tipos booleanos
+    if p[2] in ['and', 'or'] and (p[1].name not in ['true', 'false'] or p[3].name not in ['true', 'false']):
+        print(f"Error: Operador lógico solo permitido con booleanos en la línea {p.lineno}.")
     p[0] = Node('condition', children=[p[1], Node(p[2]), p[3]])
 
 def p_empty(p):
@@ -259,10 +269,15 @@ def p_error(p):
     if p:
         error_msg = f'Unexpected token: {p.value}'
         line = p.lineno
+        errors.append((line, error_msg))
     else:
         error_msg = 'Unexpected end of input'
         line = 'EOF'
-    errors.append((line, error_msg))
+        errors.append((line, error_msg))
+    
+    # Asegurarte de que el árbol de sintaxis todavía se construya
+    # Aquí, puedes devolver un nodo vacío para mantener el árbol
+    return Node('error', children=errors)
 
 def p_expression_incomplete(p):
     '''expression : expression PLUS empty
@@ -434,28 +449,31 @@ class Application(tk.Tk):
             except tk.TclError:
                 pass  # Ignorar errores de búsqueda de índices
             
+    # Función de análisis sintáctico
     def perform_syntax_analysis(self):
         # Clear previous error results
         self.tab_sintactico.delete('1.0', tk.END)
         self.tab_errors.delete('1.0', tk.END)
         self.tab_results.delete('1.0', tk.END)
         self.clear_tree(self.tree_codigo_intermedio)  # Clear previous tree
-        
+
         # Get the source code from the text widget
         source_code = self.source_code.get('1.0', tk.END)
-        
+
         # Syntax analysis
         global errors
         errors = []
-        result = parser.parse(source_code)
+        result = parser.parse(source_code)  # Esto ejecutará el parser
         if errors:
             for line, error_msg in errors:
                 self.tab_errors.insert(tk.END, f'Line {line}: {error_msg}\n')
             self.tab_sintactico.insert(tk.END, 'Syntax analysis completed with errors.\n')
         else:
             self.tab_sintactico.insert(tk.END, 'Syntax analysis completed without errors.\n')
-            self.display_syntax_tree(result)
-    
+
+        # Mostrar el árbol de sintaxis independientemente de los errores
+        self.display_syntax_tree(result)  # Esto siempre mostrará el árbol, aunque haya errores
+            
     def clear_tree(self, tree):
         """Helper function to clear all items from a Treeview."""
         for item in tree.get_children():
@@ -470,7 +488,6 @@ class Application(tk.Tk):
 
         if tree:
             add_node_to_tree(tree)
-
 
 if __name__ == "__main__":
     app = Application()
