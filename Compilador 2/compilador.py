@@ -99,15 +99,17 @@ def t_OR(t):
     return t
 
 def t_IDENTIFIER(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
-    return t
-
-def t_FLOAT_NUMBER(t):
-    r'\d+\.\d+'
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
     return t
 
 def t_NUMBER(t):
     r'\d+'
+    t.value = int(t.value)  # Aquí está bien, solo asegúrate de que se use donde sea necesario
+    return t
+
+def t_FLOAT_NUMBER(t):
+    r'\d+\.\d+'
+    t.value = float(t.value)  # Aquí también
     return t
 
 def t_COMMENT(t):
@@ -145,15 +147,24 @@ def p_declaration(p):
     '''declaration : INT var_list SEMICOLON
                    | FLOAT var_list SEMICOLON
                    | BOOL var_list SEMICOLON'''
+    # Registrar todas las variables declaradas con su tipo en la tabla de símbolos
+    var_type = p[1]
+    var_list = p[2].children
+    for var in var_list:
+        symbol_table[var.name] = var_type  # Agregar las variables con su tipo a la tabla de símbolos
     p[0] = Node('declaration', children=[Node(p[1]), p[2]])
+
 
 def p_var_list(p):
     '''var_list : var_list COMMA IDENTIFIER
                 | IDENTIFIER'''
     if len(p) == 4:
-        p[0] = Node('var_list', children=[p[1], Node(p[3])])
+        # Lista de variables (en caso de múltiples variables separadas por coma)
+        p[0] = Node('var_list', children=[*p[1].children, Node(p[3])])
     else:
+        # Un solo identificador
         p[0] = Node('var_list', children=[Node(p[1])])
+
 
 def p_statements(p):
     '''statements : statements statement
@@ -171,14 +182,49 @@ def p_statement(p):
                  | while_statement'''
     p[0] = p[1]
 
+
 def p_assignment(p):
     'assignment : IDENTIFIER ASSIGN expression SEMICOLON'
-    if p[1] not in symbol_table:
-        print(f"Error: Variable '{p[1]}' not declared.")
-    elif (symbol_table[p[1]] == 'int' and not p[3].isdigit()) or \
-         (symbol_table[p[1]] == 'float' and not is_float(p[3])):
-        print(f"Error: Type mismatch in assignment to variable '{p[1]}'.")
-    p[0] = Node('assignment', children=[Node(p[1]), Node(p[2]), p[3]])
+    var_name = p[1]
+    if var_name not in symbol_table:
+        print(f"Error: Variable '{var_name}' not declared.")
+    else:
+        var_type = symbol_table[var_name]
+        expr_type = get_expression_type(p[3])  # Aquí evaluamos el tipo de la expresión
+        if var_type != expr_type:
+            print(f"Error: Type mismatch in assignment to variable '{var_name}'. Expected '{var_type}', but got '{expr_type}'.")
+        else:
+            # Asigna el valor a la variable en la tabla de símbolos
+            if expr_type == 'int':
+                symbol_table[var_name] = p[3].value  # Guardar el valor entero
+            elif expr_type == 'float':
+                symbol_table[var_name] = p[3].value  # Guardar el valor flotante
+            elif expr_type == 'bool':
+                symbol_table[var_name] = p[3].value  # Guardar el valor booleano
+    p[0] = Node('assignment', children=[Node(var_name), Node(p[2]), p[3]])
+
+
+
+def get_expression_type(node):
+    print(f"el nodo es ´{node.type}´" )
+    if node.type == 'int':  # Para números enteros
+        return 'int'
+    elif node.name == 'float':  # Para números de punto flotante
+        return 'float'
+    elif node.name == 'IDENTIFIER':  # Para identificadores
+        return symbol_table.get(node.children[0].name, 'unknown')  # Se busca en la tabla de símbolos
+    elif node.name == 'expression':  # Si es una expresión, evaluamos su tipo
+        left_type = get_expression_type(node.children[0])
+        operator = node.children[1].name
+        right_type = get_expression_type(node.children[2])
+        
+        # Determinamos el tipo según el operador
+        if operator in ['+', '-', '*', '/']:
+            if left_type == 'float' or right_type == 'float':
+                return 'float'
+            return 'int'
+    
+    return 'unknown'
 
 def is_float(value):
     try:
@@ -232,10 +278,15 @@ def p_factor(p):
               | NUMBER
               | FLOAT_NUMBER
               | IDENTIFIER'''
-    if len(p) == 4:
+    if len(p) == 4:  # (expression)
         p[0] = Node('factor', children=[p[2]])
     else:
-        p[0] = Node('factor', children=[Node(p[1])])
+        if isinstance(p[1], (int, float)):
+            p[0] = Node('factor', value=p[1])  # Aquí guardamos el valor
+            # Establecemos el tipo de este nodo directamente
+            p[0].type = 'int' if isinstance(p[1], int) else 'float'
+        else:
+            p[0] = Node('factor', children=[Node(p[1])])
 
 def p_condition(p):
     '''condition : expression EQUALS expression
@@ -422,9 +473,13 @@ class Application(tk.Tk):
             try:
                 # Calcular la posición del token en el texto
                 # Nota: Este método es aproximado y puede requerir ajustes
-                index = self.source_code.search(token.value, '1.0', tk.END)
+                try:
+                    index = self.source_code.search(str(token.value), '1.0', tk.END)
+                except Exception as e:
+                    print(f"Error searching for token: {e}")
+
                 if index:
-                    end_index = f"{index}+{len(token.value)}c"
+                    end_index = f"{index}+{len(str(token.value))}c"
                     if token.type in ['INT', 'FLOAT', 'BOOL', 'IF', 'THEN', 'ELSE', 'WHILE', 'DO', 'FI', 'WRITE', 'AND', 'OR', 'UNTIL']:
                         self.source_code.tag_add("blue", index, end_index)
                         self.source_code.tag_config("blue", foreground="blue")
@@ -433,7 +488,7 @@ class Application(tk.Tk):
                         self.source_code.tag_config("yellow", foreground="orange")
             except tk.TclError:
                 pass  # Ignorar errores de búsqueda de índices
-            
+
     def perform_syntax_analysis(self):
         # Clear previous error results
         self.tab_sintactico.delete('1.0', tk.END)
