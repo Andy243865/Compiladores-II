@@ -153,7 +153,7 @@ def p_declaration(p):
     var_type = p[1]
     var_list = p[2].children
     for var in var_list:
-        symbol_table[var.name] = var_type  # Agregar las variables con su tipo a la tabla de símbolos
+        symbol_table[var.name] = {'type': var_type, 'value': None}   # Agregar las variables con su tipo a la tabla de símbolos
     p[0] = Node('declaration', children=[Node(p[1]), p[2]])
 
 
@@ -192,13 +192,15 @@ def p_assignment(p):
         print(f"Error: Variable '{var_name}' no declarada.")
     else:
         var_type = symbol_table[var_name]
+        variable_type = var_type['type']
         expr_type = 'float' if isinstance(p[3].value, float) else 'int'
         print(p[3])
-        if var_type != expr_type:
+        if variable_type  != expr_type:
             print(f"Error: Type mismatch. Expected '{var_type}', got '{expr_type}'.")
         else:
             # Asigna el valor resultante de la expresión a la variable en la tabla de símbolos
-            symbol_table[var_name] = p[3].value
+            if var_name in symbol_table:
+                symbol_table[var_name]['value'] = p[3].value
     p[0] = Node('assignment', children=[Node(var_name), Node(p[2]), p[3]])
 
 
@@ -411,6 +413,8 @@ class Application(tk.Tk):
         self.notebook_errors.add(self.tab_errors, text="Errores")
         self.notebook_errors.add(self.tab_results, text="Resultados")
     
+
+    
     def new_file(self):
         self.source_code.delete('1.0', tk.END)
         self.file_path = None
@@ -524,12 +528,35 @@ class Application(tk.Tk):
         else:
             self.tab_sintactico.insert(tk.END, 'Syntax analysis completed without errors.\n')
             self.display_syntax_tree(result)
+            #   Imprimir la tabla de símbolos en la pestaña semántica
+            self.print_symbol_table()
+
+
+    def print_symbol_table(self):
+        """Imprime la tabla de símbolos en la pestaña semántica."""
+        self.tab_semantico.delete('1.0', tk.END)  # Limpiar contenido anterior
+        self.tab_semantico.insert(tk.END, "Tabla de Símbolos:\n")
+        self.tab_semantico.insert(tk.END, f"{'Variable':<20}{'Tipo':<15}{'Posición en Memoria':<20}{'Valor':<10}\n")
+        self.tab_semantico.insert(tk.END, "-" * 65 + "\n")
     
+        for var_name, var_info in symbol_table.items():
+            # Asegúrate de que 'var_info' tenga los campos necesarios
+            var_type = var_info.get('type', 'undefined')  # Asumiendo que el tipo está guardado como 'type'
+            print(var_type)
+            position = id(var_info)  # Este es un ejemplo, deberías calcular la posición real si lo necesitas
+            
+            value = var_info.get('value', 'undefined')  # Asumiendo que el valor está guardado como 'value'
+            print(value)
+            self.tab_semantico.insert(tk.END, f"{var_name:<20}{var_type:<15}{position:<20}{value:<10}\n")
+
+
     def clear_tree(self, tree):
         """Helper function to clear all items from a Treeview."""
         for item in tree.get_children():
             tree.delete(item)
     
+    
+
     def display_syntax_tree(self, tree):
         """Display the syntax tree in the Treeview."""
         def add_node_to_tree(node, parent=''):
