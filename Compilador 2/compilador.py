@@ -102,15 +102,17 @@ def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     return t
 
-def t_NUMBER(t):
-    r'\d+'
-    t.value = int(t.value)  # Aquí está bien, solo asegúrate de que se use donde sea necesario
-    return t
-
+# El token para los números flotantes debe estar antes que el de los números enteros
 def t_FLOAT_NUMBER(t):
     r'\d+\.\d+'
-    t.value = float(t.value)  # Aquí también
+    t.value = float(t.value)  # Convertir a flotante
     return t
+
+def t_NUMBER(t):
+    r'\d+'
+    t.value = int(t.value)  # Convertir a entero
+    return t
+
 
 def t_COMMENT(t):
     r'//.*'
@@ -187,29 +189,26 @@ def p_assignment(p):
     'assignment : IDENTIFIER ASSIGN expression SEMICOLON'
     var_name = p[1]
     if var_name not in symbol_table:
-        print(f"Error: Variable '{var_name}' not declared.")
+        print(f"Error: Variable '{var_name}' not declarada.")
     else:
         var_type = symbol_table[var_name]
-        expr_type = get_expression_type(p[3])  # Aquí evaluamos el tipo de la expresión
+        print(f"el var ´{var_type}´" )
+        expr_type = get_expression_type(p[3])  # Evaluamos el tipo de la expresión
+        print(f"el exp ´{expr_type}´" )
         if var_type != expr_type:
             print(f"Error: Type mismatch in assignment to variable '{var_name}'. Expected '{var_type}', but got '{expr_type}'.")
         else:
-            # Asigna el valor a la variable en la tabla de símbolos
-            if expr_type == 'int':
-                symbol_table[var_name] = p[3].value  # Guardar el valor entero
-            elif expr_type == 'float':
-                symbol_table[var_name] = p[3].value  # Guardar el valor flotante
-            elif expr_type == 'bool':
-                symbol_table[var_name] = p[3].value  # Guardar el valor booleano
+            symbol_table[var_name] = p[3].value  # Guardar valor de la expresión
     p[0] = Node('assignment', children=[Node(var_name), Node(p[2]), p[3]])
 
 
 
 def get_expression_type(node):
+    print(node)
     print(f"el nodo es ´{node.type}´" )
     if node.type == 'int':  # Para números enteros
         return 'int'
-    elif node.name == 'float':  # Para números de punto flotante
+    elif node.type == 'float':  # Para números de punto flotante
         return 'float'
     elif node.name == 'IDENTIFIER':  # Para identificadores
         return symbol_table.get(node.children[0].name, 'unknown')  # Se busca en la tabla de símbolos
@@ -281,10 +280,12 @@ def p_factor(p):
     if len(p) == 4:  # (expression)
         p[0] = Node('factor', children=[p[2]])
     else:
-        if isinstance(p[1], (int, float)):
-            p[0] = Node('factor', value=p[1])  # Aquí guardamos el valor
-            # Establecemos el tipo de este nodo directamente
-            p[0].type = 'int' if isinstance(p[1], int) else 'float'
+        if isinstance(p[1], int):
+            p[0] = Node('factor', value=p[1])
+            p[0].type = 'int'
+        elif isinstance(p[1], float):
+            p[0] = Node('factor', value=p[1])  # Guardar valor flotante
+            p[0].type = 'float'  # Establecer tipo 'float'
         else:
             p[0] = Node('factor', children=[Node(p[1])])
 
