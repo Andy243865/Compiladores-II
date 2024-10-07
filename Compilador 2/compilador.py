@@ -149,12 +149,21 @@ def p_declaration(p):
     '''declaration : INT var_list SEMICOLON
                    | FLOAT var_list SEMICOLON
                    | BOOL var_list SEMICOLON'''
-    # Registrar todas las variables declaradas con su tipo en la tabla de símbolos
     var_type = p[1]
     var_list = p[2].children
+
     for var in var_list:
-        symbol_table[var.name] = {'type': var_type, 'value': None}   # Agregar las variables con su tipo a la tabla de símbolos
+        var_name = var.name
+
+        if var_name in symbol_table:
+            existing_type = symbol_table[var_name]['type']
+            if existing_type != var_type:
+                print(f"Error: Variable '{var_name}' declarada como '{existing_type}' y luego como '{var_type}'.")
+        else:
+            symbol_table[var_name] = {'type': var_type, 'value': None}   # Agregar las variables con su tipo a la tabla de símbolos
+
     p[0] = Node('declaration', children=[Node(p[1]), p[2]])
+
 
 
 def p_var_list(p):
