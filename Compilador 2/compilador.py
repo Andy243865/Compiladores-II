@@ -189,16 +189,16 @@ def p_assignment(p):
     'assignment : IDENTIFIER ASSIGN expression SEMICOLON'
     var_name = p[1]
     if var_name not in symbol_table:
-        print(f"Error: Variable '{var_name}' not declarada.")
+        print(f"Error: Variable '{var_name}' no declarada.")
     else:
         var_type = symbol_table[var_name]
-        print(f"el var ´{var_type}´" )
-        expr_type = get_expression_type(p[3])  # Evaluamos el tipo de la expresión
-        print(f"el exp ´{expr_type}´" )
+        expr_type = 'float' if isinstance(p[3].value, float) else 'int'
+        print(p[3])
         if var_type != expr_type:
-            print(f"Error: Type mismatch in assignment to variable '{var_name}'. Expected '{var_type}', but got '{expr_type}'.")
+            print(f"Error: Type mismatch. Expected '{var_type}', got '{expr_type}'.")
         else:
-            symbol_table[var_name] = p[3].value  # Guardar valor de la expresión
+            # Asigna el valor resultante de la expresión a la variable en la tabla de símbolos
+            symbol_table[var_name] = p[3].value
     p[0] = Node('assignment', children=[Node(var_name), Node(p[2]), p[3]])
 
 
@@ -259,35 +259,48 @@ def p_expression(p):
                   | expression MINUS term
                   | term'''
     if len(p) == 4:
-        p[0] = Node('expression', children=[p[1], Node(p[2]), p[3]])
+        # Realiza la operación aritmética según el operador
+        if p[2] == '+':
+            p[0] = Node('expression', value=p[1].value + p[3].value)
+        elif p[2] == '-':
+            p[0] = Node('expression', value=p[1].value - p[3].value)
     else:
-        p[0] = p[1]
+        p[0] = p[1]  # Devuelve el valor del término en caso de no haber más operaciones
+
 
 def p_term(p):
     '''term : term TIMES factor
             | term DIVIDE factor
             | factor'''
     if len(p) == 4:
-        p[0] = Node('term', children=[p[1], Node(p[2]), p[3]])
+        # Realiza la operación aritmética según el operador
+        if p[2] == '*':
+            p[0] = Node('term', value=p[1].value * p[3].value)
+        elif p[2] == '/':
+            p[0] = Node('term', value=p[1].value / p[3].value)
     else:
-        p[0] = p[1]
+        p[0] = p[1]  # Devuelve el valor del factor si no hay más operaciones
+
 
 def p_factor(p):
     '''factor : LPAREN expression RPAREN
               | NUMBER
               | FLOAT_NUMBER
               | IDENTIFIER'''
-    if len(p) == 4:  # (expression)
-        p[0] = Node('factor', children=[p[2]])
+    if len(p) == 4:
+        p[0] = p[2]  # Valor de la expresión entre paréntesis
     else:
         if isinstance(p[1], int):
             p[0] = Node('factor', value=p[1])
-            p[0].type = 'int'
         elif isinstance(p[1], float):
-            p[0] = Node('factor', value=p[1])  # Guardar valor flotante
-            p[0].type = 'float'  # Establecer tipo 'float'
+            p[0] = Node('factor', value=p[1])
         else:
-            p[0] = Node('factor', children=[Node(p[1])])
+            var_name = p[1]
+            if var_name in symbol_table:
+                p[0] = Node('factor', value=symbol_table[var_name])  # Retorna el valor de la variable desde la tabla de símbolos
+            else:
+                print(f"Error: Variable '{var_name}' no declarada.")
+
 
 def p_condition(p):
     '''condition : expression EQUALS expression
