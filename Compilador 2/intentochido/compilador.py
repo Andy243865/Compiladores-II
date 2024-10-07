@@ -55,12 +55,8 @@ def t_BOOL(t):
     return t
 
 def t_BOOL_VALUE(t):
-    r'True  |   False'
-    print(t.value)
-    t.value = True if t.value == 'True' else False  # Convert to Python boolean
-    print(f"Despues ´{t.value}´")
+    r'true|false'
     return t
-
 
 def t_IF(t):
     r'if'
@@ -131,7 +127,7 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 def t_error(t):
-    # Ignorar caracteres ilegales sin imprimir errores
+    print(f"Illegal character '{t.value[0]}'")
     t.lexer.skip(1)
 
 lexer = lex.lex()
@@ -152,16 +148,12 @@ def p_declarations(p):
 def p_declaration(p):
     '''declaration : INT var_list SEMICOLON
                    | FLOAT var_list SEMICOLON
-<<<<<<< HEAD
-                   | BOOL var_list SEMICOLON'''  # Añadido BOOL para variables booleanas
-=======
                    | BOOL var_list SEMICOLON'''
     # Registrar todas las variables declaradas con su tipo en la tabla de símbolos
     var_type = p[1]
     var_list = p[2].children
     for var in var_list:
         symbol_table[var.name] = {'type': var_type, 'value': None}   # Agregar las variables con su tipo a la tabla de símbolos
->>>>>>> 1000ad2794451912c0b19cd36217d71140f2d298
     p[0] = Node('declaration', children=[Node(p[1]), p[2]])
 
 
@@ -175,13 +167,6 @@ def p_var_list(p):
         # Un solo identificador
         p[0] = Node('var_list', children=[Node(p[1])])
 
-<<<<<<< HEAD
-def p_do_until_statement(p):
-    '''do_until_statement : DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON'''
-    # Aquí puedes agregar una validación de errores si lo deseas.
-    p[0] = Node('do_until_statement', children=[p[3], p[7]])
-=======
->>>>>>> 1000ad2794451912c0b19cd36217d71140f2d298
 
 def p_statements(p):
     '''statements : statements statement
@@ -194,60 +179,54 @@ def p_statements(p):
 def p_statement(p):
     '''statement : assignment
                  | if_statement
-                 | write_statement  # Ya está incluida
+                 | write_statement
                  | do_statement
-                 | while_statement
-                 | do_until_statement'''
+                 | while_statement'''
     p[0] = p[1]
 
-<<<<<<< HEAD
-def p_assignment(p):
-    'assignment : IDENTIFIER ASSIGN expression SEMICOLON'
-    if p[1] not in symbol_table:
-        print(f"Error: Variable '{p[1]}' no declarada.")
-    elif (symbol_table[p[1]] == 'int' and not p[3].isdigit()) or \
-         (symbol_table[p[1]] == 'float' and not is_float(p[3])) or \
-         (symbol_table[p[1]] == 'bool' and p[3].name not in ['true', 'false']):  # Validación para booleanos
-        print(f"Error: Mismatch en la asignación a la variable '{p[1]}'.")
-    p[0] = Node('assignment', children=[Node(p[1]), Node(p[2]), p[3]])
-
-=======
 
 def p_assignment(p):
     'assignment : IDENTIFIER ASSIGN expression SEMICOLON'
     var_name = p[1]
-    
     if var_name not in symbol_table:
         print(f"Error: Variable '{var_name}' no declarada.")
     else:
         var_type = symbol_table[var_name]
         variable_type = var_type['type']
-        expr_value = p[3].value  # Obtener el valor de la expresión
-        
-        # Asegúrate de que la expresión sea un booleano, entero o flotante
-        if isinstance(expr_value, bool):  # Si la expresión ya es un booleano
-            pass  # expr_value ya es un booleano
-        elif isinstance(expr_value, str):  # Si es un string, verifica si es 'true' o 'false'
-            if expr_value.lower() == 'true':
-                expr_value = True
-            elif expr_value.lower() == 'false':
-                expr_value = False
-            else:
-                print(f"Error: Valor booleano inválido '{expr_value}' para la variable '{var_name}'.")
-                return
-        
-        # Determina el tipo de la expresión
-        expr_type = 'bool' if isinstance(expr_value, bool) else ('float' if isinstance(expr_value, float) else 'int')
-
-        if variable_type != expr_type:
-            print(f"Error: Error de tipo. Se esperaba '{variable_type}', se obtuvo '{expr_type}'.")
+        expr_type = 'float' if isinstance(p[3].value, float) else 'int'
+        print(p[3])
+        if variable_type  != expr_type:
+            print(f"Error: Type mismatch. Expected '{var_type}', got '{expr_type}'.")
         else:
-            # Asigna el valor a la variable en la tabla de símbolos
-            symbol_table[var_name]['value'] = expr_value
-            
+            # Asigna el valor resultante de la expresión a la variable en la tabla de símbolos
+            if var_name in symbol_table:
+                symbol_table[var_name]['value'] = p[3].value
     p[0] = Node('assignment', children=[Node(var_name), Node(p[2]), p[3]])
 
->>>>>>> 1000ad2794451912c0b19cd36217d71140f2d298
+
+
+def get_expression_type(node):
+    print(node)
+    print(f"el nodo es ´{node.type}´" )
+    if node.type == 'int':  # Para números enteros
+        return 'int'
+    elif node.type == 'float':  # Para números de punto flotante
+        return 'float'
+    elif node.name == 'IDENTIFIER':  # Para identificadores
+        return symbol_table.get(node.children[0].name, 'unknown')  # Se busca en la tabla de símbolos
+    elif node.name == 'expression':  # Si es una expresión, evaluamos su tipo
+        left_type = get_expression_type(node.children[0])
+        operator = node.children[1].name
+        right_type = get_expression_type(node.children[2])
+        
+        # Determinamos el tipo según el operador
+        if operator in ['+', '-', '*', '/']:
+            if left_type == 'float' or right_type == 'float':
+                return 'float'
+            return 'int'
+    
+    return 'unknown'
+
 def is_float(value):
     try:
         float(value)
@@ -264,10 +243,8 @@ def p_if_statement(p):
         p[0] = Node('if_statement', children=[p[3], p[7]])
 
 def p_write_statement(p):
-    '''write_statement : WRITE LPAREN STRING RPAREN SEMICOLON'''
-    # Se añade el nodo con el valor de la cadena de texto
-    p[0] = Node('write_statement', children=[p[3]])
-
+    'write_statement : WRITE expression SEMICOLON'
+    p[0] = Node('write_statement', children=[p[2]])
 
 def p_do_statement(p):
     '''do_statement : DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON'''
@@ -311,8 +288,7 @@ def p_factor(p):
     '''factor : LPAREN expression RPAREN
               | NUMBER
               | FLOAT_NUMBER
-              | IDENTIFIER
-              | BOOL_VALUE'''  # Añadido BOOL_VALUE para valores true/false
+              | IDENTIFIER'''
     if len(p) == 4:
         p[0] = p[2]  # Valor de la expresión entre paréntesis
     else:
@@ -328,7 +304,6 @@ def p_factor(p):
                 print(f"Error: Variable '{var_name}' no declarada.")
 
 
-
 def p_condition(p):
     '''condition : expression EQUALS expression
                  | expression NOTEQUALS expression
@@ -338,14 +313,8 @@ def p_condition(p):
                  | expression GREATEREQUAL expression
                  | expression AND expression
                  | expression OR expression'''
-<<<<<<< HEAD
-    # Validación opcional para tipos booleanos
-    if p[2] in ['and', 'or'] and (p[1].name not in ['true', 'false'] or p[3].name not in ['true', 'false']):
-        print(f"Error: Operador lógico solo permitido con booleanos en la línea {p.lineno}.")
-=======
     if len(p) < 4:
         print(f"Error: Incomplete condition in line {p.lineno}.")
->>>>>>> 1000ad2794451912c0b19cd36217d71140f2d298
     p[0] = Node('condition', children=[p[1], Node(p[2]), p[3]])
 
 def p_empty(p):
@@ -357,20 +326,10 @@ def p_error(p):
     if p:
         error_msg = f'Unexpected token: {p.value}'
         line = p.lineno
-        errors.append((line, error_msg))
     else:
         error_msg = 'Unexpected end of input'
         line = 'EOF'
-        errors.append((line, error_msg))
-    
-    # Asegurarte de que el árbol de sintaxis todavía se construya
-    # Aquí, puedes devolver un nodo vacío para mantener el árbol
-    return Node('error', children=errors)
-
-def p_expression_incomplete(p):
-    '''expression : expression PLUS empty
-                  | expression MINUS empty'''
-    print(f"Error: Incomplete expression at line {p.lineno}.")
+    errors.append((line, error_msg))
 
 def p_expression_incomplete(p):
     '''expression : expression PLUS empty
@@ -547,28 +506,13 @@ class Application(tk.Tk):
                         self.source_code.tag_config("yellow", foreground="orange")
             except tk.TclError:
                 pass  # Ignorar errores de búsqueda de índices
-<<<<<<< HEAD
-            
-    # Función de análisis sintáctico
-=======
 
->>>>>>> 1000ad2794451912c0b19cd36217d71140f2d298
     def perform_syntax_analysis(self):
         # Clear previous error results
         self.tab_sintactico.delete('1.0', tk.END)
         self.tab_errors.delete('1.0', tk.END)
         self.tab_results.delete('1.0', tk.END)
         self.clear_tree(self.tree_codigo_intermedio)  # Clear previous tree
-<<<<<<< HEAD
-
-        # Get the source code from the text widget
-        source_code = self.source_code.get('1.0', tk.END)
-
-        # Syntax analysis
-        global errors
-        errors = []
-        result = parser.parse(source_code)  # Esto ejecutará el parser
-=======
         
         # Get the source code from the text widget
         source_code = self.source_code.get('1.0', tk.END)
@@ -577,23 +521,12 @@ class Application(tk.Tk):
         global errors
         errors = []
         result = parser.parse(source_code)
->>>>>>> 1000ad2794451912c0b19cd36217d71140f2d298
         if errors:
             for line, error_msg in errors:
                 self.tab_errors.insert(tk.END, f'Line {line}: {error_msg}\n')
             self.tab_sintactico.insert(tk.END, 'Syntax analysis completed with errors.\n')
         else:
             self.tab_sintactico.insert(tk.END, 'Syntax analysis completed without errors.\n')
-<<<<<<< HEAD
-
-        # Mostrar el árbol de sintaxis independientemente de los errores
-        self.display_syntax_tree(result)  # Esto siempre mostrará el árbol, aunque haya errores
-            
-    def clear_tree(self, tree):
-        """Helper function to clear all items from a Treeview."""
-        for item in tree.get_children():
-            tree.delete(item)
-=======
             self.display_syntax_tree(result)
             #   Imprimir la tabla de símbolos en la pestaña semántica
             self.print_symbol_table()
@@ -605,18 +538,15 @@ class Application(tk.Tk):
         self.tab_semantico.insert(tk.END, "Tabla de Símbolos:\n")
         self.tab_semantico.insert(tk.END, f"{'Variable':<20}{'Tipo':<15}{'Posición en Memoria':<20}{'Valor':<10}\n")
         self.tab_semantico.insert(tk.END, "-" * 65 + "\n")
->>>>>>> 1000ad2794451912c0b19cd36217d71140f2d298
     
         for var_name, var_info in symbol_table.items():
-            print(symbol_table)
             # Asegúrate de que 'var_info' tenga los campos necesarios
             var_type = var_info.get('type', 'undefined')  # Asumiendo que el tipo está guardado como 'type'
-            
+            print(var_type)
             position = id(var_info)  # Este es un ejemplo, deberías calcular la posición real si lo necesitas
             
             value = var_info.get('value', 'undefined')  # Asumiendo que el valor está guardado como 'value'
-            if value == None:
-                value = False; 
+            print(value)
             self.tab_semantico.insert(tk.END, f"{var_name:<20}{var_type:<15}{position:<20}{value:<10}\n")
 
 
@@ -633,15 +563,10 @@ class Application(tk.Tk):
             tree_id = self.tree_codigo_intermedio.insert(parent, 'end', text=node.name)
             for child in node.children:
                 add_node_to_tree(child, tree_id)
-<<<<<<< HEAD
-=======
 
         if tree:
             add_node_to_tree(tree)
->>>>>>> 1000ad2794451912c0b19cd36217d71140f2d298
 
-        if tree:
-            add_node_to_tree(tree)
 
 if __name__ == "__main__":
     app = Application()
