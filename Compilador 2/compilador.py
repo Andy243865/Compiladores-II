@@ -55,8 +55,12 @@ def t_BOOL(t):
     return t
 
 def t_BOOL_VALUE(t):
-    r'true|false'
+    r'True  |   False'
+    print(t.value)
+    t.value = True if t.value == 'True' else False  # Convert to Python boolean
+    print(f"Despues ´{t.value}´")
     return t
+
 
 def t_IF(t):
     r'if'
@@ -188,44 +192,36 @@ def p_statement(p):
 def p_assignment(p):
     'assignment : IDENTIFIER ASSIGN expression SEMICOLON'
     var_name = p[1]
+    
     if var_name not in symbol_table:
         print(f"Error: Variable '{var_name}' no declarada.")
     else:
         var_type = symbol_table[var_name]
         variable_type = var_type['type']
-        expr_type = 'float' if isinstance(p[3].value, float) else 'int'
-        print(p[3])
-        if variable_type  != expr_type:
-            print(f"Error: Type mismatch. Expected '{var_type}', got '{expr_type}'.")
-        else:
-            # Asigna el valor resultante de la expresión a la variable en la tabla de símbolos
-            if var_name in symbol_table:
-                symbol_table[var_name]['value'] = p[3].value
-    p[0] = Node('assignment', children=[Node(var_name), Node(p[2]), p[3]])
-
-
-
-def get_expression_type(node):
-    print(node)
-    print(f"el nodo es ´{node.type}´" )
-    if node.type == 'int':  # Para números enteros
-        return 'int'
-    elif node.type == 'float':  # Para números de punto flotante
-        return 'float'
-    elif node.name == 'IDENTIFIER':  # Para identificadores
-        return symbol_table.get(node.children[0].name, 'unknown')  # Se busca en la tabla de símbolos
-    elif node.name == 'expression':  # Si es una expresión, evaluamos su tipo
-        left_type = get_expression_type(node.children[0])
-        operator = node.children[1].name
-        right_type = get_expression_type(node.children[2])
+        expr_value = p[3].value  # Obtener el valor de la expresión
         
-        # Determinamos el tipo según el operador
-        if operator in ['+', '-', '*', '/']:
-            if left_type == 'float' or right_type == 'float':
-                return 'float'
-            return 'int'
-    
-    return 'unknown'
+        # Asegúrate de que la expresión sea un booleano, entero o flotante
+        if isinstance(expr_value, bool):  # Si la expresión ya es un booleano
+            pass  # expr_value ya es un booleano
+        elif isinstance(expr_value, str):  # Si es un string, verifica si es 'true' o 'false'
+            if expr_value.lower() == 'true':
+                expr_value = True
+            elif expr_value.lower() == 'false':
+                expr_value = False
+            else:
+                print(f"Error: Valor booleano inválido '{expr_value}' para la variable '{var_name}'.")
+                return
+        
+        # Determina el tipo de la expresión
+        expr_type = 'bool' if isinstance(expr_value, bool) else ('float' if isinstance(expr_value, float) else 'int')
+
+        if variable_type != expr_type:
+            print(f"Error: Error de tipo. Se esperaba '{variable_type}', se obtuvo '{expr_type}'.")
+        else:
+            # Asigna el valor a la variable en la tabla de símbolos
+            symbol_table[var_name]['value'] = expr_value
+            
+    p[0] = Node('assignment', children=[Node(var_name), Node(p[2]), p[3]])
 
 def is_float(value):
     try:
@@ -540,13 +536,15 @@ class Application(tk.Tk):
         self.tab_semantico.insert(tk.END, "-" * 65 + "\n")
     
         for var_name, var_info in symbol_table.items():
+            print(symbol_table)
             # Asegúrate de que 'var_info' tenga los campos necesarios
             var_type = var_info.get('type', 'undefined')  # Asumiendo que el tipo está guardado como 'type'
-            print(var_type)
+            
             position = id(var_info)  # Este es un ejemplo, deberías calcular la posición real si lo necesitas
             
             value = var_info.get('value', 'undefined')  # Asumiendo que el valor está guardado como 'value'
-            print(value)
+            if value == None:
+                value = False; 
             self.tab_semantico.insert(tk.END, f"{var_name:<20}{var_type:<15}{position:<20}{value:<10}\n")
 
 

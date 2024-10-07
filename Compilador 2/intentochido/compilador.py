@@ -10,7 +10,7 @@ tokens = [
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'ASSIGN', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
     'COMMA', 'SEMICOLON', 'COMMENT', 'MULTILINE_COMMENT', 'IF', 'THEN', 'ELSE', 'WHILE', 'DO',
     'FI', 'WRITE', 'AND', 'OR', 'EQUALS', 'NOTEQUALS', 'LESS', 'LESSEQUAL', 'GREATER', 'GREATEREQUAL',
-    'UNTIL', 'INCREMENT', 'DECREMENT', 'PLUSEQUAL', 'MINUSEQUAL', 'TIMESEQUAL', 'DIVIDEEQUAL', 'STRING'
+    'UNTIL'
 ]
 
 # Regular expression rules for simple tokens
@@ -31,12 +31,6 @@ t_LESS = r'<'
 t_LESSEQUAL = r'<='
 t_GREATER = r'>'
 t_GREATEREQUAL = r'>='
-t_INCREMENT = r'\+\+'
-t_DECREMENT = r'--'
-t_PLUSEQUAL = r'\+='
-t_MINUSEQUAL = r'-='
-t_TIMESEQUAL = r'\*='
-t_DIVIDEEQUAL = r'/='
 
 # Ignored characters
 t_ignore = ' \t'
@@ -61,8 +55,12 @@ def t_BOOL(t):
     return t
 
 def t_BOOL_VALUE(t):
-    r'true|false'
+    r'True  |   False'
+    print(t.value)
+    t.value = True if t.value == 'True' else False  # Convert to Python boolean
+    print(f"Despues ´{t.value}´")
     return t
+
 
 def t_IF(t):
     r'if'
@@ -105,16 +103,20 @@ def t_OR(t):
     return t
 
 def t_IDENTIFIER(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
     return t
 
+# El token para los números flotantes debe estar antes que el de los números enteros
 def t_FLOAT_NUMBER(t):
     r'\d+\.\d+'
+    t.value = float(t.value)  # Convertir a flotante
     return t
 
 def t_NUMBER(t):
     r'\d+'
+    t.value = int(t.value)  # Convertir a entero
     return t
+
 
 def t_COMMENT(t):
     r'//.*'
@@ -131,10 +133,6 @@ def t_newline(t):
 def t_error(t):
     print(f"Illegal character '{t.value[0]}'")
     t.lexer.skip(1)
-
-def t_STRING(t):
-    r'\".*?\"'
-    return t
 
 lexer = lex.lex()
 
@@ -155,25 +153,32 @@ def p_declaration(p):
     '''declaration : INT var_list SEMICOLON
                    | FLOAT var_list SEMICOLON
                    | BOOL var_list SEMICOLON'''
-    for var in p[2].children:
-        symbol_table[var.name] = p[1]  # Guardar el tipo de la variable
+    # Registrar todas las variables declaradas con su tipo en la tabla de símbolos
+    var_type = p[1]
+    var_list = p[2].children
+    for var in var_list:
+        symbol_table[var.name] = {'type': var_type, 'value': None}   # Agregar las variables con su tipo a la tabla de símbolos
     p[0] = Node('declaration', children=[Node(p[1]), p[2]])
+
 
 def p_var_list(p):
     '''var_list : var_list COMMA IDENTIFIER
                 | IDENTIFIER'''
     if len(p) == 4:
-        p[0] = Node('var_list', children=[p[1], Node(p[3])])
+        # Lista de variables (en caso de múltiples variables separadas por coma)
+        p[0] = Node('var_list', children=[*p[1].children, Node(p[3])])
     else:
+        # Un solo identificador
         p[0] = Node('var_list', children=[Node(p[1])])
 
+
 def p_statements(p):
-    '''statements : statement statements
-                  | statement'''
+    '''statements : statements statement
+                  | empty'''
     if len(p) == 3:
         p[0] = Node('statements', children=[p[1], p[2]])
     else:
-        p[0] = Node('statement', children=[p[1]])
+        p[0] = Node('statements')
 
 def p_statement(p):
     '''statement : assignment
@@ -183,11 +188,47 @@ def p_statement(p):
                  | while_statement'''
     p[0] = p[1]
 
-def p_assignment(p):
-    '''assignment : IDENTIFIER EQUALS expression'''
-    if p[1] not in symbol_table:
-        raise SyntaxError(f"Error: Variable '{p[1]}' no declarada.")
 
+def p_assignment(p):
+    'assignment : IDENTIFIER ASSIGN expression SEMICOLON'
+    var_name = p[1]
+    
+    if var_name not in symbol_table:
+        print(f"Error: Variable '{var_name}' no declarada.")
+    else:
+        var_type = symbol_table[var_name]
+        variable_type = var_type['type']
+        expr_value = p[3].value  # Obtener el valor de la expresión
+        
+        # Asegúrate de que la expresión sea un booleano, entero o flotante
+        if isinstance(expr_value, bool):  # Si la expresión ya es un booleano
+            pass  # expr_value ya es un booleano
+        elif isinstance(expr_value, str):  # Si es un string, verifica si es 'true' o 'false'
+            if expr_value.lower() == 'true':
+                expr_value = True
+            elif expr_value.lower() == 'false':
+                expr_value = False
+            else:
+                print(f"Error: Valor booleano inválido '{expr_value}' para la variable '{var_name}'.")
+                return
+        
+        # Determina el tipo de la expresión
+        expr_type = 'bool' if isinstance(expr_value, bool) else ('float' if isinstance(expr_value, float) else 'int')
+
+        if variable_type != expr_type:
+            print(f"Error: Error de tipo. Se esperaba '{variable_type}', se obtuvo '{expr_type}'.")
+        else:
+            # Asigna el valor a la variable en la tabla de símbolos
+            symbol_table[var_name]['value'] = expr_value
+            
+    p[0] = Node('assignment', children=[Node(var_name), Node(p[2]), p[3]])
+
+def is_float(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
 
 def p_if_statement(p):
     '''if_statement : IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
@@ -202,7 +243,9 @@ def p_write_statement(p):
     p[0] = Node('write_statement', children=[p[2]])
 
 def p_do_statement(p):
-    'do_statement : DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON'
+    '''do_statement : DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON'''
+    if p[7] == 'empty':
+        print(f"Error: Incomplete 'while' condition at line {p.lineno}.")
     p[0] = Node('do_statement', children=[p[3], p[7]])
 
 def p_while_statement(p):
@@ -214,18 +257,28 @@ def p_expression(p):
                   | expression MINUS term
                   | term'''
     if len(p) == 4:
-        p[0] = Node('expression', children=[p[1], Node(p[2]), p[3]])
+        # Realiza la operación aritmética según el operador
+        if p[2] == '+':
+            p[0] = Node('expression', value=p[1].value + p[3].value)
+        elif p[2] == '-':
+            p[0] = Node('expression', value=p[1].value - p[3].value)
     else:
-        p[0] = p[1]
+        p[0] = p[1]  # Devuelve el valor del término en caso de no haber más operaciones
+
 
 def p_term(p):
     '''term : term TIMES factor
             | term DIVIDE factor
             | factor'''
     if len(p) == 4:
-        p[0] = Node('term', children=[p[1], Node(p[2]), p[3]])
+        # Realiza la operación aritmética según el operador
+        if p[2] == '*':
+            p[0] = Node('term', value=p[1].value * p[3].value)
+        elif p[2] == '/':
+            p[0] = Node('term', value=p[1].value / p[3].value)
     else:
-        p[0] = p[1]
+        p[0] = p[1]  # Devuelve el valor del factor si no hay más operaciones
+
 
 def p_factor(p):
     '''factor : LPAREN expression RPAREN
@@ -233,9 +286,19 @@ def p_factor(p):
               | FLOAT_NUMBER
               | IDENTIFIER'''
     if len(p) == 4:
-        p[0] = Node('factor', children=[p[2]])
+        p[0] = p[2]  # Valor de la expresión entre paréntesis
     else:
-        p[0] = Node('factor', children=[Node(p[1])])
+        if isinstance(p[1], int):
+            p[0] = Node('factor', value=p[1])
+        elif isinstance(p[1], float):
+            p[0] = Node('factor', value=p[1])
+        else:
+            var_name = p[1]
+            if var_name in symbol_table:
+                p[0] = Node('factor', value=symbol_table[var_name])  # Retorna el valor de la variable desde la tabla de símbolos
+            else:
+                print(f"Error: Variable '{var_name}' no declarada.")
+
 
 def p_condition(p):
     '''condition : expression EQUALS expression
@@ -246,6 +309,8 @@ def p_condition(p):
                  | expression GREATEREQUAL expression
                  | expression AND expression
                  | expression OR expression'''
+    if len(p) < 4:
+        print(f"Error: Incomplete condition in line {p.lineno}.")
     p[0] = Node('condition', children=[p[1], Node(p[2]), p[3]])
 
 def p_empty(p):
@@ -261,6 +326,11 @@ def p_error(p):
         error_msg = 'Unexpected end of input'
         line = 'EOF'
     errors.append((line, error_msg))
+
+def p_expression_incomplete(p):
+    '''expression : expression PLUS empty
+                  | expression MINUS empty'''
+    print(f"Error: Incomplete expression at line {p.lineno}.")
 
 parser = yacc.yacc()
 
@@ -287,7 +357,7 @@ class Application(tk.Tk):
         file_menu.add_command(label="Salir", command=self.quit)
 
         edit_menu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Editar", menu=edit_menu)
+        menubar.add_cascade(label="Editar ", menu=edit_menu)
         edit_menu.add_command(label="Deshacer", command=self.undo)
         edit_menu.add_command(label="Rehacer", command=self.redo)
         edit_menu.add_separator()
@@ -295,16 +365,10 @@ class Application(tk.Tk):
         edit_menu.add_command(label="Copiar", command=self.copy)
         edit_menu.add_command(label="Pegar", command=self.paste)
 
-        format_menu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Formato", menu=format_menu)
-
         compile_menu = Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Compilar", menu=compile_menu)
         compile_menu.add_command(label="Compilar", command=self.run_analysis)
 
-        help_menu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Ayuda", menu=help_menu)
-        
         # Layout
         self.frame_code = tk.Frame(self, borderwidth=2, relief=tk.GROOVE)
         self.frame_code.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=10, pady=10)
@@ -319,35 +383,20 @@ class Application(tk.Tk):
         self.notebook = ttk.Notebook(self.frame_code)
         self.notebook.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        # Definir las pestañas del notebook
         self.tab_lexico = scrolledtext.ScrolledText(self.notebook)
-        self.tab_sintactico = tk.Frame(self.notebook)  # Cambiado de ScrolledText a Frame
+        self.tab_sintactico = scrolledtext.ScrolledText(self.notebook)
         self.tab_semantico = scrolledtext.ScrolledText(self.notebook)
-        self.tab_codigo_intermedio = scrolledtext.ScrolledText(self.notebook)
+
+        # Tab para el código intermedio con un Treeview
+        self.frame_codigo_intermedio = tk.Frame(self.notebook)
+        self.tree_codigo_intermedio = ttk.Treeview(self.frame_codigo_intermedio)
+        self.tree_codigo_intermedio.pack(fill=tk.BOTH, expand=True)
 
         self.notebook.add(self.tab_lexico, text="Lexico")
         self.notebook.add(self.tab_sintactico, text="Sintactico")
         self.notebook.add(self.tab_semantico, text="Semantico")
-        self.notebook.add(self.tab_codigo_intermedio, text="Codigo Intermedio")
-
-        # Crear los widgets dentro de la pestaña "Sintactico"
-        # Frame para el árbol sintáctico
-        self.frame_syntax_tree = tk.Frame(self.tab_sintactico, borderwidth=2, relief=tk.GROOVE)
-        self.frame_syntax_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
-
-        # Treeview para el árbol sintáctico
-        self.tree = ttk.Treeview(self.frame_syntax_tree, show="tree")
-        self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-        # Opcional: Scrollbar para el Treeview
-        self.tree_scroll = ttk.Scrollbar(self.frame_syntax_tree, orient="vertical", command=self.tree.yview)
-        self.tree.configure(yscrollcommand=self.tree_scroll.set)
-        self.tree_scroll.pack(side=tk.RIGHT, fill='y')
-
-        # ScrolledText para mensajes de análisis sintáctico
-        self.tab_sintactico_text = scrolledtext.ScrolledText(self.tab_sintactico, width=40)
-        self.tab_sintactico_text.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10, pady=10)
-
+        self.notebook.add(self.frame_codigo_intermedio, text="Codigo Intermedio")
+        
         self.frame_errors = tk.Frame(self, borderwidth=2, relief=tk.GROOVE)
         self.frame_errors.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10)
         
@@ -359,6 +408,8 @@ class Application(tk.Tk):
 
         self.notebook_errors.add(self.tab_errors, text="Errores")
         self.notebook_errors.add(self.tab_results, text="Resultados")
+    
+
     
     def new_file(self):
         self.source_code.delete('1.0', tk.END)
@@ -383,7 +434,7 @@ class Application(tk.Tk):
                 file.write(content)
         else:
             self.save_file_as()
-    
+
     def save_file_as(self):
         file_path = filedialog.asksaveasfilename(
             defaultextension=".txt",
@@ -394,25 +445,19 @@ class Application(tk.Tk):
                 content = self.source_code.get('1.0', tk.END)
                 file.write(content)
             self.file_path = file_path
-    
+
     def undo(self):
-        try:
-            self.source_code.edit_undo()
-        except tk.TclError:
-            pass
-    
+        self.source_code.edit_undo()
+
     def redo(self):
-        try:
-            self.source_code.edit_redo()
-        except tk.TclError:
-            pass
-    
+        self.source_code.edit_redo()
+
     def cut(self):
         self.source_code.event_generate("<<Cut>>")
-    
+
     def copy(self):
         self.source_code.event_generate("<<Copy>>")
-    
+
     def paste(self):
         self.source_code.event_generate("<<Paste>>")
     
@@ -442,9 +487,13 @@ class Application(tk.Tk):
             try:
                 # Calcular la posición del token en el texto
                 # Nota: Este método es aproximado y puede requerir ajustes
-                index = self.source_code.search(token.value, '1.0', tk.END)
+                try:
+                    index = self.source_code.search(str(token.value), '1.0', tk.END)
+                except Exception as e:
+                    print(f"Error searching for token: {e}")
+
                 if index:
-                    end_index = f"{index}+{len(token.value)}c"
+                    end_index = f"{index}+{len(str(token.value))}c"
                     if token.type in ['INT', 'FLOAT', 'BOOL', 'IF', 'THEN', 'ELSE', 'WHILE', 'DO', 'FI', 'WRITE', 'AND', 'OR', 'UNTIL']:
                         self.source_code.tag_add("blue", index, end_index)
                         self.source_code.tag_config("blue", foreground="blue")
@@ -453,64 +502,68 @@ class Application(tk.Tk):
                         self.source_code.tag_config("yellow", foreground="orange")
             except tk.TclError:
                 pass  # Ignorar errores de búsqueda de índices
-    
+
     def perform_syntax_analysis(self):
-        # Limpiar resultados anteriores
-        self.tab_sintactico_text.delete('1.0', tk.END)
+        # Clear previous error results
+        self.tab_sintactico.delete('1.0', tk.END)
         self.tab_errors.delete('1.0', tk.END)
         self.tab_results.delete('1.0', tk.END)
-        self.tree.delete(*self.tree.get_children())
+        self.clear_tree(self.tree_codigo_intermedio)  # Clear previous tree
         
-        # Obtener el código fuente
+        # Get the source code from the text widget
         source_code = self.source_code.get('1.0', tk.END)
         
-        # Análisis sintáctico
+        # Syntax analysis
         global errors
         errors = []
         result = parser.parse(source_code)
-        
         if errors:
             for line, error_msg in errors:
-                self.tab_sintactico_text.insert(tk.END, f'Line {line}: {error_msg}\n')
-            self.tab_sintactico_text.insert(tk.END, 'Syntax analysis completed with errors.\n')
+                self.tab_errors.insert(tk.END, f'Line {line}: {error_msg}\n')
+            self.tab_sintactico.insert(tk.END, 'Syntax analysis completed with errors.\n')
         else:
-            self.tab_sintactico_text.insert(tk.END, 'Syntax analysis completed without errors.\n')
-        
-        if result:
+            self.tab_sintactico.insert(tk.END, 'Syntax analysis completed without errors.\n')
             self.display_syntax_tree(result)
+            #   Imprimir la tabla de símbolos en la pestaña semántica
+            self.print_symbol_table()
+
+
+    def print_symbol_table(self):
+        """Imprime la tabla de símbolos en la pestaña semántica."""
+        self.tab_semantico.delete('1.0', tk.END)  # Limpiar contenido anterior
+        self.tab_semantico.insert(tk.END, "Tabla de Símbolos:\n")
+        self.tab_semantico.insert(tk.END, f"{'Variable':<20}{'Tipo':<15}{'Posición en Memoria':<20}{'Valor':<10}\n")
+        self.tab_semantico.insert(tk.END, "-" * 65 + "\n")
     
+        for var_name, var_info in symbol_table.items():
+            print(symbol_table)
+            # Asegúrate de que 'var_info' tenga los campos necesarios
+            var_type = var_info.get('type', 'undefined')  # Asumiendo que el tipo está guardado como 'type'
+            
+            position = id(var_info)  # Este es un ejemplo, deberías calcular la posición real si lo necesitas
+            
+            value = var_info.get('value', 'undefined')  # Asumiendo que el valor está guardado como 'value'
+            if value == None:
+                value = False; 
+            self.tab_semantico.insert(tk.END, f"{var_name:<20}{var_type:<15}{position:<20}{value:<10}\n")
+
+
+    def clear_tree(self, tree):
+        """Helper function to clear all items from a Treeview."""
+        for item in tree.get_children():
+            tree.delete(item)
+    
+    
+
     def display_syntax_tree(self, tree):
-        # Función auxiliar para insertar nodos en el Treeview
-        def insert_node(parent, node):
-            """Inserta un nodo y sus hijos de forma recursiva en el árbol sintáctico."""
-            node_text = node.name if node.name else 'Unnamed Node'
-            # Insertar el nodo actual en el Treeview
-            node_id = self.tree.insert(parent, 'end', text=node_text)
-        
-            # Insertar cada hijo del nodo recursivamente
+        """Display the syntax tree in the Treeview."""
+        def add_node_to_tree(node, parent=''):
+            tree_id = self.tree_codigo_intermedio.insert(parent, 'end', text=node.name)
             for child in node.children:
-                insert_node(node_id, child)
+                add_node_to_tree(child, tree_id)
 
-        # Limpiar cualquier árbol previo
-        self.tree.delete(*self.tree.get_children())
-    
-        # Insertar el árbol sintáctico desde la raíz
-        insert_node('', tree)
-
-        # Expandir el primer nivel para que sea visible al usuario
-        root_node = self.tree.get_children()
-        if root_node:
-            self.tree.item(root_node[0], open=True)
-            self.expand_tree(root_node[0])
-
-    def expand_tree(self, parent):
-        """Expande todos los nodos en el árbol recursivamente."""
-        # Expandir los hijos del nodo actual
-        children = self.tree.get_children(parent)
-        for child in children:
-            self.tree.item(child, open=True)
-            self.expand_tree(child)
-
+        if tree:
+            add_node_to_tree(tree)
 
 
 if __name__ == "__main__":
