@@ -345,7 +345,7 @@ class Application(tk.Tk):
         file_menu.add_command(label="Salir", command=self.quit)
 
         edit_menu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Editar", menu=edit_menu)
+        menubar.add_cascade(label="Editar 1", menu=edit_menu)
         edit_menu.add_command(label="Deshacer", command=self.undo)
         edit_menu.add_command(label="Rehacer", command=self.redo)
         edit_menu.add_separator()
