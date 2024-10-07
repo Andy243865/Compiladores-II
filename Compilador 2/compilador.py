@@ -419,13 +419,21 @@ class Application(tk.Tk):
             self.tab_lexico.insert(tk.END, f'{token.type}: {token.value}\n')
             
             # Pintar tokens
-            start = self.source_code.index(f"{token.lineno}.{lexer.lexpos - len(token.value)}")
-            end = self.source_code.index(f"{token.lineno}.{lexer.lexpos}")
-            if token.type in ['INT', 'FLOAT', 'BOOL', 'IF', 'THEN', 'ELSE', 'WHILE', 'DO', 'FI', 'WRITE', 'AND', 'OR', 'UNTIL']:
-                self.source_code.tag_add("blue", start, end)
-            elif token.type in ['NUMBER', 'FLOAT_NUMBER', 'BOOL_VALUE']:
-                self.source_code.tag_add("yellow", start, end)
-    
+            try:
+                # Calcular la posición del token en el texto
+                # Nota: Este método es aproximado y puede requerir ajustes
+                index = self.source_code.search(token.value, '1.0', tk.END)
+                if index:
+                    end_index = f"{index}+{len(token.value)}c"
+                    if token.type in ['INT', 'FLOAT', 'BOOL', 'IF', 'THEN', 'ELSE', 'WHILE', 'DO', 'FI', 'WRITE', 'AND', 'OR', 'UNTIL']:
+                        self.source_code.tag_add("blue", index, end_index)
+                        self.source_code.tag_config("blue", foreground="blue")
+                    elif token.type in ['NUMBER', 'FLOAT_NUMBER', 'BOOL_VALUE']:
+                        self.source_code.tag_add("yellow", index, end_index)
+                        self.source_code.tag_config("yellow", foreground="orange")
+            except tk.TclError:
+                pass  # Ignorar errores de búsqueda de índices
+            
     def perform_syntax_analysis(self):
         # Clear previous error results
         self.tab_sintactico.delete('1.0', tk.END)
