@@ -2,10 +2,8 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    BOOL_VALUE
     COMMENT
     MULTILINE_COMMENT
-    UNTIL
 
 Grammar
 
@@ -13,108 +11,111 @@ Rule 0     S' -> main
 Rule 1     main -> MAIN LBRACE declarations statements RBRACE
 Rule 2     declarations -> declarations declaration
 Rule 3     declarations -> empty
-Rule 4     read_statement -> READ IDENTIFIER SEMICOLON
-Rule 5     declaration -> INT var_list SEMICOLON
-Rule 6     declaration -> FLOAT var_list SEMICOLON
-Rule 7     declaration -> BOOL var_list SEMICOLON
-Rule 8     var_list -> var_list COMMA IDENTIFIER
-Rule 9     var_list -> IDENTIFIER
+Rule 4     declaration -> INT var_list SEMICOLON
+Rule 5     declaration -> FLOAT var_list SEMICOLON
+Rule 6     declaration -> BOOL var_list SEMICOLON
+Rule 7     var_list -> var_list COMMA IDENTIFIER
+Rule 8     var_list -> IDENTIFIER
+Rule 9     do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON
 Rule 10    statements -> statements statement
 Rule 11    statements -> empty
 Rule 12    statement -> assignment
 Rule 13    statement -> if_statement
 Rule 14    statement -> write_statement
-Rule 15    statement -> read_statement
-Rule 16    statement -> do_statement
-Rule 17    statement -> while_statement
+Rule 15    statement -> do_statement
+Rule 16    statement -> while_statement
+Rule 17    statement -> do_until_statement
 Rule 18    assignment -> IDENTIFIER ASSIGN expression SEMICOLON
 Rule 19    if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
 Rule 20    if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI
 Rule 21    write_statement -> WRITE expression SEMICOLON
-Rule 22    do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
-Rule 23    while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE
-Rule 24    expression -> expression PLUS term
-Rule 25    expression -> expression MINUS term
-Rule 26    expression -> term
-Rule 27    term -> term TIMES factor
-Rule 28    term -> term DIVIDE factor
-Rule 29    term -> factor
-Rule 30    factor -> LPAREN expression RPAREN
-Rule 31    factor -> NUMBER
-Rule 32    factor -> FLOAT_NUMBER
-Rule 33    factor -> IDENTIFIER
-Rule 34    condition -> expression EQUALS expression
-Rule 35    condition -> expression NOTEQUALS expression
-Rule 36    condition -> expression LESS expression
-Rule 37    condition -> expression LESSEQUAL expression
-Rule 38    condition -> expression GREATER expression
-Rule 39    condition -> expression GREATEREQUAL expression
-Rule 40    condition -> expression AND expression
-Rule 41    condition -> expression OR expression
-Rule 42    empty -> <empty>
-Rule 43    expression -> expression PLUS empty
-Rule 44    expression -> expression MINUS empty
+Rule 22    write_statement -> WRITE STRING SEMICOLON
+Rule 23    do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+Rule 24    while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+Rule 25    expression -> expression PLUS term
+Rule 26    expression -> expression MINUS term
+Rule 27    expression -> term
+Rule 28    term -> term TIMES factor
+Rule 29    term -> term DIVIDE factor
+Rule 30    term -> factor
+Rule 31    factor -> LPAREN expression RPAREN
+Rule 32    factor -> NUMBER
+Rule 33    factor -> FLOAT_NUMBER
+Rule 34    factor -> IDENTIFIER
+Rule 35    factor -> BOOL_VALUE
+Rule 36    condition -> expression EQUALS expression
+Rule 37    condition -> expression NOTEQUALS expression
+Rule 38    condition -> expression LESS expression
+Rule 39    condition -> expression LESSEQUAL expression
+Rule 40    condition -> expression GREATER expression
+Rule 41    condition -> expression GREATEREQUAL expression
+Rule 42    condition -> expression AND expression
+Rule 43    condition -> expression OR expression
+Rule 44    empty -> <empty>
+Rule 45    expression -> expression PLUS empty
+Rule 46    expression -> expression MINUS empty
+Rule 47    expression -> STRING
 
 Terminals, with rules where they appear
 
-AND                  : 40
+AND                  : 42
 ASSIGN               : 18
-BOOL                 : 7
-BOOL_VALUE           : 
-COMMA                : 8
+BOOL                 : 6
+BOOL_VALUE           : 35
+COMMA                : 7
 COMMENT              : 
-DIVIDE               : 28
-DO                   : 22
+DIVIDE               : 29
+DO                   : 9 23
 ELSE                 : 19
-EQUALS               : 34
+EQUALS               : 36
 FI                   : 19 20
-FLOAT                : 6
-FLOAT_NUMBER         : 32
-GREATER              : 38
-GREATEREQUAL         : 39
-IDENTIFIER           : 4 8 9 18 33
+FLOAT                : 5
+FLOAT_NUMBER         : 33
+GREATER              : 40
+GREATEREQUAL         : 41
+IDENTIFIER           : 7 8 18 34
 IF                   : 19 20
-INT                  : 5
-LBRACE               : 1 19 19 20 22 23
-LESS                 : 36
-LESSEQUAL            : 37
-LPAREN               : 19 20 22 23 30
+INT                  : 4
+LBRACE               : 1 9 19 19 20 23 24
+LESS                 : 38
+LESSEQUAL            : 39
+LPAREN               : 9 19 20 23 24 31
 MAIN                 : 1
-MINUS                : 25 44
+MINUS                : 26 46
 MULTILINE_COMMENT    : 
-NOTEQUALS            : 35
-NUMBER               : 31
-OR                   : 41
-PLUS                 : 24 43
-RBRACE               : 1 19 19 20 22 23
-READ                 : 4
-RPAREN               : 19 20 22 23 30
-SEMICOLON            : 4 5 6 7 18 21 22
+NOTEQUALS            : 37
+NUMBER               : 32
+OR                   : 43
+PLUS                 : 25 45
+RBRACE               : 1 9 19 19 20 23 24
+RPAREN               : 9 19 20 23 24 31
+SEMICOLON            : 4 5 6 9 18 21 22 23
+STRING               : 22 47
 THEN                 : 19 20
-TIMES                : 27
-UNTIL                : 
-WHILE                : 22 23
-WRITE                : 21
+TIMES                : 28
+UNTIL                : 9
+WHILE                : 23 24
+WRITE                : 21 22
 error                : 
 
 Nonterminals, with rules where they appear
 
 assignment           : 12
-condition            : 19 20 22 23
+condition            : 9 19 20 23 24
 declaration          : 2
 declarations         : 1 2
-do_statement         : 16
-empty                : 3 11 43 44
-expression           : 18 21 24 25 30 34 34 35 35 36 36 37 37 38 38 39 39 40 40 41 41 43 44
-factor               : 27 28 29
+do_statement         : 15
+do_until_statement   : 17
+empty                : 3 11 45 46
+expression           : 18 21 25 26 31 36 36 37 37 38 38 39 39 40 40 41 41 42 42 43 43 45 46
+factor               : 28 29 30
 if_statement         : 13
 main                 : 0
-read_statement       : 15
 statement            : 10
-statements           : 1 10 19 19 20 22 23
-term                 : 24 25 26 27 28
-var_list             : 5 6 7 8
-while_statement      : 17
+statements           : 1 9 10 19 19 20 23 24
+term                 : 25 26 27 28 29
+var_list             : 4 5 6 7
+while_statement      : 16
 write_statement      : 14
 
 Parsing method: LALR
@@ -146,18 +147,17 @@ state 3
     (1) main -> MAIN LBRACE . declarations statements RBRACE
     (2) declarations -> . declarations declaration
     (3) declarations -> . empty
-    (42) empty -> .
+    (44) empty -> .
 
-    INT             reduce using rule 42 (empty -> .)
-    FLOAT           reduce using rule 42 (empty -> .)
-    BOOL            reduce using rule 42 (empty -> .)
-    RBRACE          reduce using rule 42 (empty -> .)
-    IDENTIFIER      reduce using rule 42 (empty -> .)
-    IF              reduce using rule 42 (empty -> .)
-    WRITE           reduce using rule 42 (empty -> .)
-    READ            reduce using rule 42 (empty -> .)
-    DO              reduce using rule 42 (empty -> .)
-    WHILE           reduce using rule 42 (empty -> .)
+    INT             reduce using rule 44 (empty -> .)
+    FLOAT           reduce using rule 44 (empty -> .)
+    BOOL            reduce using rule 44 (empty -> .)
+    RBRACE          reduce using rule 44 (empty -> .)
+    IDENTIFIER      reduce using rule 44 (empty -> .)
+    IF              reduce using rule 44 (empty -> .)
+    WRITE           reduce using rule 44 (empty -> .)
+    DO              reduce using rule 44 (empty -> .)
+    WHILE           reduce using rule 44 (empty -> .)
 
     declarations                   shift and go to state 4
     empty                          shift and go to state 5
@@ -168,21 +168,20 @@ state 4
     (2) declarations -> declarations . declaration
     (10) statements -> . statements statement
     (11) statements -> . empty
-    (5) declaration -> . INT var_list SEMICOLON
-    (6) declaration -> . FLOAT var_list SEMICOLON
-    (7) declaration -> . BOOL var_list SEMICOLON
-    (42) empty -> .
+    (4) declaration -> . INT var_list SEMICOLON
+    (5) declaration -> . FLOAT var_list SEMICOLON
+    (6) declaration -> . BOOL var_list SEMICOLON
+    (44) empty -> .
 
     INT             shift and go to state 9
     FLOAT           shift and go to state 10
     BOOL            shift and go to state 11
-    RBRACE          reduce using rule 42 (empty -> .)
-    IDENTIFIER      reduce using rule 42 (empty -> .)
-    IF              reduce using rule 42 (empty -> .)
-    WRITE           reduce using rule 42 (empty -> .)
-    READ            reduce using rule 42 (empty -> .)
-    DO              reduce using rule 42 (empty -> .)
-    WHILE           reduce using rule 42 (empty -> .)
+    RBRACE          reduce using rule 44 (empty -> .)
+    IDENTIFIER      reduce using rule 44 (empty -> .)
+    IF              reduce using rule 44 (empty -> .)
+    WRITE           reduce using rule 44 (empty -> .)
+    DO              reduce using rule 44 (empty -> .)
+    WHILE           reduce using rule 44 (empty -> .)
 
     statements                     shift and go to state 6
     declaration                    shift and go to state 7
@@ -199,7 +198,6 @@ state 5
     IDENTIFIER      reduce using rule 3 (declarations -> empty .)
     IF              reduce using rule 3 (declarations -> empty .)
     WRITE           reduce using rule 3 (declarations -> empty .)
-    READ            reduce using rule 3 (declarations -> empty .)
     DO              reduce using rule 3 (declarations -> empty .)
     WHILE           reduce using rule 3 (declarations -> empty .)
 
@@ -211,32 +209,32 @@ state 6
     (12) statement -> . assignment
     (13) statement -> . if_statement
     (14) statement -> . write_statement
-    (15) statement -> . read_statement
-    (16) statement -> . do_statement
-    (17) statement -> . while_statement
+    (15) statement -> . do_statement
+    (16) statement -> . while_statement
+    (17) statement -> . do_until_statement
     (18) assignment -> . IDENTIFIER ASSIGN expression SEMICOLON
     (19) if_statement -> . IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
     (20) if_statement -> . IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI
     (21) write_statement -> . WRITE expression SEMICOLON
-    (4) read_statement -> . READ IDENTIFIER SEMICOLON
-    (22) do_statement -> . DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
-    (23) while_statement -> . WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+    (22) write_statement -> . WRITE STRING SEMICOLON
+    (23) do_statement -> . DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (24) while_statement -> . WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+    (9) do_until_statement -> . DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON
 
     RBRACE          shift and go to state 12
     IDENTIFIER      shift and go to state 20
     IF              shift and go to state 21
     WRITE           shift and go to state 22
-    READ            shift and go to state 23
-    DO              shift and go to state 24
-    WHILE           shift and go to state 25
+    DO              shift and go to state 23
+    WHILE           shift and go to state 24
 
     statement                      shift and go to state 13
     assignment                     shift and go to state 14
     if_statement                   shift and go to state 15
     write_statement                shift and go to state 16
-    read_statement                 shift and go to state 17
-    do_statement                   shift and go to state 18
-    while_statement                shift and go to state 19
+    do_statement                   shift and go to state 17
+    while_statement                shift and go to state 18
+    do_until_statement             shift and go to state 19
 
 state 7
 
@@ -249,7 +247,6 @@ state 7
     IDENTIFIER      reduce using rule 2 (declarations -> declarations declaration .)
     IF              reduce using rule 2 (declarations -> declarations declaration .)
     WRITE           reduce using rule 2 (declarations -> declarations declaration .)
-    READ            reduce using rule 2 (declarations -> declarations declaration .)
     DO              reduce using rule 2 (declarations -> declarations declaration .)
     WHILE           reduce using rule 2 (declarations -> declarations declaration .)
 
@@ -262,40 +259,39 @@ state 8
     IDENTIFIER      reduce using rule 11 (statements -> empty .)
     IF              reduce using rule 11 (statements -> empty .)
     WRITE           reduce using rule 11 (statements -> empty .)
-    READ            reduce using rule 11 (statements -> empty .)
     DO              reduce using rule 11 (statements -> empty .)
     WHILE           reduce using rule 11 (statements -> empty .)
 
 
 state 9
 
-    (5) declaration -> INT . var_list SEMICOLON
-    (8) var_list -> . var_list COMMA IDENTIFIER
-    (9) var_list -> . IDENTIFIER
+    (4) declaration -> INT . var_list SEMICOLON
+    (7) var_list -> . var_list COMMA IDENTIFIER
+    (8) var_list -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 27
+    IDENTIFIER      shift and go to state 26
 
-    var_list                       shift and go to state 26
+    var_list                       shift and go to state 25
 
 state 10
 
-    (6) declaration -> FLOAT . var_list SEMICOLON
-    (8) var_list -> . var_list COMMA IDENTIFIER
-    (9) var_list -> . IDENTIFIER
+    (5) declaration -> FLOAT . var_list SEMICOLON
+    (7) var_list -> . var_list COMMA IDENTIFIER
+    (8) var_list -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 27
+    IDENTIFIER      shift and go to state 26
 
-    var_list                       shift and go to state 28
+    var_list                       shift and go to state 27
 
 state 11
 
-    (7) declaration -> BOOL . var_list SEMICOLON
-    (8) var_list -> . var_list COMMA IDENTIFIER
-    (9) var_list -> . IDENTIFIER
+    (6) declaration -> BOOL . var_list SEMICOLON
+    (7) var_list -> . var_list COMMA IDENTIFIER
+    (8) var_list -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 27
+    IDENTIFIER      shift and go to state 26
 
-    var_list                       shift and go to state 29
+    var_list                       shift and go to state 28
 
 state 12
 
@@ -312,7 +308,6 @@ state 13
     IDENTIFIER      reduce using rule 10 (statements -> statements statement .)
     IF              reduce using rule 10 (statements -> statements statement .)
     WRITE           reduce using rule 10 (statements -> statements statement .)
-    READ            reduce using rule 10 (statements -> statements statement .)
     DO              reduce using rule 10 (statements -> statements statement .)
     WHILE           reduce using rule 10 (statements -> statements statement .)
 
@@ -325,7 +320,6 @@ state 14
     IDENTIFIER      reduce using rule 12 (statement -> assignment .)
     IF              reduce using rule 12 (statement -> assignment .)
     WRITE           reduce using rule 12 (statement -> assignment .)
-    READ            reduce using rule 12 (statement -> assignment .)
     DO              reduce using rule 12 (statement -> assignment .)
     WHILE           reduce using rule 12 (statement -> assignment .)
 
@@ -338,7 +332,6 @@ state 15
     IDENTIFIER      reduce using rule 13 (statement -> if_statement .)
     IF              reduce using rule 13 (statement -> if_statement .)
     WRITE           reduce using rule 13 (statement -> if_statement .)
-    READ            reduce using rule 13 (statement -> if_statement .)
     DO              reduce using rule 13 (statement -> if_statement .)
     WHILE           reduce using rule 13 (statement -> if_statement .)
 
@@ -351,55 +344,51 @@ state 16
     IDENTIFIER      reduce using rule 14 (statement -> write_statement .)
     IF              reduce using rule 14 (statement -> write_statement .)
     WRITE           reduce using rule 14 (statement -> write_statement .)
-    READ            reduce using rule 14 (statement -> write_statement .)
     DO              reduce using rule 14 (statement -> write_statement .)
     WHILE           reduce using rule 14 (statement -> write_statement .)
 
 
 state 17
 
-    (15) statement -> read_statement .
+    (15) statement -> do_statement .
 
-    RBRACE          reduce using rule 15 (statement -> read_statement .)
-    IDENTIFIER      reduce using rule 15 (statement -> read_statement .)
-    IF              reduce using rule 15 (statement -> read_statement .)
-    WRITE           reduce using rule 15 (statement -> read_statement .)
-    READ            reduce using rule 15 (statement -> read_statement .)
-    DO              reduce using rule 15 (statement -> read_statement .)
-    WHILE           reduce using rule 15 (statement -> read_statement .)
+    RBRACE          reduce using rule 15 (statement -> do_statement .)
+    IDENTIFIER      reduce using rule 15 (statement -> do_statement .)
+    IF              reduce using rule 15 (statement -> do_statement .)
+    WRITE           reduce using rule 15 (statement -> do_statement .)
+    DO              reduce using rule 15 (statement -> do_statement .)
+    WHILE           reduce using rule 15 (statement -> do_statement .)
 
 
 state 18
 
-    (16) statement -> do_statement .
+    (16) statement -> while_statement .
 
-    RBRACE          reduce using rule 16 (statement -> do_statement .)
-    IDENTIFIER      reduce using rule 16 (statement -> do_statement .)
-    IF              reduce using rule 16 (statement -> do_statement .)
-    WRITE           reduce using rule 16 (statement -> do_statement .)
-    READ            reduce using rule 16 (statement -> do_statement .)
-    DO              reduce using rule 16 (statement -> do_statement .)
-    WHILE           reduce using rule 16 (statement -> do_statement .)
+    RBRACE          reduce using rule 16 (statement -> while_statement .)
+    IDENTIFIER      reduce using rule 16 (statement -> while_statement .)
+    IF              reduce using rule 16 (statement -> while_statement .)
+    WRITE           reduce using rule 16 (statement -> while_statement .)
+    DO              reduce using rule 16 (statement -> while_statement .)
+    WHILE           reduce using rule 16 (statement -> while_statement .)
 
 
 state 19
 
-    (17) statement -> while_statement .
+    (17) statement -> do_until_statement .
 
-    RBRACE          reduce using rule 17 (statement -> while_statement .)
-    IDENTIFIER      reduce using rule 17 (statement -> while_statement .)
-    IF              reduce using rule 17 (statement -> while_statement .)
-    WRITE           reduce using rule 17 (statement -> while_statement .)
-    READ            reduce using rule 17 (statement -> while_statement .)
-    DO              reduce using rule 17 (statement -> while_statement .)
-    WHILE           reduce using rule 17 (statement -> while_statement .)
+    RBRACE          reduce using rule 17 (statement -> do_until_statement .)
+    IDENTIFIER      reduce using rule 17 (statement -> do_until_statement .)
+    IF              reduce using rule 17 (statement -> do_until_statement .)
+    WRITE           reduce using rule 17 (statement -> do_until_statement .)
+    DO              reduce using rule 17 (statement -> do_until_statement .)
+    WHILE           reduce using rule 17 (statement -> do_until_statement .)
 
 
 state 20
 
     (18) assignment -> IDENTIFIER . ASSIGN expression SEMICOLON
 
-    ASSIGN          shift and go to state 30
+    ASSIGN          shift and go to state 29
 
 
 state 21
@@ -407,453 +396,509 @@ state 21
     (19) if_statement -> IF . LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
     (20) if_statement -> IF . LPAREN condition RPAREN THEN LBRACE statements RBRACE FI
 
-    LPAREN          shift and go to state 31
+    LPAREN          shift and go to state 30
 
 
 state 22
 
     (21) write_statement -> WRITE . expression SEMICOLON
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (22) write_statement -> WRITE . STRING SEMICOLON
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 32
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
-    expression                     shift and go to state 32
+    expression                     shift and go to state 31
     term                           shift and go to state 33
     factor                         shift and go to state 34
 
 state 23
 
-    (4) read_statement -> READ . IDENTIFIER SEMICOLON
-
-    IDENTIFIER      shift and go to state 39
-
-
-state 24
-
-    (22) do_statement -> DO . LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (23) do_statement -> DO . LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (9) do_until_statement -> DO . LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON
 
     LBRACE          shift and go to state 40
 
 
-state 25
+state 24
 
-    (23) while_statement -> WHILE . LPAREN condition RPAREN LBRACE statements RBRACE
+    (24) while_statement -> WHILE . LPAREN condition RPAREN LBRACE statements RBRACE
 
     LPAREN          shift and go to state 41
 
 
-state 26
+state 25
 
-    (5) declaration -> INT var_list . SEMICOLON
-    (8) var_list -> var_list . COMMA IDENTIFIER
+    (4) declaration -> INT var_list . SEMICOLON
+    (7) var_list -> var_list . COMMA IDENTIFIER
 
     SEMICOLON       shift and go to state 42
     COMMA           shift and go to state 43
 
 
+state 26
+
+    (8) var_list -> IDENTIFIER .
+
+    SEMICOLON       reduce using rule 8 (var_list -> IDENTIFIER .)
+    COMMA           reduce using rule 8 (var_list -> IDENTIFIER .)
+
+
 state 27
 
-    (9) var_list -> IDENTIFIER .
-
-    SEMICOLON       reduce using rule 9 (var_list -> IDENTIFIER .)
-    COMMA           reduce using rule 9 (var_list -> IDENTIFIER .)
-
-
-state 28
-
-    (6) declaration -> FLOAT var_list . SEMICOLON
-    (8) var_list -> var_list . COMMA IDENTIFIER
+    (5) declaration -> FLOAT var_list . SEMICOLON
+    (7) var_list -> var_list . COMMA IDENTIFIER
 
     SEMICOLON       shift and go to state 44
     COMMA           shift and go to state 43
 
 
-state 29
+state 28
 
-    (7) declaration -> BOOL var_list . SEMICOLON
-    (8) var_list -> var_list . COMMA IDENTIFIER
+    (6) declaration -> BOOL var_list . SEMICOLON
+    (7) var_list -> var_list . COMMA IDENTIFIER
 
     SEMICOLON       shift and go to state 45
     COMMA           shift and go to state 43
 
 
-state 30
+state 29
 
     (18) assignment -> IDENTIFIER ASSIGN . expression SEMICOLON
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
     expression                     shift and go to state 46
     term                           shift and go to state 33
     factor                         shift and go to state 34
 
-state 31
+state 30
 
     (19) if_statement -> IF LPAREN . condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
     (20) if_statement -> IF LPAREN . condition RPAREN THEN LBRACE statements RBRACE FI
-    (34) condition -> . expression EQUALS expression
-    (35) condition -> . expression NOTEQUALS expression
-    (36) condition -> . expression LESS expression
-    (37) condition -> . expression LESSEQUAL expression
-    (38) condition -> . expression GREATER expression
-    (39) condition -> . expression GREATEREQUAL expression
-    (40) condition -> . expression AND expression
-    (41) condition -> . expression OR expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (36) condition -> . expression EQUALS expression
+    (37) condition -> . expression NOTEQUALS expression
+    (38) condition -> . expression LESS expression
+    (39) condition -> . expression LESSEQUAL expression
+    (40) condition -> . expression GREATER expression
+    (41) condition -> . expression GREATEREQUAL expression
+    (42) condition -> . expression AND expression
+    (43) condition -> . expression OR expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
-    condition                      shift and go to state 47
-    expression                     shift and go to state 48
+    condition                      shift and go to state 48
+    expression                     shift and go to state 49
     term                           shift and go to state 33
     factor                         shift and go to state 34
 
-state 32
+state 31
 
     (21) write_statement -> WRITE expression . SEMICOLON
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
 
-    SEMICOLON       shift and go to state 49
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    SEMICOLON       shift and go to state 50
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
+
+
+state 32
+
+    (22) write_statement -> WRITE STRING . SEMICOLON
+    (47) expression -> STRING .
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    SEMICOLON       shift and go to state 53
+    PLUS            reduce using rule 47 (expression -> STRING .)
+    MINUS           reduce using rule 47 (expression -> STRING .)
+
+  ! SEMICOLON       [ reduce using rule 47 (expression -> STRING .) ]
 
 
 state 33
 
-    (26) expression -> term .
-    (27) term -> term . TIMES factor
-    (28) term -> term . DIVIDE factor
+    (27) expression -> term .
+    (28) term -> term . TIMES factor
+    (29) term -> term . DIVIDE factor
 
-    SEMICOLON       reduce using rule 26 (expression -> term .)
-    PLUS            reduce using rule 26 (expression -> term .)
-    MINUS           reduce using rule 26 (expression -> term .)
-    EQUALS          reduce using rule 26 (expression -> term .)
-    NOTEQUALS       reduce using rule 26 (expression -> term .)
-    LESS            reduce using rule 26 (expression -> term .)
-    LESSEQUAL       reduce using rule 26 (expression -> term .)
-    GREATER         reduce using rule 26 (expression -> term .)
-    GREATEREQUAL    reduce using rule 26 (expression -> term .)
-    AND             reduce using rule 26 (expression -> term .)
-    OR              reduce using rule 26 (expression -> term .)
-    RPAREN          reduce using rule 26 (expression -> term .)
-    TIMES           shift and go to state 52
-    DIVIDE          shift and go to state 53
+    SEMICOLON       reduce using rule 27 (expression -> term .)
+    PLUS            reduce using rule 27 (expression -> term .)
+    MINUS           reduce using rule 27 (expression -> term .)
+    EQUALS          reduce using rule 27 (expression -> term .)
+    NOTEQUALS       reduce using rule 27 (expression -> term .)
+    LESS            reduce using rule 27 (expression -> term .)
+    LESSEQUAL       reduce using rule 27 (expression -> term .)
+    GREATER         reduce using rule 27 (expression -> term .)
+    GREATEREQUAL    reduce using rule 27 (expression -> term .)
+    AND             reduce using rule 27 (expression -> term .)
+    OR              reduce using rule 27 (expression -> term .)
+    RPAREN          reduce using rule 27 (expression -> term .)
+    TIMES           shift and go to state 54
+    DIVIDE          shift and go to state 55
 
 
 state 34
 
-    (29) term -> factor .
+    (30) term -> factor .
 
-    TIMES           reduce using rule 29 (term -> factor .)
-    DIVIDE          reduce using rule 29 (term -> factor .)
-    SEMICOLON       reduce using rule 29 (term -> factor .)
-    PLUS            reduce using rule 29 (term -> factor .)
-    MINUS           reduce using rule 29 (term -> factor .)
-    EQUALS          reduce using rule 29 (term -> factor .)
-    NOTEQUALS       reduce using rule 29 (term -> factor .)
-    LESS            reduce using rule 29 (term -> factor .)
-    LESSEQUAL       reduce using rule 29 (term -> factor .)
-    GREATER         reduce using rule 29 (term -> factor .)
-    GREATEREQUAL    reduce using rule 29 (term -> factor .)
-    AND             reduce using rule 29 (term -> factor .)
-    OR              reduce using rule 29 (term -> factor .)
-    RPAREN          reduce using rule 29 (term -> factor .)
+    TIMES           reduce using rule 30 (term -> factor .)
+    DIVIDE          reduce using rule 30 (term -> factor .)
+    SEMICOLON       reduce using rule 30 (term -> factor .)
+    PLUS            reduce using rule 30 (term -> factor .)
+    MINUS           reduce using rule 30 (term -> factor .)
+    EQUALS          reduce using rule 30 (term -> factor .)
+    NOTEQUALS       reduce using rule 30 (term -> factor .)
+    LESS            reduce using rule 30 (term -> factor .)
+    LESSEQUAL       reduce using rule 30 (term -> factor .)
+    GREATER         reduce using rule 30 (term -> factor .)
+    GREATEREQUAL    reduce using rule 30 (term -> factor .)
+    AND             reduce using rule 30 (term -> factor .)
+    OR              reduce using rule 30 (term -> factor .)
+    RPAREN          reduce using rule 30 (term -> factor .)
 
 
 state 35
 
-    (30) factor -> LPAREN . expression RPAREN
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (31) factor -> LPAREN . expression RPAREN
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
-    expression                     shift and go to state 54
+    expression                     shift and go to state 56
     term                           shift and go to state 33
     factor                         shift and go to state 34
 
 state 36
 
-    (31) factor -> NUMBER .
+    (32) factor -> NUMBER .
 
-    TIMES           reduce using rule 31 (factor -> NUMBER .)
-    DIVIDE          reduce using rule 31 (factor -> NUMBER .)
-    SEMICOLON       reduce using rule 31 (factor -> NUMBER .)
-    PLUS            reduce using rule 31 (factor -> NUMBER .)
-    MINUS           reduce using rule 31 (factor -> NUMBER .)
-    EQUALS          reduce using rule 31 (factor -> NUMBER .)
-    NOTEQUALS       reduce using rule 31 (factor -> NUMBER .)
-    LESS            reduce using rule 31 (factor -> NUMBER .)
-    LESSEQUAL       reduce using rule 31 (factor -> NUMBER .)
-    GREATER         reduce using rule 31 (factor -> NUMBER .)
-    GREATEREQUAL    reduce using rule 31 (factor -> NUMBER .)
-    AND             reduce using rule 31 (factor -> NUMBER .)
-    OR              reduce using rule 31 (factor -> NUMBER .)
-    RPAREN          reduce using rule 31 (factor -> NUMBER .)
+    TIMES           reduce using rule 32 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 32 (factor -> NUMBER .)
+    SEMICOLON       reduce using rule 32 (factor -> NUMBER .)
+    PLUS            reduce using rule 32 (factor -> NUMBER .)
+    MINUS           reduce using rule 32 (factor -> NUMBER .)
+    EQUALS          reduce using rule 32 (factor -> NUMBER .)
+    NOTEQUALS       reduce using rule 32 (factor -> NUMBER .)
+    LESS            reduce using rule 32 (factor -> NUMBER .)
+    LESSEQUAL       reduce using rule 32 (factor -> NUMBER .)
+    GREATER         reduce using rule 32 (factor -> NUMBER .)
+    GREATEREQUAL    reduce using rule 32 (factor -> NUMBER .)
+    AND             reduce using rule 32 (factor -> NUMBER .)
+    OR              reduce using rule 32 (factor -> NUMBER .)
+    RPAREN          reduce using rule 32 (factor -> NUMBER .)
 
 
 state 37
 
-    (32) factor -> FLOAT_NUMBER .
+    (33) factor -> FLOAT_NUMBER .
 
-    TIMES           reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    DIVIDE          reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    SEMICOLON       reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    PLUS            reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    MINUS           reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    EQUALS          reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    NOTEQUALS       reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    LESS            reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    LESSEQUAL       reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    GREATER         reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    GREATEREQUAL    reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    AND             reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    OR              reduce using rule 32 (factor -> FLOAT_NUMBER .)
-    RPAREN          reduce using rule 32 (factor -> FLOAT_NUMBER .)
+    TIMES           reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    DIVIDE          reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    SEMICOLON       reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    PLUS            reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    MINUS           reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    EQUALS          reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    NOTEQUALS       reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    LESS            reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    LESSEQUAL       reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    GREATER         reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    GREATEREQUAL    reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    AND             reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    OR              reduce using rule 33 (factor -> FLOAT_NUMBER .)
+    RPAREN          reduce using rule 33 (factor -> FLOAT_NUMBER .)
 
 
 state 38
 
-    (33) factor -> IDENTIFIER .
+    (34) factor -> IDENTIFIER .
 
-    TIMES           reduce using rule 33 (factor -> IDENTIFIER .)
-    DIVIDE          reduce using rule 33 (factor -> IDENTIFIER .)
-    SEMICOLON       reduce using rule 33 (factor -> IDENTIFIER .)
-    PLUS            reduce using rule 33 (factor -> IDENTIFIER .)
-    MINUS           reduce using rule 33 (factor -> IDENTIFIER .)
-    EQUALS          reduce using rule 33 (factor -> IDENTIFIER .)
-    NOTEQUALS       reduce using rule 33 (factor -> IDENTIFIER .)
-    LESS            reduce using rule 33 (factor -> IDENTIFIER .)
-    LESSEQUAL       reduce using rule 33 (factor -> IDENTIFIER .)
-    GREATER         reduce using rule 33 (factor -> IDENTIFIER .)
-    GREATEREQUAL    reduce using rule 33 (factor -> IDENTIFIER .)
-    AND             reduce using rule 33 (factor -> IDENTIFIER .)
-    OR              reduce using rule 33 (factor -> IDENTIFIER .)
-    RPAREN          reduce using rule 33 (factor -> IDENTIFIER .)
+    TIMES           reduce using rule 34 (factor -> IDENTIFIER .)
+    DIVIDE          reduce using rule 34 (factor -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 34 (factor -> IDENTIFIER .)
+    PLUS            reduce using rule 34 (factor -> IDENTIFIER .)
+    MINUS           reduce using rule 34 (factor -> IDENTIFIER .)
+    EQUALS          reduce using rule 34 (factor -> IDENTIFIER .)
+    NOTEQUALS       reduce using rule 34 (factor -> IDENTIFIER .)
+    LESS            reduce using rule 34 (factor -> IDENTIFIER .)
+    LESSEQUAL       reduce using rule 34 (factor -> IDENTIFIER .)
+    GREATER         reduce using rule 34 (factor -> IDENTIFIER .)
+    GREATEREQUAL    reduce using rule 34 (factor -> IDENTIFIER .)
+    AND             reduce using rule 34 (factor -> IDENTIFIER .)
+    OR              reduce using rule 34 (factor -> IDENTIFIER .)
+    RPAREN          reduce using rule 34 (factor -> IDENTIFIER .)
 
 
 state 39
 
-    (4) read_statement -> READ IDENTIFIER . SEMICOLON
+    (35) factor -> BOOL_VALUE .
 
-    SEMICOLON       shift and go to state 55
+    TIMES           reduce using rule 35 (factor -> BOOL_VALUE .)
+    DIVIDE          reduce using rule 35 (factor -> BOOL_VALUE .)
+    SEMICOLON       reduce using rule 35 (factor -> BOOL_VALUE .)
+    PLUS            reduce using rule 35 (factor -> BOOL_VALUE .)
+    MINUS           reduce using rule 35 (factor -> BOOL_VALUE .)
+    EQUALS          reduce using rule 35 (factor -> BOOL_VALUE .)
+    NOTEQUALS       reduce using rule 35 (factor -> BOOL_VALUE .)
+    LESS            reduce using rule 35 (factor -> BOOL_VALUE .)
+    LESSEQUAL       reduce using rule 35 (factor -> BOOL_VALUE .)
+    GREATER         reduce using rule 35 (factor -> BOOL_VALUE .)
+    GREATEREQUAL    reduce using rule 35 (factor -> BOOL_VALUE .)
+    AND             reduce using rule 35 (factor -> BOOL_VALUE .)
+    OR              reduce using rule 35 (factor -> BOOL_VALUE .)
+    RPAREN          reduce using rule 35 (factor -> BOOL_VALUE .)
 
 
 state 40
 
-    (22) do_statement -> DO LBRACE . statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (23) do_statement -> DO LBRACE . statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (9) do_until_statement -> DO LBRACE . statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON
     (10) statements -> . statements statement
     (11) statements -> . empty
-    (42) empty -> .
+    (44) empty -> .
 
-    RBRACE          reduce using rule 42 (empty -> .)
-    IDENTIFIER      reduce using rule 42 (empty -> .)
-    IF              reduce using rule 42 (empty -> .)
-    WRITE           reduce using rule 42 (empty -> .)
-    READ            reduce using rule 42 (empty -> .)
-    DO              reduce using rule 42 (empty -> .)
-    WHILE           reduce using rule 42 (empty -> .)
+    RBRACE          reduce using rule 44 (empty -> .)
+    IDENTIFIER      reduce using rule 44 (empty -> .)
+    IF              reduce using rule 44 (empty -> .)
+    WRITE           reduce using rule 44 (empty -> .)
+    DO              reduce using rule 44 (empty -> .)
+    WHILE           reduce using rule 44 (empty -> .)
 
-    statements                     shift and go to state 56
+    statements                     shift and go to state 57
     empty                          shift and go to state 8
 
 state 41
 
-    (23) while_statement -> WHILE LPAREN . condition RPAREN LBRACE statements RBRACE
-    (34) condition -> . expression EQUALS expression
-    (35) condition -> . expression NOTEQUALS expression
-    (36) condition -> . expression LESS expression
-    (37) condition -> . expression LESSEQUAL expression
-    (38) condition -> . expression GREATER expression
-    (39) condition -> . expression GREATEREQUAL expression
-    (40) condition -> . expression AND expression
-    (41) condition -> . expression OR expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (24) while_statement -> WHILE LPAREN . condition RPAREN LBRACE statements RBRACE
+    (36) condition -> . expression EQUALS expression
+    (37) condition -> . expression NOTEQUALS expression
+    (38) condition -> . expression LESS expression
+    (39) condition -> . expression LESSEQUAL expression
+    (40) condition -> . expression GREATER expression
+    (41) condition -> . expression GREATEREQUAL expression
+    (42) condition -> . expression AND expression
+    (43) condition -> . expression OR expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
-    condition                      shift and go to state 57
-    expression                     shift and go to state 48
+    condition                      shift and go to state 58
+    expression                     shift and go to state 49
     term                           shift and go to state 33
     factor                         shift and go to state 34
 
 state 42
 
-    (5) declaration -> INT var_list SEMICOLON .
+    (4) declaration -> INT var_list SEMICOLON .
 
-    INT             reduce using rule 5 (declaration -> INT var_list SEMICOLON .)
-    FLOAT           reduce using rule 5 (declaration -> INT var_list SEMICOLON .)
-    BOOL            reduce using rule 5 (declaration -> INT var_list SEMICOLON .)
-    RBRACE          reduce using rule 5 (declaration -> INT var_list SEMICOLON .)
-    IDENTIFIER      reduce using rule 5 (declaration -> INT var_list SEMICOLON .)
-    IF              reduce using rule 5 (declaration -> INT var_list SEMICOLON .)
-    WRITE           reduce using rule 5 (declaration -> INT var_list SEMICOLON .)
-    READ            reduce using rule 5 (declaration -> INT var_list SEMICOLON .)
-    DO              reduce using rule 5 (declaration -> INT var_list SEMICOLON .)
-    WHILE           reduce using rule 5 (declaration -> INT var_list SEMICOLON .)
+    INT             reduce using rule 4 (declaration -> INT var_list SEMICOLON .)
+    FLOAT           reduce using rule 4 (declaration -> INT var_list SEMICOLON .)
+    BOOL            reduce using rule 4 (declaration -> INT var_list SEMICOLON .)
+    RBRACE          reduce using rule 4 (declaration -> INT var_list SEMICOLON .)
+    IDENTIFIER      reduce using rule 4 (declaration -> INT var_list SEMICOLON .)
+    IF              reduce using rule 4 (declaration -> INT var_list SEMICOLON .)
+    WRITE           reduce using rule 4 (declaration -> INT var_list SEMICOLON .)
+    DO              reduce using rule 4 (declaration -> INT var_list SEMICOLON .)
+    WHILE           reduce using rule 4 (declaration -> INT var_list SEMICOLON .)
 
 
 state 43
 
-    (8) var_list -> var_list COMMA . IDENTIFIER
+    (7) var_list -> var_list COMMA . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 58
+    IDENTIFIER      shift and go to state 59
 
 
 state 44
 
-    (6) declaration -> FLOAT var_list SEMICOLON .
+    (5) declaration -> FLOAT var_list SEMICOLON .
 
-    INT             reduce using rule 6 (declaration -> FLOAT var_list SEMICOLON .)
-    FLOAT           reduce using rule 6 (declaration -> FLOAT var_list SEMICOLON .)
-    BOOL            reduce using rule 6 (declaration -> FLOAT var_list SEMICOLON .)
-    RBRACE          reduce using rule 6 (declaration -> FLOAT var_list SEMICOLON .)
-    IDENTIFIER      reduce using rule 6 (declaration -> FLOAT var_list SEMICOLON .)
-    IF              reduce using rule 6 (declaration -> FLOAT var_list SEMICOLON .)
-    WRITE           reduce using rule 6 (declaration -> FLOAT var_list SEMICOLON .)
-    READ            reduce using rule 6 (declaration -> FLOAT var_list SEMICOLON .)
-    DO              reduce using rule 6 (declaration -> FLOAT var_list SEMICOLON .)
-    WHILE           reduce using rule 6 (declaration -> FLOAT var_list SEMICOLON .)
+    INT             reduce using rule 5 (declaration -> FLOAT var_list SEMICOLON .)
+    FLOAT           reduce using rule 5 (declaration -> FLOAT var_list SEMICOLON .)
+    BOOL            reduce using rule 5 (declaration -> FLOAT var_list SEMICOLON .)
+    RBRACE          reduce using rule 5 (declaration -> FLOAT var_list SEMICOLON .)
+    IDENTIFIER      reduce using rule 5 (declaration -> FLOAT var_list SEMICOLON .)
+    IF              reduce using rule 5 (declaration -> FLOAT var_list SEMICOLON .)
+    WRITE           reduce using rule 5 (declaration -> FLOAT var_list SEMICOLON .)
+    DO              reduce using rule 5 (declaration -> FLOAT var_list SEMICOLON .)
+    WHILE           reduce using rule 5 (declaration -> FLOAT var_list SEMICOLON .)
 
 
 state 45
 
-    (7) declaration -> BOOL var_list SEMICOLON .
+    (6) declaration -> BOOL var_list SEMICOLON .
 
-    INT             reduce using rule 7 (declaration -> BOOL var_list SEMICOLON .)
-    FLOAT           reduce using rule 7 (declaration -> BOOL var_list SEMICOLON .)
-    BOOL            reduce using rule 7 (declaration -> BOOL var_list SEMICOLON .)
-    RBRACE          reduce using rule 7 (declaration -> BOOL var_list SEMICOLON .)
-    IDENTIFIER      reduce using rule 7 (declaration -> BOOL var_list SEMICOLON .)
-    IF              reduce using rule 7 (declaration -> BOOL var_list SEMICOLON .)
-    WRITE           reduce using rule 7 (declaration -> BOOL var_list SEMICOLON .)
-    READ            reduce using rule 7 (declaration -> BOOL var_list SEMICOLON .)
-    DO              reduce using rule 7 (declaration -> BOOL var_list SEMICOLON .)
-    WHILE           reduce using rule 7 (declaration -> BOOL var_list SEMICOLON .)
+    INT             reduce using rule 6 (declaration -> BOOL var_list SEMICOLON .)
+    FLOAT           reduce using rule 6 (declaration -> BOOL var_list SEMICOLON .)
+    BOOL            reduce using rule 6 (declaration -> BOOL var_list SEMICOLON .)
+    RBRACE          reduce using rule 6 (declaration -> BOOL var_list SEMICOLON .)
+    IDENTIFIER      reduce using rule 6 (declaration -> BOOL var_list SEMICOLON .)
+    IF              reduce using rule 6 (declaration -> BOOL var_list SEMICOLON .)
+    WRITE           reduce using rule 6 (declaration -> BOOL var_list SEMICOLON .)
+    DO              reduce using rule 6 (declaration -> BOOL var_list SEMICOLON .)
+    WHILE           reduce using rule 6 (declaration -> BOOL var_list SEMICOLON .)
 
 
 state 46
 
     (18) assignment -> IDENTIFIER ASSIGN expression . SEMICOLON
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
 
-    SEMICOLON       shift and go to state 59
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    SEMICOLON       shift and go to state 60
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
 
 
 state 47
 
-    (19) if_statement -> IF LPAREN condition . RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
-    (20) if_statement -> IF LPAREN condition . RPAREN THEN LBRACE statements RBRACE FI
+    (47) expression -> STRING .
 
-    RPAREN          shift and go to state 60
+    SEMICOLON       reduce using rule 47 (expression -> STRING .)
+    PLUS            reduce using rule 47 (expression -> STRING .)
+    MINUS           reduce using rule 47 (expression -> STRING .)
+    EQUALS          reduce using rule 47 (expression -> STRING .)
+    NOTEQUALS       reduce using rule 47 (expression -> STRING .)
+    LESS            reduce using rule 47 (expression -> STRING .)
+    LESSEQUAL       reduce using rule 47 (expression -> STRING .)
+    GREATER         reduce using rule 47 (expression -> STRING .)
+    GREATEREQUAL    reduce using rule 47 (expression -> STRING .)
+    AND             reduce using rule 47 (expression -> STRING .)
+    OR              reduce using rule 47 (expression -> STRING .)
+    RPAREN          reduce using rule 47 (expression -> STRING .)
 
 
 state 48
 
-    (34) condition -> expression . EQUALS expression
-    (35) condition -> expression . NOTEQUALS expression
-    (36) condition -> expression . LESS expression
-    (37) condition -> expression . LESSEQUAL expression
-    (38) condition -> expression . GREATER expression
-    (39) condition -> expression . GREATEREQUAL expression
-    (40) condition -> expression . AND expression
-    (41) condition -> expression . OR expression
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (19) if_statement -> IF LPAREN condition . RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
+    (20) if_statement -> IF LPAREN condition . RPAREN THEN LBRACE statements RBRACE FI
 
-    EQUALS          shift and go to state 61
-    NOTEQUALS       shift and go to state 62
-    LESS            shift and go to state 63
-    LESSEQUAL       shift and go to state 64
-    GREATER         shift and go to state 65
-    GREATEREQUAL    shift and go to state 66
-    AND             shift and go to state 67
-    OR              shift and go to state 68
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    RPAREN          shift and go to state 61
 
 
 state 49
+
+    (36) condition -> expression . EQUALS expression
+    (37) condition -> expression . NOTEQUALS expression
+    (38) condition -> expression . LESS expression
+    (39) condition -> expression . LESSEQUAL expression
+    (40) condition -> expression . GREATER expression
+    (41) condition -> expression . GREATEREQUAL expression
+    (42) condition -> expression . AND expression
+    (43) condition -> expression . OR expression
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
+
+    EQUALS          shift and go to state 62
+    NOTEQUALS       shift and go to state 63
+    LESS            shift and go to state 64
+    LESSEQUAL       shift and go to state 65
+    GREATER         shift and go to state 66
+    GREATEREQUAL    shift and go to state 67
+    AND             shift and go to state 68
+    OR              shift and go to state 69
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
+
+
+state 50
 
     (21) write_statement -> WRITE expression SEMICOLON .
 
@@ -861,185 +906,192 @@ state 49
     IDENTIFIER      reduce using rule 21 (write_statement -> WRITE expression SEMICOLON .)
     IF              reduce using rule 21 (write_statement -> WRITE expression SEMICOLON .)
     WRITE           reduce using rule 21 (write_statement -> WRITE expression SEMICOLON .)
-    READ            reduce using rule 21 (write_statement -> WRITE expression SEMICOLON .)
     DO              reduce using rule 21 (write_statement -> WRITE expression SEMICOLON .)
     WHILE           reduce using rule 21 (write_statement -> WRITE expression SEMICOLON .)
 
 
-state 50
-
-    (24) expression -> expression PLUS . term
-    (43) expression -> expression PLUS . empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (42) empty -> .
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
-
-    SEMICOLON       reduce using rule 42 (empty -> .)
-    PLUS            reduce using rule 42 (empty -> .)
-    MINUS           reduce using rule 42 (empty -> .)
-    EQUALS          reduce using rule 42 (empty -> .)
-    NOTEQUALS       reduce using rule 42 (empty -> .)
-    LESS            reduce using rule 42 (empty -> .)
-    LESSEQUAL       reduce using rule 42 (empty -> .)
-    GREATER         reduce using rule 42 (empty -> .)
-    GREATEREQUAL    reduce using rule 42 (empty -> .)
-    AND             reduce using rule 42 (empty -> .)
-    OR              reduce using rule 42 (empty -> .)
-    RPAREN          reduce using rule 42 (empty -> .)
-    LPAREN          shift and go to state 35
-    NUMBER          shift and go to state 36
-    FLOAT_NUMBER    shift and go to state 37
-    IDENTIFIER      shift and go to state 38
-
-    term                           shift and go to state 69
-    empty                          shift and go to state 70
-    factor                         shift and go to state 34
-
 state 51
 
-    (25) expression -> expression MINUS . term
-    (44) expression -> expression MINUS . empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (42) empty -> .
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (25) expression -> expression PLUS . term
+    (45) expression -> expression PLUS . empty
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (44) empty -> .
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
-    SEMICOLON       reduce using rule 42 (empty -> .)
-    PLUS            reduce using rule 42 (empty -> .)
-    MINUS           reduce using rule 42 (empty -> .)
-    EQUALS          reduce using rule 42 (empty -> .)
-    NOTEQUALS       reduce using rule 42 (empty -> .)
-    LESS            reduce using rule 42 (empty -> .)
-    LESSEQUAL       reduce using rule 42 (empty -> .)
-    GREATER         reduce using rule 42 (empty -> .)
-    GREATEREQUAL    reduce using rule 42 (empty -> .)
-    AND             reduce using rule 42 (empty -> .)
-    OR              reduce using rule 42 (empty -> .)
-    RPAREN          reduce using rule 42 (empty -> .)
+    SEMICOLON       reduce using rule 44 (empty -> .)
+    PLUS            reduce using rule 44 (empty -> .)
+    MINUS           reduce using rule 44 (empty -> .)
+    EQUALS          reduce using rule 44 (empty -> .)
+    NOTEQUALS       reduce using rule 44 (empty -> .)
+    LESS            reduce using rule 44 (empty -> .)
+    LESSEQUAL       reduce using rule 44 (empty -> .)
+    GREATER         reduce using rule 44 (empty -> .)
+    GREATEREQUAL    reduce using rule 44 (empty -> .)
+    AND             reduce using rule 44 (empty -> .)
+    OR              reduce using rule 44 (empty -> .)
+    RPAREN          reduce using rule 44 (empty -> .)
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
-    term                           shift and go to state 71
-    empty                          shift and go to state 72
+    term                           shift and go to state 70
+    empty                          shift and go to state 71
     factor                         shift and go to state 34
 
 state 52
 
-    (27) term -> term TIMES . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (26) expression -> expression MINUS . term
+    (46) expression -> expression MINUS . empty
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (44) empty -> .
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    SEMICOLON       reduce using rule 44 (empty -> .)
+    PLUS            reduce using rule 44 (empty -> .)
+    MINUS           reduce using rule 44 (empty -> .)
+    EQUALS          reduce using rule 44 (empty -> .)
+    NOTEQUALS       reduce using rule 44 (empty -> .)
+    LESS            reduce using rule 44 (empty -> .)
+    LESSEQUAL       reduce using rule 44 (empty -> .)
+    GREATER         reduce using rule 44 (empty -> .)
+    GREATEREQUAL    reduce using rule 44 (empty -> .)
+    AND             reduce using rule 44 (empty -> .)
+    OR              reduce using rule 44 (empty -> .)
+    RPAREN          reduce using rule 44 (empty -> .)
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
-    factor                         shift and go to state 73
+    term                           shift and go to state 72
+    empty                          shift and go to state 73
+    factor                         shift and go to state 34
 
 state 53
 
-    (28) term -> term DIVIDE . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (22) write_statement -> WRITE STRING SEMICOLON .
+
+    RBRACE          reduce using rule 22 (write_statement -> WRITE STRING SEMICOLON .)
+    IDENTIFIER      reduce using rule 22 (write_statement -> WRITE STRING SEMICOLON .)
+    IF              reduce using rule 22 (write_statement -> WRITE STRING SEMICOLON .)
+    WRITE           reduce using rule 22 (write_statement -> WRITE STRING SEMICOLON .)
+    DO              reduce using rule 22 (write_statement -> WRITE STRING SEMICOLON .)
+    WHILE           reduce using rule 22 (write_statement -> WRITE STRING SEMICOLON .)
+
+
+state 54
+
+    (28) term -> term TIMES . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
     factor                         shift and go to state 74
 
-state 54
-
-    (30) factor -> LPAREN expression . RPAREN
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
-
-    RPAREN          shift and go to state 75
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
-
-
 state 55
 
-    (4) read_statement -> READ IDENTIFIER SEMICOLON .
+    (29) term -> term DIVIDE . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
-    RBRACE          reduce using rule 4 (read_statement -> READ IDENTIFIER SEMICOLON .)
-    IDENTIFIER      reduce using rule 4 (read_statement -> READ IDENTIFIER SEMICOLON .)
-    IF              reduce using rule 4 (read_statement -> READ IDENTIFIER SEMICOLON .)
-    WRITE           reduce using rule 4 (read_statement -> READ IDENTIFIER SEMICOLON .)
-    READ            reduce using rule 4 (read_statement -> READ IDENTIFIER SEMICOLON .)
-    DO              reduce using rule 4 (read_statement -> READ IDENTIFIER SEMICOLON .)
-    WHILE           reduce using rule 4 (read_statement -> READ IDENTIFIER SEMICOLON .)
+    LPAREN          shift and go to state 35
+    NUMBER          shift and go to state 36
+    FLOAT_NUMBER    shift and go to state 37
+    IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
+    factor                         shift and go to state 75
 
 state 56
 
-    (22) do_statement -> DO LBRACE statements . RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (31) factor -> LPAREN expression . RPAREN
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
+
+    RPAREN          shift and go to state 76
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
+
+
+state 57
+
+    (23) do_statement -> DO LBRACE statements . RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (9) do_until_statement -> DO LBRACE statements . RBRACE UNTIL LPAREN condition RPAREN SEMICOLON
     (10) statements -> statements . statement
     (12) statement -> . assignment
     (13) statement -> . if_statement
     (14) statement -> . write_statement
-    (15) statement -> . read_statement
-    (16) statement -> . do_statement
-    (17) statement -> . while_statement
+    (15) statement -> . do_statement
+    (16) statement -> . while_statement
+    (17) statement -> . do_until_statement
     (18) assignment -> . IDENTIFIER ASSIGN expression SEMICOLON
     (19) if_statement -> . IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
     (20) if_statement -> . IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI
     (21) write_statement -> . WRITE expression SEMICOLON
-    (4) read_statement -> . READ IDENTIFIER SEMICOLON
-    (22) do_statement -> . DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
-    (23) while_statement -> . WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+    (22) write_statement -> . WRITE STRING SEMICOLON
+    (23) do_statement -> . DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (24) while_statement -> . WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+    (9) do_until_statement -> . DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON
 
-    RBRACE          shift and go to state 76
+    RBRACE          shift and go to state 77
     IDENTIFIER      shift and go to state 20
     IF              shift and go to state 21
     WRITE           shift and go to state 22
-    READ            shift and go to state 23
-    DO              shift and go to state 24
-    WHILE           shift and go to state 25
+    DO              shift and go to state 23
+    WHILE           shift and go to state 24
 
     statement                      shift and go to state 13
     assignment                     shift and go to state 14
     if_statement                   shift and go to state 15
     write_statement                shift and go to state 16
-    read_statement                 shift and go to state 17
-    do_statement                   shift and go to state 18
-    while_statement                shift and go to state 19
-
-state 57
-
-    (23) while_statement -> WHILE LPAREN condition . RPAREN LBRACE statements RBRACE
-
-    RPAREN          shift and go to state 77
-
+    do_statement                   shift and go to state 17
+    while_statement                shift and go to state 18
+    do_until_statement             shift and go to state 19
 
 state 58
 
-    (8) var_list -> var_list COMMA IDENTIFIER .
+    (24) while_statement -> WHILE LPAREN condition . RPAREN LBRACE statements RBRACE
 
-    SEMICOLON       reduce using rule 8 (var_list -> var_list COMMA IDENTIFIER .)
-    COMMA           reduce using rule 8 (var_list -> var_list COMMA IDENTIFIER .)
+    RPAREN          shift and go to state 78
 
 
 state 59
+
+    (7) var_list -> var_list COMMA IDENTIFIER .
+
+    SEMICOLON       reduce using rule 7 (var_list -> var_list COMMA IDENTIFIER .)
+    COMMA           reduce using rule 7 (var_list -> var_list COMMA IDENTIFIER .)
+
+
+state 60
 
     (18) assignment -> IDENTIFIER ASSIGN expression SEMICOLON .
 
@@ -1047,64 +1099,42 @@ state 59
     IDENTIFIER      reduce using rule 18 (assignment -> IDENTIFIER ASSIGN expression SEMICOLON .)
     IF              reduce using rule 18 (assignment -> IDENTIFIER ASSIGN expression SEMICOLON .)
     WRITE           reduce using rule 18 (assignment -> IDENTIFIER ASSIGN expression SEMICOLON .)
-    READ            reduce using rule 18 (assignment -> IDENTIFIER ASSIGN expression SEMICOLON .)
     DO              reduce using rule 18 (assignment -> IDENTIFIER ASSIGN expression SEMICOLON .)
     WHILE           reduce using rule 18 (assignment -> IDENTIFIER ASSIGN expression SEMICOLON .)
 
 
-state 60
+state 61
 
     (19) if_statement -> IF LPAREN condition RPAREN . THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
     (20) if_statement -> IF LPAREN condition RPAREN . THEN LBRACE statements RBRACE FI
 
-    THEN            shift and go to state 78
+    THEN            shift and go to state 79
 
-
-state 61
-
-    (34) condition -> expression EQUALS . expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
-
-    LPAREN          shift and go to state 35
-    NUMBER          shift and go to state 36
-    FLOAT_NUMBER    shift and go to state 37
-    IDENTIFIER      shift and go to state 38
-
-    expression                     shift and go to state 79
-    term                           shift and go to state 33
-    factor                         shift and go to state 34
 
 state 62
 
-    (35) condition -> expression NOTEQUALS . expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (36) condition -> expression EQUALS . expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
     expression                     shift and go to state 80
     term                           shift and go to state 33
@@ -1112,24 +1142,28 @@ state 62
 
 state 63
 
-    (36) condition -> expression LESS . expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (37) condition -> expression NOTEQUALS . expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
     expression                     shift and go to state 81
     term                           shift and go to state 33
@@ -1137,24 +1171,28 @@ state 63
 
 state 64
 
-    (37) condition -> expression LESSEQUAL . expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (38) condition -> expression LESS . expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
     expression                     shift and go to state 82
     term                           shift and go to state 33
@@ -1162,24 +1200,28 @@ state 64
 
 state 65
 
-    (38) condition -> expression GREATER . expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (39) condition -> expression LESSEQUAL . expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
     expression                     shift and go to state 83
     term                           shift and go to state 33
@@ -1187,24 +1229,28 @@ state 65
 
 state 66
 
-    (39) condition -> expression GREATEREQUAL . expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (40) condition -> expression GREATER . expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
     expression                     shift and go to state 84
     term                           shift and go to state 33
@@ -1212,24 +1258,28 @@ state 66
 
 state 67
 
-    (40) condition -> expression AND . expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (41) condition -> expression GREATEREQUAL . expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
     expression                     shift and go to state 85
     term                           shift and go to state 33
@@ -1237,24 +1287,28 @@ state 67
 
 state 68
 
-    (41) condition -> expression OR . expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (42) condition -> expression AND . expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
     expression                     shift and go to state 86
     term                           shift and go to state 33
@@ -1262,383 +1316,461 @@ state 68
 
 state 69
 
-    (24) expression -> expression PLUS term .
-    (27) term -> term . TIMES factor
-    (28) term -> term . DIVIDE factor
+    (43) condition -> expression OR . expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
-    SEMICOLON       reduce using rule 24 (expression -> expression PLUS term .)
-    PLUS            reduce using rule 24 (expression -> expression PLUS term .)
-    MINUS           reduce using rule 24 (expression -> expression PLUS term .)
-    EQUALS          reduce using rule 24 (expression -> expression PLUS term .)
-    NOTEQUALS       reduce using rule 24 (expression -> expression PLUS term .)
-    LESS            reduce using rule 24 (expression -> expression PLUS term .)
-    LESSEQUAL       reduce using rule 24 (expression -> expression PLUS term .)
-    GREATER         reduce using rule 24 (expression -> expression PLUS term .)
-    GREATEREQUAL    reduce using rule 24 (expression -> expression PLUS term .)
-    AND             reduce using rule 24 (expression -> expression PLUS term .)
-    OR              reduce using rule 24 (expression -> expression PLUS term .)
-    RPAREN          reduce using rule 24 (expression -> expression PLUS term .)
-    TIMES           shift and go to state 52
-    DIVIDE          shift and go to state 53
+    STRING          shift and go to state 47
+    LPAREN          shift and go to state 35
+    NUMBER          shift and go to state 36
+    FLOAT_NUMBER    shift and go to state 37
+    IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
+    expression                     shift and go to state 87
+    term                           shift and go to state 33
+    factor                         shift and go to state 34
 
 state 70
 
-    (43) expression -> expression PLUS empty .
+    (25) expression -> expression PLUS term .
+    (28) term -> term . TIMES factor
+    (29) term -> term . DIVIDE factor
 
-    SEMICOLON       reduce using rule 43 (expression -> expression PLUS empty .)
-    PLUS            reduce using rule 43 (expression -> expression PLUS empty .)
-    MINUS           reduce using rule 43 (expression -> expression PLUS empty .)
-    EQUALS          reduce using rule 43 (expression -> expression PLUS empty .)
-    NOTEQUALS       reduce using rule 43 (expression -> expression PLUS empty .)
-    LESS            reduce using rule 43 (expression -> expression PLUS empty .)
-    LESSEQUAL       reduce using rule 43 (expression -> expression PLUS empty .)
-    GREATER         reduce using rule 43 (expression -> expression PLUS empty .)
-    GREATEREQUAL    reduce using rule 43 (expression -> expression PLUS empty .)
-    AND             reduce using rule 43 (expression -> expression PLUS empty .)
-    OR              reduce using rule 43 (expression -> expression PLUS empty .)
-    RPAREN          reduce using rule 43 (expression -> expression PLUS empty .)
+    SEMICOLON       reduce using rule 25 (expression -> expression PLUS term .)
+    PLUS            reduce using rule 25 (expression -> expression PLUS term .)
+    MINUS           reduce using rule 25 (expression -> expression PLUS term .)
+    EQUALS          reduce using rule 25 (expression -> expression PLUS term .)
+    NOTEQUALS       reduce using rule 25 (expression -> expression PLUS term .)
+    LESS            reduce using rule 25 (expression -> expression PLUS term .)
+    LESSEQUAL       reduce using rule 25 (expression -> expression PLUS term .)
+    GREATER         reduce using rule 25 (expression -> expression PLUS term .)
+    GREATEREQUAL    reduce using rule 25 (expression -> expression PLUS term .)
+    AND             reduce using rule 25 (expression -> expression PLUS term .)
+    OR              reduce using rule 25 (expression -> expression PLUS term .)
+    RPAREN          reduce using rule 25 (expression -> expression PLUS term .)
+    TIMES           shift and go to state 54
+    DIVIDE          shift and go to state 55
 
 
 state 71
 
-    (25) expression -> expression MINUS term .
-    (27) term -> term . TIMES factor
-    (28) term -> term . DIVIDE factor
+    (45) expression -> expression PLUS empty .
 
-    SEMICOLON       reduce using rule 25 (expression -> expression MINUS term .)
-    PLUS            reduce using rule 25 (expression -> expression MINUS term .)
-    MINUS           reduce using rule 25 (expression -> expression MINUS term .)
-    EQUALS          reduce using rule 25 (expression -> expression MINUS term .)
-    NOTEQUALS       reduce using rule 25 (expression -> expression MINUS term .)
-    LESS            reduce using rule 25 (expression -> expression MINUS term .)
-    LESSEQUAL       reduce using rule 25 (expression -> expression MINUS term .)
-    GREATER         reduce using rule 25 (expression -> expression MINUS term .)
-    GREATEREQUAL    reduce using rule 25 (expression -> expression MINUS term .)
-    AND             reduce using rule 25 (expression -> expression MINUS term .)
-    OR              reduce using rule 25 (expression -> expression MINUS term .)
-    RPAREN          reduce using rule 25 (expression -> expression MINUS term .)
-    TIMES           shift and go to state 52
-    DIVIDE          shift and go to state 53
+    SEMICOLON       reduce using rule 45 (expression -> expression PLUS empty .)
+    PLUS            reduce using rule 45 (expression -> expression PLUS empty .)
+    MINUS           reduce using rule 45 (expression -> expression PLUS empty .)
+    EQUALS          reduce using rule 45 (expression -> expression PLUS empty .)
+    NOTEQUALS       reduce using rule 45 (expression -> expression PLUS empty .)
+    LESS            reduce using rule 45 (expression -> expression PLUS empty .)
+    LESSEQUAL       reduce using rule 45 (expression -> expression PLUS empty .)
+    GREATER         reduce using rule 45 (expression -> expression PLUS empty .)
+    GREATEREQUAL    reduce using rule 45 (expression -> expression PLUS empty .)
+    AND             reduce using rule 45 (expression -> expression PLUS empty .)
+    OR              reduce using rule 45 (expression -> expression PLUS empty .)
+    RPAREN          reduce using rule 45 (expression -> expression PLUS empty .)
 
 
 state 72
 
-    (44) expression -> expression MINUS empty .
+    (26) expression -> expression MINUS term .
+    (28) term -> term . TIMES factor
+    (29) term -> term . DIVIDE factor
 
-    SEMICOLON       reduce using rule 44 (expression -> expression MINUS empty .)
-    PLUS            reduce using rule 44 (expression -> expression MINUS empty .)
-    MINUS           reduce using rule 44 (expression -> expression MINUS empty .)
-    EQUALS          reduce using rule 44 (expression -> expression MINUS empty .)
-    NOTEQUALS       reduce using rule 44 (expression -> expression MINUS empty .)
-    LESS            reduce using rule 44 (expression -> expression MINUS empty .)
-    LESSEQUAL       reduce using rule 44 (expression -> expression MINUS empty .)
-    GREATER         reduce using rule 44 (expression -> expression MINUS empty .)
-    GREATEREQUAL    reduce using rule 44 (expression -> expression MINUS empty .)
-    AND             reduce using rule 44 (expression -> expression MINUS empty .)
-    OR              reduce using rule 44 (expression -> expression MINUS empty .)
-    RPAREN          reduce using rule 44 (expression -> expression MINUS empty .)
+    SEMICOLON       reduce using rule 26 (expression -> expression MINUS term .)
+    PLUS            reduce using rule 26 (expression -> expression MINUS term .)
+    MINUS           reduce using rule 26 (expression -> expression MINUS term .)
+    EQUALS          reduce using rule 26 (expression -> expression MINUS term .)
+    NOTEQUALS       reduce using rule 26 (expression -> expression MINUS term .)
+    LESS            reduce using rule 26 (expression -> expression MINUS term .)
+    LESSEQUAL       reduce using rule 26 (expression -> expression MINUS term .)
+    GREATER         reduce using rule 26 (expression -> expression MINUS term .)
+    GREATEREQUAL    reduce using rule 26 (expression -> expression MINUS term .)
+    AND             reduce using rule 26 (expression -> expression MINUS term .)
+    OR              reduce using rule 26 (expression -> expression MINUS term .)
+    RPAREN          reduce using rule 26 (expression -> expression MINUS term .)
+    TIMES           shift and go to state 54
+    DIVIDE          shift and go to state 55
 
 
 state 73
 
-    (27) term -> term TIMES factor .
+    (46) expression -> expression MINUS empty .
 
-    TIMES           reduce using rule 27 (term -> term TIMES factor .)
-    DIVIDE          reduce using rule 27 (term -> term TIMES factor .)
-    SEMICOLON       reduce using rule 27 (term -> term TIMES factor .)
-    PLUS            reduce using rule 27 (term -> term TIMES factor .)
-    MINUS           reduce using rule 27 (term -> term TIMES factor .)
-    EQUALS          reduce using rule 27 (term -> term TIMES factor .)
-    NOTEQUALS       reduce using rule 27 (term -> term TIMES factor .)
-    LESS            reduce using rule 27 (term -> term TIMES factor .)
-    LESSEQUAL       reduce using rule 27 (term -> term TIMES factor .)
-    GREATER         reduce using rule 27 (term -> term TIMES factor .)
-    GREATEREQUAL    reduce using rule 27 (term -> term TIMES factor .)
-    AND             reduce using rule 27 (term -> term TIMES factor .)
-    OR              reduce using rule 27 (term -> term TIMES factor .)
-    RPAREN          reduce using rule 27 (term -> term TIMES factor .)
+    SEMICOLON       reduce using rule 46 (expression -> expression MINUS empty .)
+    PLUS            reduce using rule 46 (expression -> expression MINUS empty .)
+    MINUS           reduce using rule 46 (expression -> expression MINUS empty .)
+    EQUALS          reduce using rule 46 (expression -> expression MINUS empty .)
+    NOTEQUALS       reduce using rule 46 (expression -> expression MINUS empty .)
+    LESS            reduce using rule 46 (expression -> expression MINUS empty .)
+    LESSEQUAL       reduce using rule 46 (expression -> expression MINUS empty .)
+    GREATER         reduce using rule 46 (expression -> expression MINUS empty .)
+    GREATEREQUAL    reduce using rule 46 (expression -> expression MINUS empty .)
+    AND             reduce using rule 46 (expression -> expression MINUS empty .)
+    OR              reduce using rule 46 (expression -> expression MINUS empty .)
+    RPAREN          reduce using rule 46 (expression -> expression MINUS empty .)
 
 
 state 74
 
-    (28) term -> term DIVIDE factor .
+    (28) term -> term TIMES factor .
 
-    TIMES           reduce using rule 28 (term -> term DIVIDE factor .)
-    DIVIDE          reduce using rule 28 (term -> term DIVIDE factor .)
-    SEMICOLON       reduce using rule 28 (term -> term DIVIDE factor .)
-    PLUS            reduce using rule 28 (term -> term DIVIDE factor .)
-    MINUS           reduce using rule 28 (term -> term DIVIDE factor .)
-    EQUALS          reduce using rule 28 (term -> term DIVIDE factor .)
-    NOTEQUALS       reduce using rule 28 (term -> term DIVIDE factor .)
-    LESS            reduce using rule 28 (term -> term DIVIDE factor .)
-    LESSEQUAL       reduce using rule 28 (term -> term DIVIDE factor .)
-    GREATER         reduce using rule 28 (term -> term DIVIDE factor .)
-    GREATEREQUAL    reduce using rule 28 (term -> term DIVIDE factor .)
-    AND             reduce using rule 28 (term -> term DIVIDE factor .)
-    OR              reduce using rule 28 (term -> term DIVIDE factor .)
-    RPAREN          reduce using rule 28 (term -> term DIVIDE factor .)
+    TIMES           reduce using rule 28 (term -> term TIMES factor .)
+    DIVIDE          reduce using rule 28 (term -> term TIMES factor .)
+    SEMICOLON       reduce using rule 28 (term -> term TIMES factor .)
+    PLUS            reduce using rule 28 (term -> term TIMES factor .)
+    MINUS           reduce using rule 28 (term -> term TIMES factor .)
+    EQUALS          reduce using rule 28 (term -> term TIMES factor .)
+    NOTEQUALS       reduce using rule 28 (term -> term TIMES factor .)
+    LESS            reduce using rule 28 (term -> term TIMES factor .)
+    LESSEQUAL       reduce using rule 28 (term -> term TIMES factor .)
+    GREATER         reduce using rule 28 (term -> term TIMES factor .)
+    GREATEREQUAL    reduce using rule 28 (term -> term TIMES factor .)
+    AND             reduce using rule 28 (term -> term TIMES factor .)
+    OR              reduce using rule 28 (term -> term TIMES factor .)
+    RPAREN          reduce using rule 28 (term -> term TIMES factor .)
 
 
 state 75
 
-    (30) factor -> LPAREN expression RPAREN .
+    (29) term -> term DIVIDE factor .
 
-    TIMES           reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    SEMICOLON       reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    PLUS            reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    EQUALS          reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    NOTEQUALS       reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    LESS            reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    LESSEQUAL       reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    GREATER         reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    GREATEREQUAL    reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    AND             reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    OR              reduce using rule 30 (factor -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 30 (factor -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 29 (term -> term DIVIDE factor .)
+    DIVIDE          reduce using rule 29 (term -> term DIVIDE factor .)
+    SEMICOLON       reduce using rule 29 (term -> term DIVIDE factor .)
+    PLUS            reduce using rule 29 (term -> term DIVIDE factor .)
+    MINUS           reduce using rule 29 (term -> term DIVIDE factor .)
+    EQUALS          reduce using rule 29 (term -> term DIVIDE factor .)
+    NOTEQUALS       reduce using rule 29 (term -> term DIVIDE factor .)
+    LESS            reduce using rule 29 (term -> term DIVIDE factor .)
+    LESSEQUAL       reduce using rule 29 (term -> term DIVIDE factor .)
+    GREATER         reduce using rule 29 (term -> term DIVIDE factor .)
+    GREATEREQUAL    reduce using rule 29 (term -> term DIVIDE factor .)
+    AND             reduce using rule 29 (term -> term DIVIDE factor .)
+    OR              reduce using rule 29 (term -> term DIVIDE factor .)
+    RPAREN          reduce using rule 29 (term -> term DIVIDE factor .)
 
 
 state 76
 
-    (22) do_statement -> DO LBRACE statements RBRACE . WHILE LPAREN condition RPAREN SEMICOLON
+    (31) factor -> LPAREN expression RPAREN .
 
-    WHILE           shift and go to state 87
+    TIMES           reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    EQUALS          reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    NOTEQUALS       reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    LESS            reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    LESSEQUAL       reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    GREATER         reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    GREATEREQUAL    reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    AND             reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    OR              reduce using rule 31 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 31 (factor -> LPAREN expression RPAREN .)
 
 
 state 77
 
-    (23) while_statement -> WHILE LPAREN condition RPAREN . LBRACE statements RBRACE
+    (23) do_statement -> DO LBRACE statements RBRACE . WHILE LPAREN condition RPAREN SEMICOLON
+    (9) do_until_statement -> DO LBRACE statements RBRACE . UNTIL LPAREN condition RPAREN SEMICOLON
 
-    LBRACE          shift and go to state 88
+    WHILE           shift and go to state 88
+    UNTIL           shift and go to state 89
 
 
 state 78
 
-    (19) if_statement -> IF LPAREN condition RPAREN THEN . LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
-    (20) if_statement -> IF LPAREN condition RPAREN THEN . LBRACE statements RBRACE FI
+    (24) while_statement -> WHILE LPAREN condition RPAREN . LBRACE statements RBRACE
 
-    LBRACE          shift and go to state 89
+    LBRACE          shift and go to state 90
 
 
 state 79
 
-    (34) condition -> expression EQUALS expression .
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (19) if_statement -> IF LPAREN condition RPAREN THEN . LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
+    (20) if_statement -> IF LPAREN condition RPAREN THEN . LBRACE statements RBRACE FI
 
-    RPAREN          reduce using rule 34 (condition -> expression EQUALS expression .)
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    LBRACE          shift and go to state 91
 
 
 state 80
 
-    (35) condition -> expression NOTEQUALS expression .
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (36) condition -> expression EQUALS expression .
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
 
-    RPAREN          reduce using rule 35 (condition -> expression NOTEQUALS expression .)
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    RPAREN          reduce using rule 36 (condition -> expression EQUALS expression .)
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
 
 
 state 81
 
-    (36) condition -> expression LESS expression .
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (37) condition -> expression NOTEQUALS expression .
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
 
-    RPAREN          reduce using rule 36 (condition -> expression LESS expression .)
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    RPAREN          reduce using rule 37 (condition -> expression NOTEQUALS expression .)
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
 
 
 state 82
 
-    (37) condition -> expression LESSEQUAL expression .
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (38) condition -> expression LESS expression .
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
 
-    RPAREN          reduce using rule 37 (condition -> expression LESSEQUAL expression .)
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    RPAREN          reduce using rule 38 (condition -> expression LESS expression .)
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
 
 
 state 83
 
-    (38) condition -> expression GREATER expression .
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (39) condition -> expression LESSEQUAL expression .
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
 
-    RPAREN          reduce using rule 38 (condition -> expression GREATER expression .)
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    RPAREN          reduce using rule 39 (condition -> expression LESSEQUAL expression .)
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
 
 
 state 84
 
-    (39) condition -> expression GREATEREQUAL expression .
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (40) condition -> expression GREATER expression .
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
 
-    RPAREN          reduce using rule 39 (condition -> expression GREATEREQUAL expression .)
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    RPAREN          reduce using rule 40 (condition -> expression GREATER expression .)
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
 
 
 state 85
 
-    (40) condition -> expression AND expression .
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (41) condition -> expression GREATEREQUAL expression .
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
 
-    RPAREN          reduce using rule 40 (condition -> expression AND expression .)
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    RPAREN          reduce using rule 41 (condition -> expression GREATEREQUAL expression .)
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
 
 
 state 86
 
-    (41) condition -> expression OR expression .
-    (24) expression -> expression . PLUS term
-    (25) expression -> expression . MINUS term
-    (43) expression -> expression . PLUS empty
-    (44) expression -> expression . MINUS empty
+    (42) condition -> expression AND expression .
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
 
-    RPAREN          reduce using rule 41 (condition -> expression OR expression .)
-    PLUS            shift and go to state 50
-    MINUS           shift and go to state 51
+    RPAREN          reduce using rule 42 (condition -> expression AND expression .)
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
 
 
 state 87
 
-    (22) do_statement -> DO LBRACE statements RBRACE WHILE . LPAREN condition RPAREN SEMICOLON
+    (43) condition -> expression OR expression .
+    (25) expression -> expression . PLUS term
+    (26) expression -> expression . MINUS term
+    (45) expression -> expression . PLUS empty
+    (46) expression -> expression . MINUS empty
 
-    LPAREN          shift and go to state 90
+    RPAREN          reduce using rule 43 (condition -> expression OR expression .)
+    PLUS            shift and go to state 51
+    MINUS           shift and go to state 52
 
 
 state 88
 
-    (23) while_statement -> WHILE LPAREN condition RPAREN LBRACE . statements RBRACE
-    (10) statements -> . statements statement
-    (11) statements -> . empty
-    (42) empty -> .
+    (23) do_statement -> DO LBRACE statements RBRACE WHILE . LPAREN condition RPAREN SEMICOLON
 
-    RBRACE          reduce using rule 42 (empty -> .)
-    IDENTIFIER      reduce using rule 42 (empty -> .)
-    IF              reduce using rule 42 (empty -> .)
-    WRITE           reduce using rule 42 (empty -> .)
-    READ            reduce using rule 42 (empty -> .)
-    DO              reduce using rule 42 (empty -> .)
-    WHILE           reduce using rule 42 (empty -> .)
+    LPAREN          shift and go to state 92
 
-    statements                     shift and go to state 91
-    empty                          shift and go to state 8
 
 state 89
+
+    (9) do_until_statement -> DO LBRACE statements RBRACE UNTIL . LPAREN condition RPAREN SEMICOLON
+
+    LPAREN          shift and go to state 93
+
+
+state 90
+
+    (24) while_statement -> WHILE LPAREN condition RPAREN LBRACE . statements RBRACE
+    (10) statements -> . statements statement
+    (11) statements -> . empty
+    (44) empty -> .
+
+    RBRACE          reduce using rule 44 (empty -> .)
+    IDENTIFIER      reduce using rule 44 (empty -> .)
+    IF              reduce using rule 44 (empty -> .)
+    WRITE           reduce using rule 44 (empty -> .)
+    DO              reduce using rule 44 (empty -> .)
+    WHILE           reduce using rule 44 (empty -> .)
+
+    statements                     shift and go to state 94
+    empty                          shift and go to state 8
+
+state 91
 
     (19) if_statement -> IF LPAREN condition RPAREN THEN LBRACE . statements RBRACE ELSE LBRACE statements RBRACE FI
     (20) if_statement -> IF LPAREN condition RPAREN THEN LBRACE . statements RBRACE FI
     (10) statements -> . statements statement
     (11) statements -> . empty
-    (42) empty -> .
+    (44) empty -> .
 
-    RBRACE          reduce using rule 42 (empty -> .)
-    IDENTIFIER      reduce using rule 42 (empty -> .)
-    IF              reduce using rule 42 (empty -> .)
-    WRITE           reduce using rule 42 (empty -> .)
-    READ            reduce using rule 42 (empty -> .)
-    DO              reduce using rule 42 (empty -> .)
-    WHILE           reduce using rule 42 (empty -> .)
+    RBRACE          reduce using rule 44 (empty -> .)
+    IDENTIFIER      reduce using rule 44 (empty -> .)
+    IF              reduce using rule 44 (empty -> .)
+    WRITE           reduce using rule 44 (empty -> .)
+    DO              reduce using rule 44 (empty -> .)
+    WHILE           reduce using rule 44 (empty -> .)
 
-    statements                     shift and go to state 92
+    statements                     shift and go to state 95
     empty                          shift and go to state 8
 
-state 90
+state 92
 
-    (22) do_statement -> DO LBRACE statements RBRACE WHILE LPAREN . condition RPAREN SEMICOLON
-    (34) condition -> . expression EQUALS expression
-    (35) condition -> . expression NOTEQUALS expression
-    (36) condition -> . expression LESS expression
-    (37) condition -> . expression LESSEQUAL expression
-    (38) condition -> . expression GREATER expression
-    (39) condition -> . expression GREATEREQUAL expression
-    (40) condition -> . expression AND expression
-    (41) condition -> . expression OR expression
-    (24) expression -> . expression PLUS term
-    (25) expression -> . expression MINUS term
-    (26) expression -> . term
-    (43) expression -> . expression PLUS empty
-    (44) expression -> . expression MINUS empty
-    (27) term -> . term TIMES factor
-    (28) term -> . term DIVIDE factor
-    (29) term -> . factor
-    (30) factor -> . LPAREN expression RPAREN
-    (31) factor -> . NUMBER
-    (32) factor -> . FLOAT_NUMBER
-    (33) factor -> . IDENTIFIER
+    (23) do_statement -> DO LBRACE statements RBRACE WHILE LPAREN . condition RPAREN SEMICOLON
+    (36) condition -> . expression EQUALS expression
+    (37) condition -> . expression NOTEQUALS expression
+    (38) condition -> . expression LESS expression
+    (39) condition -> . expression LESSEQUAL expression
+    (40) condition -> . expression GREATER expression
+    (41) condition -> . expression GREATEREQUAL expression
+    (42) condition -> . expression AND expression
+    (43) condition -> . expression OR expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
 
+    STRING          shift and go to state 47
     LPAREN          shift and go to state 35
     NUMBER          shift and go to state 36
     FLOAT_NUMBER    shift and go to state 37
     IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
 
-    condition                      shift and go to state 93
-    expression                     shift and go to state 48
+    condition                      shift and go to state 96
+    expression                     shift and go to state 49
     term                           shift and go to state 33
     factor                         shift and go to state 34
 
-state 91
+state 93
 
-    (23) while_statement -> WHILE LPAREN condition RPAREN LBRACE statements . RBRACE
+    (9) do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN . condition RPAREN SEMICOLON
+    (36) condition -> . expression EQUALS expression
+    (37) condition -> . expression NOTEQUALS expression
+    (38) condition -> . expression LESS expression
+    (39) condition -> . expression LESSEQUAL expression
+    (40) condition -> . expression GREATER expression
+    (41) condition -> . expression GREATEREQUAL expression
+    (42) condition -> . expression AND expression
+    (43) condition -> . expression OR expression
+    (25) expression -> . expression PLUS term
+    (26) expression -> . expression MINUS term
+    (27) expression -> . term
+    (45) expression -> . expression PLUS empty
+    (46) expression -> . expression MINUS empty
+    (47) expression -> . STRING
+    (28) term -> . term TIMES factor
+    (29) term -> . term DIVIDE factor
+    (30) term -> . factor
+    (31) factor -> . LPAREN expression RPAREN
+    (32) factor -> . NUMBER
+    (33) factor -> . FLOAT_NUMBER
+    (34) factor -> . IDENTIFIER
+    (35) factor -> . BOOL_VALUE
+
+    STRING          shift and go to state 47
+    LPAREN          shift and go to state 35
+    NUMBER          shift and go to state 36
+    FLOAT_NUMBER    shift and go to state 37
+    IDENTIFIER      shift and go to state 38
+    BOOL_VALUE      shift and go to state 39
+
+    condition                      shift and go to state 97
+    expression                     shift and go to state 49
+    term                           shift and go to state 33
+    factor                         shift and go to state 34
+
+state 94
+
+    (24) while_statement -> WHILE LPAREN condition RPAREN LBRACE statements . RBRACE
     (10) statements -> statements . statement
     (12) statement -> . assignment
     (13) statement -> . if_statement
     (14) statement -> . write_statement
-    (15) statement -> . read_statement
-    (16) statement -> . do_statement
-    (17) statement -> . while_statement
+    (15) statement -> . do_statement
+    (16) statement -> . while_statement
+    (17) statement -> . do_until_statement
     (18) assignment -> . IDENTIFIER ASSIGN expression SEMICOLON
     (19) if_statement -> . IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
     (20) if_statement -> . IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI
     (21) write_statement -> . WRITE expression SEMICOLON
-    (4) read_statement -> . READ IDENTIFIER SEMICOLON
-    (22) do_statement -> . DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
-    (23) while_statement -> . WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+    (22) write_statement -> . WRITE STRING SEMICOLON
+    (23) do_statement -> . DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (24) while_statement -> . WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+    (9) do_until_statement -> . DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON
 
-    RBRACE          shift and go to state 94
+    RBRACE          shift and go to state 98
     IDENTIFIER      shift and go to state 20
     IF              shift and go to state 21
     WRITE           shift and go to state 22
-    READ            shift and go to state 23
-    DO              shift and go to state 24
-    WHILE           shift and go to state 25
+    DO              shift and go to state 23
+    WHILE           shift and go to state 24
 
     statement                      shift and go to state 13
     assignment                     shift and go to state 14
     if_statement                   shift and go to state 15
     write_statement                shift and go to state 16
-    read_statement                 shift and go to state 17
-    do_statement                   shift and go to state 18
-    while_statement                shift and go to state 19
+    do_statement                   shift and go to state 17
+    while_statement                shift and go to state 18
+    do_until_statement             shift and go to state 19
 
-state 92
+state 95
 
     (19) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements . RBRACE ELSE LBRACE statements RBRACE FI
     (20) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements . RBRACE FI
@@ -1646,77 +1778,90 @@ state 92
     (12) statement -> . assignment
     (13) statement -> . if_statement
     (14) statement -> . write_statement
-    (15) statement -> . read_statement
-    (16) statement -> . do_statement
-    (17) statement -> . while_statement
+    (15) statement -> . do_statement
+    (16) statement -> . while_statement
+    (17) statement -> . do_until_statement
     (18) assignment -> . IDENTIFIER ASSIGN expression SEMICOLON
     (19) if_statement -> . IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
     (20) if_statement -> . IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI
     (21) write_statement -> . WRITE expression SEMICOLON
-    (4) read_statement -> . READ IDENTIFIER SEMICOLON
-    (22) do_statement -> . DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
-    (23) while_statement -> . WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+    (22) write_statement -> . WRITE STRING SEMICOLON
+    (23) do_statement -> . DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (24) while_statement -> . WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+    (9) do_until_statement -> . DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON
 
-    RBRACE          shift and go to state 95
+    RBRACE          shift and go to state 99
     IDENTIFIER      shift and go to state 20
     IF              shift and go to state 21
     WRITE           shift and go to state 22
-    READ            shift and go to state 23
-    DO              shift and go to state 24
-    WHILE           shift and go to state 25
+    DO              shift and go to state 23
+    WHILE           shift and go to state 24
 
     statement                      shift and go to state 13
     assignment                     shift and go to state 14
     if_statement                   shift and go to state 15
     write_statement                shift and go to state 16
-    read_statement                 shift and go to state 17
-    do_statement                   shift and go to state 18
-    while_statement                shift and go to state 19
-
-state 93
-
-    (22) do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition . RPAREN SEMICOLON
-
-    RPAREN          shift and go to state 96
-
-
-state 94
-
-    (23) while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .
-
-    RBRACE          reduce using rule 23 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
-    IDENTIFIER      reduce using rule 23 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
-    IF              reduce using rule 23 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
-    WRITE           reduce using rule 23 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
-    READ            reduce using rule 23 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
-    DO              reduce using rule 23 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
-    WHILE           reduce using rule 23 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
-
-
-state 95
-
-    (19) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE . ELSE LBRACE statements RBRACE FI
-    (20) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE . FI
-
-    ELSE            shift and go to state 97
-    FI              shift and go to state 98
-
+    do_statement                   shift and go to state 17
+    while_statement                shift and go to state 18
+    do_until_statement             shift and go to state 19
 
 state 96
 
-    (22) do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN . SEMICOLON
+    (23) do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition . RPAREN SEMICOLON
 
-    SEMICOLON       shift and go to state 99
+    RPAREN          shift and go to state 100
 
 
 state 97
 
-    (19) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE . LBRACE statements RBRACE FI
+    (9) do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN condition . RPAREN SEMICOLON
 
-    LBRACE          shift and go to state 100
+    RPAREN          shift and go to state 101
 
 
 state 98
+
+    (24) while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .
+
+    RBRACE          reduce using rule 24 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
+    IDENTIFIER      reduce using rule 24 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
+    IF              reduce using rule 24 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
+    WRITE           reduce using rule 24 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
+    DO              reduce using rule 24 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
+    WHILE           reduce using rule 24 (while_statement -> WHILE LPAREN condition RPAREN LBRACE statements RBRACE .)
+
+
+state 99
+
+    (19) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE . ELSE LBRACE statements RBRACE FI
+    (20) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE . FI
+
+    ELSE            shift and go to state 102
+    FI              shift and go to state 103
+
+
+state 100
+
+    (23) do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 104
+
+
+state 101
+
+    (9) do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN . SEMICOLON
+
+    SEMICOLON       shift and go to state 105
+
+
+state 102
+
+    (19) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE . LBRACE statements RBRACE FI
+
+    LBRACE          shift and go to state 106
+
+
+state 103
 
     (20) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI .
 
@@ -1724,84 +1869,93 @@ state 98
     IDENTIFIER      reduce using rule 20 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI .)
     IF              reduce using rule 20 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI .)
     WRITE           reduce using rule 20 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI .)
-    READ            reduce using rule 20 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI .)
     DO              reduce using rule 20 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI .)
     WHILE           reduce using rule 20 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI .)
 
 
-state 99
+state 104
 
-    (22) do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .
+    (23) do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .
 
-    RBRACE          reduce using rule 22 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
-    IDENTIFIER      reduce using rule 22 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
-    IF              reduce using rule 22 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
-    WRITE           reduce using rule 22 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
-    READ            reduce using rule 22 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
-    DO              reduce using rule 22 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
-    WHILE           reduce using rule 22 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
+    RBRACE          reduce using rule 23 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
+    IDENTIFIER      reduce using rule 23 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
+    IF              reduce using rule 23 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
+    WRITE           reduce using rule 23 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
+    DO              reduce using rule 23 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
+    WHILE           reduce using rule 23 (do_statement -> DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON .)
 
 
-state 100
+state 105
+
+    (9) do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON .
+
+    RBRACE          reduce using rule 9 (do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON .)
+    IDENTIFIER      reduce using rule 9 (do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON .)
+    IF              reduce using rule 9 (do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON .)
+    WRITE           reduce using rule 9 (do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON .)
+    DO              reduce using rule 9 (do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON .)
+    WHILE           reduce using rule 9 (do_until_statement -> DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON .)
+
+
+state 106
 
     (19) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE . statements RBRACE FI
     (10) statements -> . statements statement
     (11) statements -> . empty
-    (42) empty -> .
+    (44) empty -> .
 
-    RBRACE          reduce using rule 42 (empty -> .)
-    IDENTIFIER      reduce using rule 42 (empty -> .)
-    IF              reduce using rule 42 (empty -> .)
-    WRITE           reduce using rule 42 (empty -> .)
-    READ            reduce using rule 42 (empty -> .)
-    DO              reduce using rule 42 (empty -> .)
-    WHILE           reduce using rule 42 (empty -> .)
+    RBRACE          reduce using rule 44 (empty -> .)
+    IDENTIFIER      reduce using rule 44 (empty -> .)
+    IF              reduce using rule 44 (empty -> .)
+    WRITE           reduce using rule 44 (empty -> .)
+    DO              reduce using rule 44 (empty -> .)
+    WHILE           reduce using rule 44 (empty -> .)
 
-    statements                     shift and go to state 101
+    statements                     shift and go to state 107
     empty                          shift and go to state 8
 
-state 101
+state 107
 
     (19) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements . RBRACE FI
     (10) statements -> statements . statement
     (12) statement -> . assignment
     (13) statement -> . if_statement
     (14) statement -> . write_statement
-    (15) statement -> . read_statement
-    (16) statement -> . do_statement
-    (17) statement -> . while_statement
+    (15) statement -> . do_statement
+    (16) statement -> . while_statement
+    (17) statement -> . do_until_statement
     (18) assignment -> . IDENTIFIER ASSIGN expression SEMICOLON
     (19) if_statement -> . IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI
     (20) if_statement -> . IF LPAREN condition RPAREN THEN LBRACE statements RBRACE FI
     (21) write_statement -> . WRITE expression SEMICOLON
-    (4) read_statement -> . READ IDENTIFIER SEMICOLON
-    (22) do_statement -> . DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
-    (23) while_statement -> . WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+    (22) write_statement -> . WRITE STRING SEMICOLON
+    (23) do_statement -> . DO LBRACE statements RBRACE WHILE LPAREN condition RPAREN SEMICOLON
+    (24) while_statement -> . WHILE LPAREN condition RPAREN LBRACE statements RBRACE
+    (9) do_until_statement -> . DO LBRACE statements RBRACE UNTIL LPAREN condition RPAREN SEMICOLON
 
-    RBRACE          shift and go to state 102
+    RBRACE          shift and go to state 108
     IDENTIFIER      shift and go to state 20
     IF              shift and go to state 21
     WRITE           shift and go to state 22
-    READ            shift and go to state 23
-    DO              shift and go to state 24
-    WHILE           shift and go to state 25
+    DO              shift and go to state 23
+    WHILE           shift and go to state 24
 
     statement                      shift and go to state 13
     assignment                     shift and go to state 14
     if_statement                   shift and go to state 15
     write_statement                shift and go to state 16
-    read_statement                 shift and go to state 17
-    do_statement                   shift and go to state 18
-    while_statement                shift and go to state 19
+    do_statement                   shift and go to state 17
+    while_statement                shift and go to state 18
+    do_until_statement             shift and go to state 19
 
-state 102
+state 108
 
     (19) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE . FI
 
-    FI              shift and go to state 103
+    FI              shift and go to state 109
 
 
-state 103
+state 109
 
     (19) if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI .
 
@@ -1809,7 +1963,10 @@ state 103
     IDENTIFIER      reduce using rule 19 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI .)
     IF              reduce using rule 19 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI .)
     WRITE           reduce using rule 19 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI .)
-    READ            reduce using rule 19 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI .)
     DO              reduce using rule 19 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI .)
     WHILE           reduce using rule 19 (if_statement -> IF LPAREN condition RPAREN THEN LBRACE statements RBRACE ELSE LBRACE statements RBRACE FI .)
 
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for SEMICOLON in state 32 resolved as shift
