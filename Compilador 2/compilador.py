@@ -3,10 +3,12 @@ from tkinter import ttk, scrolledtext, Menu, filedialog
 import ply.lex as lex
 import ply.yacc as yacc
 from anytree import Node, RenderTree
+import hashlib
+
 
 # Define the lexer
 tokens = [
-    'MAIN', 'INT', 'FLOAT', 'BOOL', 'IDENTIFIER', 'NUMBER', 'FLOAT_NUMBER', 'BOOL_VALUE',
+    'READ','MAIN', 'INT', 'FLOAT', 'BOOL', 'IDENTIFIER', 'NUMBER', 'FLOAT_NUMBER', 'BOOL_VALUE',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'ASSIGN', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
     'COMMA', 'SEMICOLON', 'COMMENT', 'MULTILINE_COMMENT', 'IF', 'THEN', 'ELSE', 'WHILE', 'DO',
     'FI', 'WRITE', 'AND', 'OR', 'EQUALS', 'NOTEQUALS', 'LESS', 'LESSEQUAL', 'GREATER', 'GREATEREQUAL',
@@ -38,6 +40,9 @@ t_ignore = ' \t'
 # Symbol table
 symbol_table = {}
 
+# Tabla para almacenar los hashes de cada variable (histórico)
+hash_table = {}
+
 def t_MAIN(t):
     r'main'
     return t
@@ -60,6 +65,10 @@ def t_BOOL_VALUE(t):
 
 def t_IF(t):
     r'if'
+    return t
+
+def t_READ(t):
+    r'read'
     return t
 
 def t_THEN(t):
@@ -145,6 +154,13 @@ def p_declarations(p):
     else:
         p[0] = Node('declarations')
 
+def p_read_statement(p):
+    'read_statement : READ IDENTIFIER SEMICOLON'
+    var_name = p[2]
+    
+    p[0] = Node('read_statement', children=[Node(var_name)])
+
+
 def p_declaration(p):
     '''declaration : INT var_list SEMICOLON
                    | FLOAT var_list SEMICOLON
@@ -189,9 +205,11 @@ def p_statement(p):
     '''statement : assignment
                  | if_statement
                  | write_statement
+                 | read_statement 
                  | do_statement
                  | while_statement'''
     p[0] = p[1]
+
 
 
 def p_assignment(p):
@@ -346,6 +364,25 @@ def p_expression_incomplete(p):
     print(f"Error: Incomplete expression at line {p.lineno}.")
 
 parser = yacc.yacc()
+
+def generate_hash(value):
+    """Genera un hash SHA-256 para un valor dado."""
+    return hashlib.sha256(str(value).encode()).hexdigest()
+
+def update_variable_hash(var_name, value):
+    """Actualiza el hash de una variable cuando se le asigna un valor.
+       Si ya tiene un valor anterior, lo almacena junto con su hash."""
+    if value != 'undefined':
+        # Si la variable no está en el hash_table, la agregamos como una lista de valores
+        if var_name not in hash_table:
+            hash_table[var_name] = []
+        
+        # Guardar el valor y su hash correspondiente
+        hash_value = generate_hash(value)
+        hash_table[var_name].append({'value': value, 'hash': hash_value})
+    else:
+        # Eliminar el hash si la variable no tiene un valor definido
+        hash_table.pop(var_name, None)
 
 # Define the GUI
 class Application(tk.Tk):
@@ -540,30 +577,45 @@ class Application(tk.Tk):
             #   Imprimir la tabla de símbolos en la pestaña semántica
             self.print_symbol_table()
 
-
+    
+    
     def print_symbol_table(self):
-        """Imprime la tabla de símbolos en la pestaña semántica."""
+        """Imprime la tabla de símbolos y la tabla de hashes en la pestaña semántica."""
         self.tab_semantico.delete('1.0', tk.END)  # Limpiar contenido anterior
         self.tab_semantico.insert(tk.END, "Tabla de Símbolos:\n")
         self.tab_semantico.insert(tk.END, f"{'Variable':<20}{'Tipo':<15}{'Posición en Memoria':<20}{'Valor':<10}\n")
         self.tab_semantico.insert(tk.END, "-" * 65 + "\n")
-    
+
+        # Imprimir la tabla de símbolos
         for var_name, var_info in symbol_table.items():
-            # Asegúrate de que 'var_info' tenga los campos necesarios
-            var_type = var_info.get('type', 'undefined')  # Asumiendo que el tipo está guardado como 'type'
-            print(var_type)
-            position = id(var_info)  # Este es un ejemplo, deberías calcular la posición real si lo necesitas
-            
-            value = var_info.get('value', 'undefined')  # Asumiendo que el valor está guardado como 'value'
-            print(value)
+            var_type = var_info.get('type', 'undefined')  # Tipo de variable
+            position = id(var_info)  # Posición en memoria
+            value = var_info.get('value', 'undefined')  # Valor de la variable
+
+            # Imprimir la entrada en la tabla de símbolos
             self.tab_semantico.insert(tk.END, f"{var_name:<20}{var_type:<15}{position:<20}{value:<10}\n")
+
+            # Actualizar el hash cuando se hace una asignación
+            update_variable_hash(var_name, value)
+
+        # Agregar una línea divisoria entre tablas
+        self.tab_semantico.insert(tk.END, "\n" + "-" * 65 + "\n")
+    
+        # Imprimir la tabla de hashes debajo
+        self.tab_semantico.insert(tk.END, "Tabla de Hashes (SHA-256) de las Variables:\n")
+        self.tab_semantico.insert(tk.END, f"{'Variable':<20}{'Valor':<10}{'Hash (SHA-256)':<64}\n")
+        self.tab_semantico.insert(tk.END, "-" * 95 + "\n")
+    
+        # Imprimir los hashes actuales
+        for var_name, values in hash_table.items():
+            for entry in values:
+                self.tab_semantico.insert(tk.END, f"{var_name:<20}{entry['value']:<10}{entry['hash']:<64}\n")
 
 
     def clear_tree(self, tree):
         """Helper function to clear all items from a Treeview."""
         for item in tree.get_children():
             tree.delete(item)
-    
     
 
     def display_syntax_tree(self, tree):
