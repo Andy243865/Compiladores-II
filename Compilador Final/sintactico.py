@@ -594,7 +594,7 @@ def p_empty(p):
 
 def p_error(p):
     if p:
-        with open("errores.txt", "a", encoding="utf-8") as f:
+        with open("errores_de_ejecucion.txt", "a", encoding="utf-8") as f:
             f.write(f"Syntax error at '{p.value}' on line {p.lineno}\n")
 
         parser.errok()
