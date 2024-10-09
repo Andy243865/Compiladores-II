@@ -144,10 +144,10 @@ def lexico():
     label1.insert('1.0',lex_analy)
     
     #los token se guardan en su archivo correspondiente
-    f = open("lexico.txt", "w")
+    f = open("Formato_lexico.txt", "w")
     f.write(lex_analy)
     f.close()
-    f = open("errores.txt", "w")
+    f = open("errores_de_ejecucion.txt", "w")
     f.write(unknow_tokens)
     f.close()
 
@@ -161,7 +161,7 @@ def sintactico():
     content = editor.get("1.0", tk.END)
     setup_syntax_analysis(tab2, content)
     #sintaxis = sint_analyzer(content)
-    with open("errores.txt", "r", encoding="utf-8") as f:
+    with open("errores_de_ejecucion.txt", "r", encoding="utf-8") as f:
         contenido = f.read()
         lbl_err.delete('1.0', tk.END)
         lbl_err.insert('1.0', contenido)
@@ -185,7 +185,7 @@ def semantico():
     print(resultado)
     
     # Mostrar errores en el widget de errores
-    with open("errores.txt", "r", encoding="utf-8") as f:
+    with open("errores_de_ejecucion.txt", "r", encoding="utf-8") as f:
         contenido = f.read()
         lbl_err.delete('1.0', tk.END)
         lbl_err.insert('1.0', contenido)

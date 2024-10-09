@@ -36,7 +36,7 @@ def mostrar_tabla_simbolos():
         print(tabla)  # Imprimir la tabla en la consola
     else:
         for error in tabla_errores:
-            with open("errores.txt", "a", encoding="utf-8") as f:
+            with open("errores_de_ejecucion.txt", "a", encoding="utf-8") as f:
                 f.write(f"{error}\n")
             print(error, '\n')
     return tabla

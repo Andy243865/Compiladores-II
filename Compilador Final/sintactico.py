@@ -610,7 +610,7 @@ def sint_analyzer(codigo):
     simbolos={}
     lexer.lineno = 1  # Reiniciar el contador de líneas del lexer
     result = parser.parse(codigo, lexer=lexer)
-    with open("sintactico.txt", "w", encoding="utf-8") as f:
+    with open("arbol_sintactico.txt", "w", encoding="utf-8") as f:
         for pre, fill, n in RenderTree(result):
             f.write("%s%s (tipo: %s, valor: %s)\n" % (pre, n.name, getattr(n, "tipo", "N/A"), getattr(n, "valor", "N/A")))
     return result
