@@ -120,36 +120,36 @@ lex_analy = ""
 tokens=""
 
 #funcion lexico
+# Función léxico modificada
 def lexico():
     global lex_analy
     global tokens
-    unknow_tokens=''
-    lex_analy=''
-    #obtiene el conteido del texto y llama a la funcion lex_analyzer definida y explicada anteriormente
+    unknow_tokens = ''
+    lex_analy = ''
+    
+    # Obtiene el contenido del texto y llama a la función lex_analyzer
     content = editor.get("1.0", tk.END)
-    tokens=lex_analyzer(content)
+    tokens = lex_analyzer(content)
     
-    #se imprimen los token encontrados
+    # Se imprimen los tokens encontrados
     for token in tokens:
-        #si el token es un erro se guarda en la cadena errores
-        if token[0] =='DESCONOCIDO' or token[0] == 'DESCONOCI2' or token[0] =='NO_NUMBER':
-            unknow_tokens += str(token) + "\n"
-        else:   
-            #de lo contrario se guarda en loos token coincidentes
-            lex_analy += str(token) + "\n"
-
-
-    #los tokens guardados en unknow_tokens y lex_analy se muestran en la ventana lbl_err y label1 respectivamente
-    label1.delete('1.0',tk.END)
-    label1.insert('1.0',lex_analy)
+        # Si el token es un error, se guarda en la cadena de errores
+        if token[0] == 'DESCONOCIDO' or token[0] == 'DESCONOCI2' or token[0] == 'NO_NUMBER':
+            unknow_tokens += f'{token[0]}, {token[1]}\n'
+        else:
+            # Se guarda en los tokens coincidentes sin paréntesis ni comillas
+            lex_analy += f'{token[0]}, {token[1]}\n'
     
-    #los token se guardan en su archivo correspondiente
-    f = open("Formato_lexico.txt", "w")
-    f.write(lex_analy)
-    f.close()
-    f = open("errores_de_ejecucion.txt", "w")
-    f.write(unknow_tokens)
-    f.close()
+    # Muestra los tokens en el widget correspondiente
+    label1.delete('1.0', tk.END)
+    label1.insert('1.0', lex_analy)
+    
+    # Guarda los tokens en el archivo correspondiente
+    with open("Formato_lexico.txt", "w") as f:
+        f.write(lex_analy)
+    
+    with open("errores_de_ejecucion.txt", "w") as f:
+        f.write(unknow_tokens)
 
     sintactico()
     fn_reset()
