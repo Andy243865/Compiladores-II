@@ -1,0 +1,2185 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    FOR
+    LCOR
+    RCOR
+    foo_NUMBER
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> main
+Rule 2     main -> MAIN LKEY declarations RKEY
+Rule 3     declarations -> declarations declaration
+Rule 4     declarations -> declaration
+Rule 5     declaration -> declaration_variable
+Rule 6     declaration -> statement
+Rule 7     declaration_variable -> type variable PCOMMA
+Rule 8     variable -> variable COMMA ID
+Rule 9     variable -> ID
+Rule 10    type -> INT
+Rule 11    type -> DOUBLE
+Rule 12    type -> STRINGKY
+Rule 13    statements -> statements statement
+Rule 14    statements -> statement
+Rule 15    statement -> compound_statement
+Rule 16    statement -> assign_statement
+Rule 17    statement -> select_statement
+Rule 18    statement -> iteration_statement
+Rule 19    statement -> cin_statement
+Rule 20    statement -> cout_statement
+Rule 21    statement -> switch_statement
+Rule 22    statement -> doublefacts
+Rule 23    compound_statement -> LKEY statements RKEY
+Rule 24    assign_statement -> ID ASSIGN expression PCOMMA
+Rule 25    select_statement -> IF LPAREN expression RPAREN compound_statement
+Rule 26    select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement
+Rule 27    iteration_statement -> WHILE LPAREN expression RPAREN compound_statement
+Rule 28    iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA
+Rule 29    switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY
+Rule 30    case_list -> case_list case_statement
+Rule 31    case_list -> case_statement
+Rule 32    case_statement -> CASE facts PEPE statements BREAK PCOMMA
+Rule 33    cin_statement -> CIN ID PCOMMA
+Rule 34    cout_statement -> COUT expression PCOMMA
+Rule 35    expression -> simple_expression relation_operator simple_expression
+Rule 36    expression -> simple_expression
+Rule 37    relation_operator -> EQ
+Rule 38    relation_operator -> DIFF
+Rule 39    relation_operator -> LESST
+Rule 40    relation_operator -> LESSTEQ
+Rule 41    relation_operator -> GREATT
+Rule 42    relation_operator -> GREATTEQ
+Rule 43    relation_operator -> AND
+Rule 44    relation_operator -> OR
+Rule 45    simple_expression -> simple_expression sum_operator term
+Rule 46    simple_expression -> term
+Rule 47    sum_operator -> PLUS
+Rule 48    sum_operator -> MINUS
+Rule 49    term -> term mult_operator factor
+Rule 50    term -> factor
+Rule 51    mult_operator -> TIMES
+Rule 52    mult_operator -> DIVIDE
+Rule 53    mult_operator -> MODULE
+Rule 54    factor -> factor pot_operator component
+Rule 55    factor -> component
+Rule 56    pot_operator -> POW
+Rule 57    doublefacts -> ID PLUSPLUS PCOMMA
+Rule 58    doublefacts -> ID MINUSMINUS PCOMMA
+Rule 59    component -> LPAREN expression RPAREN
+Rule 60    component -> ID
+Rule 61    component -> facts
+Rule 62    component -> doublefacts
+Rule 63    facts -> NUMBER
+Rule 64    facts -> REALNUMBER
+Rule 65    facts -> STRING
+Rule 66    empty -> <empty>
+
+Terminals, with rules where they appear
+
+AND                  : 43
+ASSIGN               : 24
+BREAK                : 32
+CASE                 : 32
+CIN                  : 33
+COMMA                : 8
+COUT                 : 34
+DIFF                 : 38
+DIVIDE               : 52
+DO                   : 28
+DOUBLE               : 11
+ELSE                 : 26
+EQ                   : 37
+FOR                  : 
+GREATT               : 41
+GREATTEQ             : 42
+ID                   : 8 9 24 33 57 58 60
+IF                   : 25 26
+INT                  : 10
+LCOR                 : 
+LESST                : 39
+LESSTEQ              : 40
+LKEY                 : 2 23 29
+LPAREN               : 25 26 27 28 29 59
+MAIN                 : 2
+MINUS                : 48
+MINUSMINUS           : 58
+MODULE               : 53
+NUMBER               : 63
+OR                   : 44
+PCOMMA               : 7 24 28 32 33 34 57 58
+PEPE                 : 32
+PLUS                 : 47
+PLUSPLUS             : 57
+POW                  : 56
+RCOR                 : 
+REALNUMBER           : 64
+RKEY                 : 2 23 29
+RPAREN               : 25 26 27 28 29 59
+STRING               : 65
+STRINGKY             : 12
+SWITCH               : 29
+TIMES                : 51
+WHILE                : 27 28
+error                : 
+foo_NUMBER           : 
+
+Nonterminals, with rules where they appear
+
+assign_statement     : 16
+case_list            : 29 30
+case_statement       : 30 31
+cin_statement        : 19
+component            : 54 55
+compound_statement   : 15 25 26 26 27 28
+cout_statement       : 20
+declaration          : 3 4
+declaration_variable : 5
+declarations         : 2 3
+doublefacts          : 22 62
+empty                : 
+expression           : 24 25 26 27 28 29 34 59
+factor               : 49 50 54
+facts                : 32 61
+iteration_statement  : 18
+main                 : 1
+mult_operator        : 49
+pot_operator         : 54
+program              : 0
+relation_operator    : 35
+select_statement     : 17
+simple_expression    : 35 35 36 45
+statement            : 6 13 14
+statements           : 13 23 32
+sum_operator         : 45
+switch_statement     : 21
+term                 : 45 46 49
+type                 : 7
+variable             : 7 8
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . main
+    (2) main -> . MAIN LKEY declarations RKEY
+
+    MAIN            shift and go to state 3
+
+    program                        shift and go to state 1
+    main                           shift and go to state 2
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> main .
+
+    $end            reduce using rule 1 (program -> main .)
+
+
+state 3
+
+    (2) main -> MAIN . LKEY declarations RKEY
+
+    LKEY            shift and go to state 4
+
+
+state 4
+
+    (2) main -> MAIN LKEY . declarations RKEY
+    (3) declarations -> . declarations declaration
+    (4) declarations -> . declaration
+    (5) declaration -> . declaration_variable
+    (6) declaration -> . statement
+    (7) declaration_variable -> . type variable PCOMMA
+    (15) statement -> . compound_statement
+    (16) statement -> . assign_statement
+    (17) statement -> . select_statement
+    (18) statement -> . iteration_statement
+    (19) statement -> . cin_statement
+    (20) statement -> . cout_statement
+    (21) statement -> . switch_statement
+    (22) statement -> . doublefacts
+    (10) type -> . INT
+    (11) type -> . DOUBLE
+    (12) type -> . STRINGKY
+    (23) compound_statement -> . LKEY statements RKEY
+    (24) assign_statement -> . ID ASSIGN expression PCOMMA
+    (25) select_statement -> . IF LPAREN expression RPAREN compound_statement
+    (26) select_statement -> . IF LPAREN expression RPAREN compound_statement ELSE compound_statement
+    (27) iteration_statement -> . WHILE LPAREN expression RPAREN compound_statement
+    (28) iteration_statement -> . DO compound_statement WHILE LPAREN expression RPAREN PCOMMA
+    (33) cin_statement -> . CIN ID PCOMMA
+    (34) cout_statement -> . COUT expression PCOMMA
+    (29) switch_statement -> . SWITCH LPAREN expression RPAREN LKEY case_list RKEY
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    INT             shift and go to state 19
+    DOUBLE          shift and go to state 20
+    STRINGKY        shift and go to state 21
+    LKEY            shift and go to state 5
+    ID              shift and go to state 22
+    IF              shift and go to state 23
+    WHILE           shift and go to state 24
+    DO              shift and go to state 25
+    CIN             shift and go to state 26
+    COUT            shift and go to state 27
+    SWITCH          shift and go to state 28
+
+    declarations                   shift and go to state 6
+    declaration                    shift and go to state 7
+    declaration_variable           shift and go to state 8
+    statement                      shift and go to state 9
+    type                           shift and go to state 10
+    compound_statement             shift and go to state 11
+    assign_statement               shift and go to state 12
+    select_statement               shift and go to state 13
+    iteration_statement            shift and go to state 14
+    cin_statement                  shift and go to state 15
+    cout_statement                 shift and go to state 16
+    switch_statement               shift and go to state 17
+    doublefacts                    shift and go to state 18
+
+state 5
+
+    (23) compound_statement -> LKEY . statements RKEY
+    (13) statements -> . statements statement
+    (14) statements -> . statement
+    (15) statement -> . compound_statement
+    (16) statement -> . assign_statement
+    (17) statement -> . select_statement
+    (18) statement -> . iteration_statement
+    (19) statement -> . cin_statement
+    (20) statement -> . cout_statement
+    (21) statement -> . switch_statement
+    (22) statement -> . doublefacts
+    (23) compound_statement -> . LKEY statements RKEY
+    (24) assign_statement -> . ID ASSIGN expression PCOMMA
+    (25) select_statement -> . IF LPAREN expression RPAREN compound_statement
+    (26) select_statement -> . IF LPAREN expression RPAREN compound_statement ELSE compound_statement
+    (27) iteration_statement -> . WHILE LPAREN expression RPAREN compound_statement
+    (28) iteration_statement -> . DO compound_statement WHILE LPAREN expression RPAREN PCOMMA
+    (33) cin_statement -> . CIN ID PCOMMA
+    (34) cout_statement -> . COUT expression PCOMMA
+    (29) switch_statement -> . SWITCH LPAREN expression RPAREN LKEY case_list RKEY
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LKEY            shift and go to state 5
+    ID              shift and go to state 22
+    IF              shift and go to state 23
+    WHILE           shift and go to state 24
+    DO              shift and go to state 25
+    CIN             shift and go to state 26
+    COUT            shift and go to state 27
+    SWITCH          shift and go to state 28
+
+    statements                     shift and go to state 29
+    statement                      shift and go to state 30
+    compound_statement             shift and go to state 11
+    assign_statement               shift and go to state 12
+    select_statement               shift and go to state 13
+    iteration_statement            shift and go to state 14
+    cin_statement                  shift and go to state 15
+    cout_statement                 shift and go to state 16
+    switch_statement               shift and go to state 17
+    doublefacts                    shift and go to state 18
+
+state 6
+
+    (2) main -> MAIN LKEY declarations . RKEY
+    (3) declarations -> declarations . declaration
+    (5) declaration -> . declaration_variable
+    (6) declaration -> . statement
+    (7) declaration_variable -> . type variable PCOMMA
+    (15) statement -> . compound_statement
+    (16) statement -> . assign_statement
+    (17) statement -> . select_statement
+    (18) statement -> . iteration_statement
+    (19) statement -> . cin_statement
+    (20) statement -> . cout_statement
+    (21) statement -> . switch_statement
+    (22) statement -> . doublefacts
+    (10) type -> . INT
+    (11) type -> . DOUBLE
+    (12) type -> . STRINGKY
+    (23) compound_statement -> . LKEY statements RKEY
+    (24) assign_statement -> . ID ASSIGN expression PCOMMA
+    (25) select_statement -> . IF LPAREN expression RPAREN compound_statement
+    (26) select_statement -> . IF LPAREN expression RPAREN compound_statement ELSE compound_statement
+    (27) iteration_statement -> . WHILE LPAREN expression RPAREN compound_statement
+    (28) iteration_statement -> . DO compound_statement WHILE LPAREN expression RPAREN PCOMMA
+    (33) cin_statement -> . CIN ID PCOMMA
+    (34) cout_statement -> . COUT expression PCOMMA
+    (29) switch_statement -> . SWITCH LPAREN expression RPAREN LKEY case_list RKEY
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    RKEY            shift and go to state 31
+    INT             shift and go to state 19
+    DOUBLE          shift and go to state 20
+    STRINGKY        shift and go to state 21
+    LKEY            shift and go to state 5
+    ID              shift and go to state 22
+    IF              shift and go to state 23
+    WHILE           shift and go to state 24
+    DO              shift and go to state 25
+    CIN             shift and go to state 26
+    COUT            shift and go to state 27
+    SWITCH          shift and go to state 28
+
+    declaration                    shift and go to state 32
+    declaration_variable           shift and go to state 8
+    statement                      shift and go to state 9
+    type                           shift and go to state 10
+    compound_statement             shift and go to state 11
+    assign_statement               shift and go to state 12
+    select_statement               shift and go to state 13
+    iteration_statement            shift and go to state 14
+    cin_statement                  shift and go to state 15
+    cout_statement                 shift and go to state 16
+    switch_statement               shift and go to state 17
+    doublefacts                    shift and go to state 18
+
+state 7
+
+    (4) declarations -> declaration .
+
+    RKEY            reduce using rule 4 (declarations -> declaration .)
+    INT             reduce using rule 4 (declarations -> declaration .)
+    DOUBLE          reduce using rule 4 (declarations -> declaration .)
+    STRINGKY        reduce using rule 4 (declarations -> declaration .)
+    LKEY            reduce using rule 4 (declarations -> declaration .)
+    ID              reduce using rule 4 (declarations -> declaration .)
+    IF              reduce using rule 4 (declarations -> declaration .)
+    WHILE           reduce using rule 4 (declarations -> declaration .)
+    DO              reduce using rule 4 (declarations -> declaration .)
+    CIN             reduce using rule 4 (declarations -> declaration .)
+    COUT            reduce using rule 4 (declarations -> declaration .)
+    SWITCH          reduce using rule 4 (declarations -> declaration .)
+
+
+state 8
+
+    (5) declaration -> declaration_variable .
+
+    RKEY            reduce using rule 5 (declaration -> declaration_variable .)
+    INT             reduce using rule 5 (declaration -> declaration_variable .)
+    DOUBLE          reduce using rule 5 (declaration -> declaration_variable .)
+    STRINGKY        reduce using rule 5 (declaration -> declaration_variable .)
+    LKEY            reduce using rule 5 (declaration -> declaration_variable .)
+    ID              reduce using rule 5 (declaration -> declaration_variable .)
+    IF              reduce using rule 5 (declaration -> declaration_variable .)
+    WHILE           reduce using rule 5 (declaration -> declaration_variable .)
+    DO              reduce using rule 5 (declaration -> declaration_variable .)
+    CIN             reduce using rule 5 (declaration -> declaration_variable .)
+    COUT            reduce using rule 5 (declaration -> declaration_variable .)
+    SWITCH          reduce using rule 5 (declaration -> declaration_variable .)
+
+
+state 9
+
+    (6) declaration -> statement .
+
+    RKEY            reduce using rule 6 (declaration -> statement .)
+    INT             reduce using rule 6 (declaration -> statement .)
+    DOUBLE          reduce using rule 6 (declaration -> statement .)
+    STRINGKY        reduce using rule 6 (declaration -> statement .)
+    LKEY            reduce using rule 6 (declaration -> statement .)
+    ID              reduce using rule 6 (declaration -> statement .)
+    IF              reduce using rule 6 (declaration -> statement .)
+    WHILE           reduce using rule 6 (declaration -> statement .)
+    DO              reduce using rule 6 (declaration -> statement .)
+    CIN             reduce using rule 6 (declaration -> statement .)
+    COUT            reduce using rule 6 (declaration -> statement .)
+    SWITCH          reduce using rule 6 (declaration -> statement .)
+
+
+state 10
+
+    (7) declaration_variable -> type . variable PCOMMA
+    (8) variable -> . variable COMMA ID
+    (9) variable -> . ID
+
+    ID              shift and go to state 34
+
+    variable                       shift and go to state 33
+
+state 11
+
+    (15) statement -> compound_statement .
+
+    RKEY            reduce using rule 15 (statement -> compound_statement .)
+    INT             reduce using rule 15 (statement -> compound_statement .)
+    DOUBLE          reduce using rule 15 (statement -> compound_statement .)
+    STRINGKY        reduce using rule 15 (statement -> compound_statement .)
+    LKEY            reduce using rule 15 (statement -> compound_statement .)
+    ID              reduce using rule 15 (statement -> compound_statement .)
+    IF              reduce using rule 15 (statement -> compound_statement .)
+    WHILE           reduce using rule 15 (statement -> compound_statement .)
+    DO              reduce using rule 15 (statement -> compound_statement .)
+    CIN             reduce using rule 15 (statement -> compound_statement .)
+    COUT            reduce using rule 15 (statement -> compound_statement .)
+    SWITCH          reduce using rule 15 (statement -> compound_statement .)
+    BREAK           reduce using rule 15 (statement -> compound_statement .)
+
+
+state 12
+
+    (16) statement -> assign_statement .
+
+    RKEY            reduce using rule 16 (statement -> assign_statement .)
+    INT             reduce using rule 16 (statement -> assign_statement .)
+    DOUBLE          reduce using rule 16 (statement -> assign_statement .)
+    STRINGKY        reduce using rule 16 (statement -> assign_statement .)
+    LKEY            reduce using rule 16 (statement -> assign_statement .)
+    ID              reduce using rule 16 (statement -> assign_statement .)
+    IF              reduce using rule 16 (statement -> assign_statement .)
+    WHILE           reduce using rule 16 (statement -> assign_statement .)
+    DO              reduce using rule 16 (statement -> assign_statement .)
+    CIN             reduce using rule 16 (statement -> assign_statement .)
+    COUT            reduce using rule 16 (statement -> assign_statement .)
+    SWITCH          reduce using rule 16 (statement -> assign_statement .)
+    BREAK           reduce using rule 16 (statement -> assign_statement .)
+
+
+state 13
+
+    (17) statement -> select_statement .
+
+    RKEY            reduce using rule 17 (statement -> select_statement .)
+    INT             reduce using rule 17 (statement -> select_statement .)
+    DOUBLE          reduce using rule 17 (statement -> select_statement .)
+    STRINGKY        reduce using rule 17 (statement -> select_statement .)
+    LKEY            reduce using rule 17 (statement -> select_statement .)
+    ID              reduce using rule 17 (statement -> select_statement .)
+    IF              reduce using rule 17 (statement -> select_statement .)
+    WHILE           reduce using rule 17 (statement -> select_statement .)
+    DO              reduce using rule 17 (statement -> select_statement .)
+    CIN             reduce using rule 17 (statement -> select_statement .)
+    COUT            reduce using rule 17 (statement -> select_statement .)
+    SWITCH          reduce using rule 17 (statement -> select_statement .)
+    BREAK           reduce using rule 17 (statement -> select_statement .)
+
+
+state 14
+
+    (18) statement -> iteration_statement .
+
+    RKEY            reduce using rule 18 (statement -> iteration_statement .)
+    INT             reduce using rule 18 (statement -> iteration_statement .)
+    DOUBLE          reduce using rule 18 (statement -> iteration_statement .)
+    STRINGKY        reduce using rule 18 (statement -> iteration_statement .)
+    LKEY            reduce using rule 18 (statement -> iteration_statement .)
+    ID              reduce using rule 18 (statement -> iteration_statement .)
+    IF              reduce using rule 18 (statement -> iteration_statement .)
+    WHILE           reduce using rule 18 (statement -> iteration_statement .)
+    DO              reduce using rule 18 (statement -> iteration_statement .)
+    CIN             reduce using rule 18 (statement -> iteration_statement .)
+    COUT            reduce using rule 18 (statement -> iteration_statement .)
+    SWITCH          reduce using rule 18 (statement -> iteration_statement .)
+    BREAK           reduce using rule 18 (statement -> iteration_statement .)
+
+
+state 15
+
+    (19) statement -> cin_statement .
+
+    RKEY            reduce using rule 19 (statement -> cin_statement .)
+    INT             reduce using rule 19 (statement -> cin_statement .)
+    DOUBLE          reduce using rule 19 (statement -> cin_statement .)
+    STRINGKY        reduce using rule 19 (statement -> cin_statement .)
+    LKEY            reduce using rule 19 (statement -> cin_statement .)
+    ID              reduce using rule 19 (statement -> cin_statement .)
+    IF              reduce using rule 19 (statement -> cin_statement .)
+    WHILE           reduce using rule 19 (statement -> cin_statement .)
+    DO              reduce using rule 19 (statement -> cin_statement .)
+    CIN             reduce using rule 19 (statement -> cin_statement .)
+    COUT            reduce using rule 19 (statement -> cin_statement .)
+    SWITCH          reduce using rule 19 (statement -> cin_statement .)
+    BREAK           reduce using rule 19 (statement -> cin_statement .)
+
+
+state 16
+
+    (20) statement -> cout_statement .
+
+    RKEY            reduce using rule 20 (statement -> cout_statement .)
+    INT             reduce using rule 20 (statement -> cout_statement .)
+    DOUBLE          reduce using rule 20 (statement -> cout_statement .)
+    STRINGKY        reduce using rule 20 (statement -> cout_statement .)
+    LKEY            reduce using rule 20 (statement -> cout_statement .)
+    ID              reduce using rule 20 (statement -> cout_statement .)
+    IF              reduce using rule 20 (statement -> cout_statement .)
+    WHILE           reduce using rule 20 (statement -> cout_statement .)
+    DO              reduce using rule 20 (statement -> cout_statement .)
+    CIN             reduce using rule 20 (statement -> cout_statement .)
+    COUT            reduce using rule 20 (statement -> cout_statement .)
+    SWITCH          reduce using rule 20 (statement -> cout_statement .)
+    BREAK           reduce using rule 20 (statement -> cout_statement .)
+
+
+state 17
+
+    (21) statement -> switch_statement .
+
+    RKEY            reduce using rule 21 (statement -> switch_statement .)
+    INT             reduce using rule 21 (statement -> switch_statement .)
+    DOUBLE          reduce using rule 21 (statement -> switch_statement .)
+    STRINGKY        reduce using rule 21 (statement -> switch_statement .)
+    LKEY            reduce using rule 21 (statement -> switch_statement .)
+    ID              reduce using rule 21 (statement -> switch_statement .)
+    IF              reduce using rule 21 (statement -> switch_statement .)
+    WHILE           reduce using rule 21 (statement -> switch_statement .)
+    DO              reduce using rule 21 (statement -> switch_statement .)
+    CIN             reduce using rule 21 (statement -> switch_statement .)
+    COUT            reduce using rule 21 (statement -> switch_statement .)
+    SWITCH          reduce using rule 21 (statement -> switch_statement .)
+    BREAK           reduce using rule 21 (statement -> switch_statement .)
+
+
+state 18
+
+    (22) statement -> doublefacts .
+
+    RKEY            reduce using rule 22 (statement -> doublefacts .)
+    INT             reduce using rule 22 (statement -> doublefacts .)
+    DOUBLE          reduce using rule 22 (statement -> doublefacts .)
+    STRINGKY        reduce using rule 22 (statement -> doublefacts .)
+    LKEY            reduce using rule 22 (statement -> doublefacts .)
+    ID              reduce using rule 22 (statement -> doublefacts .)
+    IF              reduce using rule 22 (statement -> doublefacts .)
+    WHILE           reduce using rule 22 (statement -> doublefacts .)
+    DO              reduce using rule 22 (statement -> doublefacts .)
+    CIN             reduce using rule 22 (statement -> doublefacts .)
+    COUT            reduce using rule 22 (statement -> doublefacts .)
+    SWITCH          reduce using rule 22 (statement -> doublefacts .)
+    BREAK           reduce using rule 22 (statement -> doublefacts .)
+
+
+state 19
+
+    (10) type -> INT .
+
+    ID              reduce using rule 10 (type -> INT .)
+
+
+state 20
+
+    (11) type -> DOUBLE .
+
+    ID              reduce using rule 11 (type -> DOUBLE .)
+
+
+state 21
+
+    (12) type -> STRINGKY .
+
+    ID              reduce using rule 12 (type -> STRINGKY .)
+
+
+state 22
+
+    (24) assign_statement -> ID . ASSIGN expression PCOMMA
+    (57) doublefacts -> ID . PLUSPLUS PCOMMA
+    (58) doublefacts -> ID . MINUSMINUS PCOMMA
+
+    ASSIGN          shift and go to state 35
+    PLUSPLUS        shift and go to state 36
+    MINUSMINUS      shift and go to state 37
+
+
+state 23
+
+    (25) select_statement -> IF . LPAREN expression RPAREN compound_statement
+    (26) select_statement -> IF . LPAREN expression RPAREN compound_statement ELSE compound_statement
+
+    LPAREN          shift and go to state 38
+
+
+state 24
+
+    (27) iteration_statement -> WHILE . LPAREN expression RPAREN compound_statement
+
+    LPAREN          shift and go to state 39
+
+
+state 25
+
+    (28) iteration_statement -> DO . compound_statement WHILE LPAREN expression RPAREN PCOMMA
+    (23) compound_statement -> . LKEY statements RKEY
+
+    LKEY            shift and go to state 5
+
+    compound_statement             shift and go to state 40
+
+state 26
+
+    (33) cin_statement -> CIN . ID PCOMMA
+
+    ID              shift and go to state 41
+
+
+state 27
+
+    (34) cout_statement -> COUT . expression PCOMMA
+    (35) expression -> . simple_expression relation_operator simple_expression
+    (36) expression -> . simple_expression
+    (45) simple_expression -> . simple_expression sum_operator term
+    (46) simple_expression -> . term
+    (49) term -> . term mult_operator factor
+    (50) term -> . factor
+    (54) factor -> . factor pot_operator component
+    (55) factor -> . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    expression                     shift and go to state 42
+    simple_expression              shift and go to state 43
+    term                           shift and go to state 44
+    factor                         shift and go to state 45
+    component                      shift and go to state 46
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 28
+
+    (29) switch_statement -> SWITCH . LPAREN expression RPAREN LKEY case_list RKEY
+
+    LPAREN          shift and go to state 54
+
+
+state 29
+
+    (23) compound_statement -> LKEY statements . RKEY
+    (13) statements -> statements . statement
+    (15) statement -> . compound_statement
+    (16) statement -> . assign_statement
+    (17) statement -> . select_statement
+    (18) statement -> . iteration_statement
+    (19) statement -> . cin_statement
+    (20) statement -> . cout_statement
+    (21) statement -> . switch_statement
+    (22) statement -> . doublefacts
+    (23) compound_statement -> . LKEY statements RKEY
+    (24) assign_statement -> . ID ASSIGN expression PCOMMA
+    (25) select_statement -> . IF LPAREN expression RPAREN compound_statement
+    (26) select_statement -> . IF LPAREN expression RPAREN compound_statement ELSE compound_statement
+    (27) iteration_statement -> . WHILE LPAREN expression RPAREN compound_statement
+    (28) iteration_statement -> . DO compound_statement WHILE LPAREN expression RPAREN PCOMMA
+    (33) cin_statement -> . CIN ID PCOMMA
+    (34) cout_statement -> . COUT expression PCOMMA
+    (29) switch_statement -> . SWITCH LPAREN expression RPAREN LKEY case_list RKEY
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    RKEY            shift and go to state 55
+    LKEY            shift and go to state 5
+    ID              shift and go to state 22
+    IF              shift and go to state 23
+    WHILE           shift and go to state 24
+    DO              shift and go to state 25
+    CIN             shift and go to state 26
+    COUT            shift and go to state 27
+    SWITCH          shift and go to state 28
+
+    statement                      shift and go to state 56
+    compound_statement             shift and go to state 11
+    assign_statement               shift and go to state 12
+    select_statement               shift and go to state 13
+    iteration_statement            shift and go to state 14
+    cin_statement                  shift and go to state 15
+    cout_statement                 shift and go to state 16
+    switch_statement               shift and go to state 17
+    doublefacts                    shift and go to state 18
+
+state 30
+
+    (14) statements -> statement .
+
+    RKEY            reduce using rule 14 (statements -> statement .)
+    LKEY            reduce using rule 14 (statements -> statement .)
+    ID              reduce using rule 14 (statements -> statement .)
+    IF              reduce using rule 14 (statements -> statement .)
+    WHILE           reduce using rule 14 (statements -> statement .)
+    DO              reduce using rule 14 (statements -> statement .)
+    CIN             reduce using rule 14 (statements -> statement .)
+    COUT            reduce using rule 14 (statements -> statement .)
+    SWITCH          reduce using rule 14 (statements -> statement .)
+    BREAK           reduce using rule 14 (statements -> statement .)
+
+
+state 31
+
+    (2) main -> MAIN LKEY declarations RKEY .
+
+    $end            reduce using rule 2 (main -> MAIN LKEY declarations RKEY .)
+
+
+state 32
+
+    (3) declarations -> declarations declaration .
+
+    RKEY            reduce using rule 3 (declarations -> declarations declaration .)
+    INT             reduce using rule 3 (declarations -> declarations declaration .)
+    DOUBLE          reduce using rule 3 (declarations -> declarations declaration .)
+    STRINGKY        reduce using rule 3 (declarations -> declarations declaration .)
+    LKEY            reduce using rule 3 (declarations -> declarations declaration .)
+    ID              reduce using rule 3 (declarations -> declarations declaration .)
+    IF              reduce using rule 3 (declarations -> declarations declaration .)
+    WHILE           reduce using rule 3 (declarations -> declarations declaration .)
+    DO              reduce using rule 3 (declarations -> declarations declaration .)
+    CIN             reduce using rule 3 (declarations -> declarations declaration .)
+    COUT            reduce using rule 3 (declarations -> declarations declaration .)
+    SWITCH          reduce using rule 3 (declarations -> declarations declaration .)
+
+
+state 33
+
+    (7) declaration_variable -> type variable . PCOMMA
+    (8) variable -> variable . COMMA ID
+
+    PCOMMA          shift and go to state 57
+    COMMA           shift and go to state 58
+
+
+state 34
+
+    (9) variable -> ID .
+
+    PCOMMA          reduce using rule 9 (variable -> ID .)
+    COMMA           reduce using rule 9 (variable -> ID .)
+
+
+state 35
+
+    (24) assign_statement -> ID ASSIGN . expression PCOMMA
+    (35) expression -> . simple_expression relation_operator simple_expression
+    (36) expression -> . simple_expression
+    (45) simple_expression -> . simple_expression sum_operator term
+    (46) simple_expression -> . term
+    (49) term -> . term mult_operator factor
+    (50) term -> . factor
+    (54) factor -> . factor pot_operator component
+    (55) factor -> . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    expression                     shift and go to state 59
+    simple_expression              shift and go to state 43
+    term                           shift and go to state 44
+    factor                         shift and go to state 45
+    component                      shift and go to state 46
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 36
+
+    (57) doublefacts -> ID PLUSPLUS . PCOMMA
+
+    PCOMMA          shift and go to state 60
+
+
+state 37
+
+    (58) doublefacts -> ID MINUSMINUS . PCOMMA
+
+    PCOMMA          shift and go to state 61
+
+
+state 38
+
+    (25) select_statement -> IF LPAREN . expression RPAREN compound_statement
+    (26) select_statement -> IF LPAREN . expression RPAREN compound_statement ELSE compound_statement
+    (35) expression -> . simple_expression relation_operator simple_expression
+    (36) expression -> . simple_expression
+    (45) simple_expression -> . simple_expression sum_operator term
+    (46) simple_expression -> . term
+    (49) term -> . term mult_operator factor
+    (50) term -> . factor
+    (54) factor -> . factor pot_operator component
+    (55) factor -> . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    expression                     shift and go to state 62
+    simple_expression              shift and go to state 43
+    term                           shift and go to state 44
+    factor                         shift and go to state 45
+    component                      shift and go to state 46
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 39
+
+    (27) iteration_statement -> WHILE LPAREN . expression RPAREN compound_statement
+    (35) expression -> . simple_expression relation_operator simple_expression
+    (36) expression -> . simple_expression
+    (45) simple_expression -> . simple_expression sum_operator term
+    (46) simple_expression -> . term
+    (49) term -> . term mult_operator factor
+    (50) term -> . factor
+    (54) factor -> . factor pot_operator component
+    (55) factor -> . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    expression                     shift and go to state 63
+    simple_expression              shift and go to state 43
+    term                           shift and go to state 44
+    factor                         shift and go to state 45
+    component                      shift and go to state 46
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 40
+
+    (28) iteration_statement -> DO compound_statement . WHILE LPAREN expression RPAREN PCOMMA
+
+    WHILE           shift and go to state 64
+
+
+state 41
+
+    (33) cin_statement -> CIN ID . PCOMMA
+
+    PCOMMA          shift and go to state 65
+
+
+state 42
+
+    (34) cout_statement -> COUT expression . PCOMMA
+
+    PCOMMA          shift and go to state 66
+
+
+state 43
+
+    (35) expression -> simple_expression . relation_operator simple_expression
+    (36) expression -> simple_expression .
+    (45) simple_expression -> simple_expression . sum_operator term
+    (37) relation_operator -> . EQ
+    (38) relation_operator -> . DIFF
+    (39) relation_operator -> . LESST
+    (40) relation_operator -> . LESSTEQ
+    (41) relation_operator -> . GREATT
+    (42) relation_operator -> . GREATTEQ
+    (43) relation_operator -> . AND
+    (44) relation_operator -> . OR
+    (47) sum_operator -> . PLUS
+    (48) sum_operator -> . MINUS
+
+    PCOMMA          reduce using rule 36 (expression -> simple_expression .)
+    RPAREN          reduce using rule 36 (expression -> simple_expression .)
+    EQ              shift and go to state 69
+    DIFF            shift and go to state 70
+    LESST           shift and go to state 71
+    LESSTEQ         shift and go to state 72
+    GREATT          shift and go to state 73
+    GREATTEQ        shift and go to state 74
+    AND             shift and go to state 75
+    OR              shift and go to state 76
+    PLUS            shift and go to state 77
+    MINUS           shift and go to state 78
+
+    relation_operator              shift and go to state 67
+    sum_operator                   shift and go to state 68
+
+state 44
+
+    (46) simple_expression -> term .
+    (49) term -> term . mult_operator factor
+    (51) mult_operator -> . TIMES
+    (52) mult_operator -> . DIVIDE
+    (53) mult_operator -> . MODULE
+
+    EQ              reduce using rule 46 (simple_expression -> term .)
+    DIFF            reduce using rule 46 (simple_expression -> term .)
+    LESST           reduce using rule 46 (simple_expression -> term .)
+    LESSTEQ         reduce using rule 46 (simple_expression -> term .)
+    GREATT          reduce using rule 46 (simple_expression -> term .)
+    GREATTEQ        reduce using rule 46 (simple_expression -> term .)
+    AND             reduce using rule 46 (simple_expression -> term .)
+    OR              reduce using rule 46 (simple_expression -> term .)
+    PLUS            reduce using rule 46 (simple_expression -> term .)
+    MINUS           reduce using rule 46 (simple_expression -> term .)
+    PCOMMA          reduce using rule 46 (simple_expression -> term .)
+    RPAREN          reduce using rule 46 (simple_expression -> term .)
+    TIMES           shift and go to state 80
+    DIVIDE          shift and go to state 81
+    MODULE          shift and go to state 82
+
+    mult_operator                  shift and go to state 79
+
+state 45
+
+    (50) term -> factor .
+    (54) factor -> factor . pot_operator component
+    (56) pot_operator -> . POW
+
+    TIMES           reduce using rule 50 (term -> factor .)
+    DIVIDE          reduce using rule 50 (term -> factor .)
+    MODULE          reduce using rule 50 (term -> factor .)
+    EQ              reduce using rule 50 (term -> factor .)
+    DIFF            reduce using rule 50 (term -> factor .)
+    LESST           reduce using rule 50 (term -> factor .)
+    LESSTEQ         reduce using rule 50 (term -> factor .)
+    GREATT          reduce using rule 50 (term -> factor .)
+    GREATTEQ        reduce using rule 50 (term -> factor .)
+    AND             reduce using rule 50 (term -> factor .)
+    OR              reduce using rule 50 (term -> factor .)
+    PLUS            reduce using rule 50 (term -> factor .)
+    MINUS           reduce using rule 50 (term -> factor .)
+    PCOMMA          reduce using rule 50 (term -> factor .)
+    RPAREN          reduce using rule 50 (term -> factor .)
+    POW             shift and go to state 84
+
+    pot_operator                   shift and go to state 83
+
+state 46
+
+    (55) factor -> component .
+
+    POW             reduce using rule 55 (factor -> component .)
+    TIMES           reduce using rule 55 (factor -> component .)
+    DIVIDE          reduce using rule 55 (factor -> component .)
+    MODULE          reduce using rule 55 (factor -> component .)
+    EQ              reduce using rule 55 (factor -> component .)
+    DIFF            reduce using rule 55 (factor -> component .)
+    LESST           reduce using rule 55 (factor -> component .)
+    LESSTEQ         reduce using rule 55 (factor -> component .)
+    GREATT          reduce using rule 55 (factor -> component .)
+    GREATTEQ        reduce using rule 55 (factor -> component .)
+    AND             reduce using rule 55 (factor -> component .)
+    OR              reduce using rule 55 (factor -> component .)
+    PLUS            reduce using rule 55 (factor -> component .)
+    MINUS           reduce using rule 55 (factor -> component .)
+    PCOMMA          reduce using rule 55 (factor -> component .)
+    RPAREN          reduce using rule 55 (factor -> component .)
+
+
+state 47
+
+    (59) component -> LPAREN . expression RPAREN
+    (35) expression -> . simple_expression relation_operator simple_expression
+    (36) expression -> . simple_expression
+    (45) simple_expression -> . simple_expression sum_operator term
+    (46) simple_expression -> . term
+    (49) term -> . term mult_operator factor
+    (50) term -> . factor
+    (54) factor -> . factor pot_operator component
+    (55) factor -> . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    expression                     shift and go to state 85
+    simple_expression              shift and go to state 43
+    term                           shift and go to state 44
+    factor                         shift and go to state 45
+    component                      shift and go to state 46
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 48
+
+    (60) component -> ID .
+    (57) doublefacts -> ID . PLUSPLUS PCOMMA
+    (58) doublefacts -> ID . MINUSMINUS PCOMMA
+
+    POW             reduce using rule 60 (component -> ID .)
+    TIMES           reduce using rule 60 (component -> ID .)
+    DIVIDE          reduce using rule 60 (component -> ID .)
+    MODULE          reduce using rule 60 (component -> ID .)
+    EQ              reduce using rule 60 (component -> ID .)
+    DIFF            reduce using rule 60 (component -> ID .)
+    LESST           reduce using rule 60 (component -> ID .)
+    LESSTEQ         reduce using rule 60 (component -> ID .)
+    GREATT          reduce using rule 60 (component -> ID .)
+    GREATTEQ        reduce using rule 60 (component -> ID .)
+    AND             reduce using rule 60 (component -> ID .)
+    OR              reduce using rule 60 (component -> ID .)
+    PLUS            reduce using rule 60 (component -> ID .)
+    MINUS           reduce using rule 60 (component -> ID .)
+    PCOMMA          reduce using rule 60 (component -> ID .)
+    RPAREN          reduce using rule 60 (component -> ID .)
+    PLUSPLUS        shift and go to state 36
+    MINUSMINUS      shift and go to state 37
+
+
+state 49
+
+    (61) component -> facts .
+
+    POW             reduce using rule 61 (component -> facts .)
+    TIMES           reduce using rule 61 (component -> facts .)
+    DIVIDE          reduce using rule 61 (component -> facts .)
+    MODULE          reduce using rule 61 (component -> facts .)
+    EQ              reduce using rule 61 (component -> facts .)
+    DIFF            reduce using rule 61 (component -> facts .)
+    LESST           reduce using rule 61 (component -> facts .)
+    LESSTEQ         reduce using rule 61 (component -> facts .)
+    GREATT          reduce using rule 61 (component -> facts .)
+    GREATTEQ        reduce using rule 61 (component -> facts .)
+    AND             reduce using rule 61 (component -> facts .)
+    OR              reduce using rule 61 (component -> facts .)
+    PLUS            reduce using rule 61 (component -> facts .)
+    MINUS           reduce using rule 61 (component -> facts .)
+    PCOMMA          reduce using rule 61 (component -> facts .)
+    RPAREN          reduce using rule 61 (component -> facts .)
+
+
+state 50
+
+    (62) component -> doublefacts .
+
+    POW             reduce using rule 62 (component -> doublefacts .)
+    TIMES           reduce using rule 62 (component -> doublefacts .)
+    DIVIDE          reduce using rule 62 (component -> doublefacts .)
+    MODULE          reduce using rule 62 (component -> doublefacts .)
+    EQ              reduce using rule 62 (component -> doublefacts .)
+    DIFF            reduce using rule 62 (component -> doublefacts .)
+    LESST           reduce using rule 62 (component -> doublefacts .)
+    LESSTEQ         reduce using rule 62 (component -> doublefacts .)
+    GREATT          reduce using rule 62 (component -> doublefacts .)
+    GREATTEQ        reduce using rule 62 (component -> doublefacts .)
+    AND             reduce using rule 62 (component -> doublefacts .)
+    OR              reduce using rule 62 (component -> doublefacts .)
+    PLUS            reduce using rule 62 (component -> doublefacts .)
+    MINUS           reduce using rule 62 (component -> doublefacts .)
+    PCOMMA          reduce using rule 62 (component -> doublefacts .)
+    RPAREN          reduce using rule 62 (component -> doublefacts .)
+
+
+state 51
+
+    (63) facts -> NUMBER .
+
+    POW             reduce using rule 63 (facts -> NUMBER .)
+    TIMES           reduce using rule 63 (facts -> NUMBER .)
+    DIVIDE          reduce using rule 63 (facts -> NUMBER .)
+    MODULE          reduce using rule 63 (facts -> NUMBER .)
+    EQ              reduce using rule 63 (facts -> NUMBER .)
+    DIFF            reduce using rule 63 (facts -> NUMBER .)
+    LESST           reduce using rule 63 (facts -> NUMBER .)
+    LESSTEQ         reduce using rule 63 (facts -> NUMBER .)
+    GREATT          reduce using rule 63 (facts -> NUMBER .)
+    GREATTEQ        reduce using rule 63 (facts -> NUMBER .)
+    AND             reduce using rule 63 (facts -> NUMBER .)
+    OR              reduce using rule 63 (facts -> NUMBER .)
+    PLUS            reduce using rule 63 (facts -> NUMBER .)
+    MINUS           reduce using rule 63 (facts -> NUMBER .)
+    PCOMMA          reduce using rule 63 (facts -> NUMBER .)
+    RPAREN          reduce using rule 63 (facts -> NUMBER .)
+    PEPE            reduce using rule 63 (facts -> NUMBER .)
+
+
+state 52
+
+    (64) facts -> REALNUMBER .
+
+    POW             reduce using rule 64 (facts -> REALNUMBER .)
+    TIMES           reduce using rule 64 (facts -> REALNUMBER .)
+    DIVIDE          reduce using rule 64 (facts -> REALNUMBER .)
+    MODULE          reduce using rule 64 (facts -> REALNUMBER .)
+    EQ              reduce using rule 64 (facts -> REALNUMBER .)
+    DIFF            reduce using rule 64 (facts -> REALNUMBER .)
+    LESST           reduce using rule 64 (facts -> REALNUMBER .)
+    LESSTEQ         reduce using rule 64 (facts -> REALNUMBER .)
+    GREATT          reduce using rule 64 (facts -> REALNUMBER .)
+    GREATTEQ        reduce using rule 64 (facts -> REALNUMBER .)
+    AND             reduce using rule 64 (facts -> REALNUMBER .)
+    OR              reduce using rule 64 (facts -> REALNUMBER .)
+    PLUS            reduce using rule 64 (facts -> REALNUMBER .)
+    MINUS           reduce using rule 64 (facts -> REALNUMBER .)
+    PCOMMA          reduce using rule 64 (facts -> REALNUMBER .)
+    RPAREN          reduce using rule 64 (facts -> REALNUMBER .)
+    PEPE            reduce using rule 64 (facts -> REALNUMBER .)
+
+
+state 53
+
+    (65) facts -> STRING .
+
+    POW             reduce using rule 65 (facts -> STRING .)
+    TIMES           reduce using rule 65 (facts -> STRING .)
+    DIVIDE          reduce using rule 65 (facts -> STRING .)
+    MODULE          reduce using rule 65 (facts -> STRING .)
+    EQ              reduce using rule 65 (facts -> STRING .)
+    DIFF            reduce using rule 65 (facts -> STRING .)
+    LESST           reduce using rule 65 (facts -> STRING .)
+    LESSTEQ         reduce using rule 65 (facts -> STRING .)
+    GREATT          reduce using rule 65 (facts -> STRING .)
+    GREATTEQ        reduce using rule 65 (facts -> STRING .)
+    AND             reduce using rule 65 (facts -> STRING .)
+    OR              reduce using rule 65 (facts -> STRING .)
+    PLUS            reduce using rule 65 (facts -> STRING .)
+    MINUS           reduce using rule 65 (facts -> STRING .)
+    PCOMMA          reduce using rule 65 (facts -> STRING .)
+    RPAREN          reduce using rule 65 (facts -> STRING .)
+    PEPE            reduce using rule 65 (facts -> STRING .)
+
+
+state 54
+
+    (29) switch_statement -> SWITCH LPAREN . expression RPAREN LKEY case_list RKEY
+    (35) expression -> . simple_expression relation_operator simple_expression
+    (36) expression -> . simple_expression
+    (45) simple_expression -> . simple_expression sum_operator term
+    (46) simple_expression -> . term
+    (49) term -> . term mult_operator factor
+    (50) term -> . factor
+    (54) factor -> . factor pot_operator component
+    (55) factor -> . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    expression                     shift and go to state 86
+    simple_expression              shift and go to state 43
+    term                           shift and go to state 44
+    factor                         shift and go to state 45
+    component                      shift and go to state 46
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 55
+
+    (23) compound_statement -> LKEY statements RKEY .
+
+    RKEY            reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    INT             reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    DOUBLE          reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    STRINGKY        reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    LKEY            reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    ID              reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    IF              reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    WHILE           reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    DO              reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    CIN             reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    COUT            reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    SWITCH          reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    ELSE            reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+    BREAK           reduce using rule 23 (compound_statement -> LKEY statements RKEY .)
+
+
+state 56
+
+    (13) statements -> statements statement .
+
+    RKEY            reduce using rule 13 (statements -> statements statement .)
+    LKEY            reduce using rule 13 (statements -> statements statement .)
+    ID              reduce using rule 13 (statements -> statements statement .)
+    IF              reduce using rule 13 (statements -> statements statement .)
+    WHILE           reduce using rule 13 (statements -> statements statement .)
+    DO              reduce using rule 13 (statements -> statements statement .)
+    CIN             reduce using rule 13 (statements -> statements statement .)
+    COUT            reduce using rule 13 (statements -> statements statement .)
+    SWITCH          reduce using rule 13 (statements -> statements statement .)
+    BREAK           reduce using rule 13 (statements -> statements statement .)
+
+
+state 57
+
+    (7) declaration_variable -> type variable PCOMMA .
+
+    RKEY            reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    INT             reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    DOUBLE          reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    STRINGKY        reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    LKEY            reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    ID              reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    IF              reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    WHILE           reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    DO              reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    CIN             reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    COUT            reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+    SWITCH          reduce using rule 7 (declaration_variable -> type variable PCOMMA .)
+
+
+state 58
+
+    (8) variable -> variable COMMA . ID
+
+    ID              shift and go to state 87
+
+
+state 59
+
+    (24) assign_statement -> ID ASSIGN expression . PCOMMA
+
+    PCOMMA          shift and go to state 88
+
+
+state 60
+
+    (57) doublefacts -> ID PLUSPLUS PCOMMA .
+
+    RKEY            reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    INT             reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    DOUBLE          reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    STRINGKY        reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    LKEY            reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    ID              reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    IF              reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    WHILE           reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    DO              reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    CIN             reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    COUT            reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    SWITCH          reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    POW             reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    TIMES           reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    DIVIDE          reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    MODULE          reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    EQ              reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    DIFF            reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    LESST           reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    LESSTEQ         reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    GREATT          reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    GREATTEQ        reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    AND             reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    OR              reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    PLUS            reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    MINUS           reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    PCOMMA          reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    RPAREN          reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+    BREAK           reduce using rule 57 (doublefacts -> ID PLUSPLUS PCOMMA .)
+
+
+state 61
+
+    (58) doublefacts -> ID MINUSMINUS PCOMMA .
+
+    RKEY            reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    INT             reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    DOUBLE          reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    STRINGKY        reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    LKEY            reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    ID              reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    IF              reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    WHILE           reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    DO              reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    CIN             reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    COUT            reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    SWITCH          reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    POW             reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    TIMES           reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    DIVIDE          reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    MODULE          reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    EQ              reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    DIFF            reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    LESST           reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    LESSTEQ         reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    GREATT          reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    GREATTEQ        reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    AND             reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    OR              reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    PLUS            reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    MINUS           reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    PCOMMA          reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    RPAREN          reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+    BREAK           reduce using rule 58 (doublefacts -> ID MINUSMINUS PCOMMA .)
+
+
+state 62
+
+    (25) select_statement -> IF LPAREN expression . RPAREN compound_statement
+    (26) select_statement -> IF LPAREN expression . RPAREN compound_statement ELSE compound_statement
+
+    RPAREN          shift and go to state 89
+
+
+state 63
+
+    (27) iteration_statement -> WHILE LPAREN expression . RPAREN compound_statement
+
+    RPAREN          shift and go to state 90
+
+
+state 64
+
+    (28) iteration_statement -> DO compound_statement WHILE . LPAREN expression RPAREN PCOMMA
+
+    LPAREN          shift and go to state 91
+
+
+state 65
+
+    (33) cin_statement -> CIN ID PCOMMA .
+
+    RKEY            reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    INT             reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    DOUBLE          reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    STRINGKY        reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    LKEY            reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    ID              reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    IF              reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    WHILE           reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    DO              reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    CIN             reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    COUT            reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    SWITCH          reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+    BREAK           reduce using rule 33 (cin_statement -> CIN ID PCOMMA .)
+
+
+state 66
+
+    (34) cout_statement -> COUT expression PCOMMA .
+
+    RKEY            reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    INT             reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    DOUBLE          reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    STRINGKY        reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    LKEY            reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    ID              reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    IF              reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    WHILE           reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    DO              reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    CIN             reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    COUT            reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    SWITCH          reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+    BREAK           reduce using rule 34 (cout_statement -> COUT expression PCOMMA .)
+
+
+state 67
+
+    (35) expression -> simple_expression relation_operator . simple_expression
+    (45) simple_expression -> . simple_expression sum_operator term
+    (46) simple_expression -> . term
+    (49) term -> . term mult_operator factor
+    (50) term -> . factor
+    (54) factor -> . factor pot_operator component
+    (55) factor -> . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    simple_expression              shift and go to state 92
+    term                           shift and go to state 44
+    factor                         shift and go to state 45
+    component                      shift and go to state 46
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 68
+
+    (45) simple_expression -> simple_expression sum_operator . term
+    (49) term -> . term mult_operator factor
+    (50) term -> . factor
+    (54) factor -> . factor pot_operator component
+    (55) factor -> . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    term                           shift and go to state 93
+    factor                         shift and go to state 45
+    component                      shift and go to state 46
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 69
+
+    (37) relation_operator -> EQ .
+
+    LPAREN          reduce using rule 37 (relation_operator -> EQ .)
+    ID              reduce using rule 37 (relation_operator -> EQ .)
+    NUMBER          reduce using rule 37 (relation_operator -> EQ .)
+    REALNUMBER      reduce using rule 37 (relation_operator -> EQ .)
+    STRING          reduce using rule 37 (relation_operator -> EQ .)
+
+
+state 70
+
+    (38) relation_operator -> DIFF .
+
+    LPAREN          reduce using rule 38 (relation_operator -> DIFF .)
+    ID              reduce using rule 38 (relation_operator -> DIFF .)
+    NUMBER          reduce using rule 38 (relation_operator -> DIFF .)
+    REALNUMBER      reduce using rule 38 (relation_operator -> DIFF .)
+    STRING          reduce using rule 38 (relation_operator -> DIFF .)
+
+
+state 71
+
+    (39) relation_operator -> LESST .
+
+    LPAREN          reduce using rule 39 (relation_operator -> LESST .)
+    ID              reduce using rule 39 (relation_operator -> LESST .)
+    NUMBER          reduce using rule 39 (relation_operator -> LESST .)
+    REALNUMBER      reduce using rule 39 (relation_operator -> LESST .)
+    STRING          reduce using rule 39 (relation_operator -> LESST .)
+
+
+state 72
+
+    (40) relation_operator -> LESSTEQ .
+
+    LPAREN          reduce using rule 40 (relation_operator -> LESSTEQ .)
+    ID              reduce using rule 40 (relation_operator -> LESSTEQ .)
+    NUMBER          reduce using rule 40 (relation_operator -> LESSTEQ .)
+    REALNUMBER      reduce using rule 40 (relation_operator -> LESSTEQ .)
+    STRING          reduce using rule 40 (relation_operator -> LESSTEQ .)
+
+
+state 73
+
+    (41) relation_operator -> GREATT .
+
+    LPAREN          reduce using rule 41 (relation_operator -> GREATT .)
+    ID              reduce using rule 41 (relation_operator -> GREATT .)
+    NUMBER          reduce using rule 41 (relation_operator -> GREATT .)
+    REALNUMBER      reduce using rule 41 (relation_operator -> GREATT .)
+    STRING          reduce using rule 41 (relation_operator -> GREATT .)
+
+
+state 74
+
+    (42) relation_operator -> GREATTEQ .
+
+    LPAREN          reduce using rule 42 (relation_operator -> GREATTEQ .)
+    ID              reduce using rule 42 (relation_operator -> GREATTEQ .)
+    NUMBER          reduce using rule 42 (relation_operator -> GREATTEQ .)
+    REALNUMBER      reduce using rule 42 (relation_operator -> GREATTEQ .)
+    STRING          reduce using rule 42 (relation_operator -> GREATTEQ .)
+
+
+state 75
+
+    (43) relation_operator -> AND .
+
+    LPAREN          reduce using rule 43 (relation_operator -> AND .)
+    ID              reduce using rule 43 (relation_operator -> AND .)
+    NUMBER          reduce using rule 43 (relation_operator -> AND .)
+    REALNUMBER      reduce using rule 43 (relation_operator -> AND .)
+    STRING          reduce using rule 43 (relation_operator -> AND .)
+
+
+state 76
+
+    (44) relation_operator -> OR .
+
+    LPAREN          reduce using rule 44 (relation_operator -> OR .)
+    ID              reduce using rule 44 (relation_operator -> OR .)
+    NUMBER          reduce using rule 44 (relation_operator -> OR .)
+    REALNUMBER      reduce using rule 44 (relation_operator -> OR .)
+    STRING          reduce using rule 44 (relation_operator -> OR .)
+
+
+state 77
+
+    (47) sum_operator -> PLUS .
+
+    LPAREN          reduce using rule 47 (sum_operator -> PLUS .)
+    ID              reduce using rule 47 (sum_operator -> PLUS .)
+    NUMBER          reduce using rule 47 (sum_operator -> PLUS .)
+    REALNUMBER      reduce using rule 47 (sum_operator -> PLUS .)
+    STRING          reduce using rule 47 (sum_operator -> PLUS .)
+
+
+state 78
+
+    (48) sum_operator -> MINUS .
+
+    LPAREN          reduce using rule 48 (sum_operator -> MINUS .)
+    ID              reduce using rule 48 (sum_operator -> MINUS .)
+    NUMBER          reduce using rule 48 (sum_operator -> MINUS .)
+    REALNUMBER      reduce using rule 48 (sum_operator -> MINUS .)
+    STRING          reduce using rule 48 (sum_operator -> MINUS .)
+
+
+state 79
+
+    (49) term -> term mult_operator . factor
+    (54) factor -> . factor pot_operator component
+    (55) factor -> . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    factor                         shift and go to state 94
+    component                      shift and go to state 46
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 80
+
+    (51) mult_operator -> TIMES .
+
+    LPAREN          reduce using rule 51 (mult_operator -> TIMES .)
+    ID              reduce using rule 51 (mult_operator -> TIMES .)
+    NUMBER          reduce using rule 51 (mult_operator -> TIMES .)
+    REALNUMBER      reduce using rule 51 (mult_operator -> TIMES .)
+    STRING          reduce using rule 51 (mult_operator -> TIMES .)
+
+
+state 81
+
+    (52) mult_operator -> DIVIDE .
+
+    LPAREN          reduce using rule 52 (mult_operator -> DIVIDE .)
+    ID              reduce using rule 52 (mult_operator -> DIVIDE .)
+    NUMBER          reduce using rule 52 (mult_operator -> DIVIDE .)
+    REALNUMBER      reduce using rule 52 (mult_operator -> DIVIDE .)
+    STRING          reduce using rule 52 (mult_operator -> DIVIDE .)
+
+
+state 82
+
+    (53) mult_operator -> MODULE .
+
+    LPAREN          reduce using rule 53 (mult_operator -> MODULE .)
+    ID              reduce using rule 53 (mult_operator -> MODULE .)
+    NUMBER          reduce using rule 53 (mult_operator -> MODULE .)
+    REALNUMBER      reduce using rule 53 (mult_operator -> MODULE .)
+    STRING          reduce using rule 53 (mult_operator -> MODULE .)
+
+
+state 83
+
+    (54) factor -> factor pot_operator . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    component                      shift and go to state 95
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 84
+
+    (56) pot_operator -> POW .
+
+    LPAREN          reduce using rule 56 (pot_operator -> POW .)
+    ID              reduce using rule 56 (pot_operator -> POW .)
+    NUMBER          reduce using rule 56 (pot_operator -> POW .)
+    REALNUMBER      reduce using rule 56 (pot_operator -> POW .)
+    STRING          reduce using rule 56 (pot_operator -> POW .)
+
+
+state 85
+
+    (59) component -> LPAREN expression . RPAREN
+
+    RPAREN          shift and go to state 96
+
+
+state 86
+
+    (29) switch_statement -> SWITCH LPAREN expression . RPAREN LKEY case_list RKEY
+
+    RPAREN          shift and go to state 97
+
+
+state 87
+
+    (8) variable -> variable COMMA ID .
+
+    PCOMMA          reduce using rule 8 (variable -> variable COMMA ID .)
+    COMMA           reduce using rule 8 (variable -> variable COMMA ID .)
+
+
+state 88
+
+    (24) assign_statement -> ID ASSIGN expression PCOMMA .
+
+    RKEY            reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    INT             reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    DOUBLE          reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    STRINGKY        reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    LKEY            reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    ID              reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    IF              reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    WHILE           reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    DO              reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    CIN             reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    COUT            reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    SWITCH          reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+    BREAK           reduce using rule 24 (assign_statement -> ID ASSIGN expression PCOMMA .)
+
+
+state 89
+
+    (25) select_statement -> IF LPAREN expression RPAREN . compound_statement
+    (26) select_statement -> IF LPAREN expression RPAREN . compound_statement ELSE compound_statement
+    (23) compound_statement -> . LKEY statements RKEY
+
+    LKEY            shift and go to state 5
+
+    compound_statement             shift and go to state 98
+
+state 90
+
+    (27) iteration_statement -> WHILE LPAREN expression RPAREN . compound_statement
+    (23) compound_statement -> . LKEY statements RKEY
+
+    LKEY            shift and go to state 5
+
+    compound_statement             shift and go to state 99
+
+state 91
+
+    (28) iteration_statement -> DO compound_statement WHILE LPAREN . expression RPAREN PCOMMA
+    (35) expression -> . simple_expression relation_operator simple_expression
+    (36) expression -> . simple_expression
+    (45) simple_expression -> . simple_expression sum_operator term
+    (46) simple_expression -> . term
+    (49) term -> . term mult_operator factor
+    (50) term -> . factor
+    (54) factor -> . factor pot_operator component
+    (55) factor -> . component
+    (59) component -> . LPAREN expression RPAREN
+    (60) component -> . ID
+    (61) component -> . facts
+    (62) component -> . doublefacts
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LPAREN          shift and go to state 47
+    ID              shift and go to state 48
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    expression                     shift and go to state 100
+    simple_expression              shift and go to state 43
+    term                           shift and go to state 44
+    factor                         shift and go to state 45
+    component                      shift and go to state 46
+    facts                          shift and go to state 49
+    doublefacts                    shift and go to state 50
+
+state 92
+
+    (35) expression -> simple_expression relation_operator simple_expression .
+    (45) simple_expression -> simple_expression . sum_operator term
+    (47) sum_operator -> . PLUS
+    (48) sum_operator -> . MINUS
+
+    PCOMMA          reduce using rule 35 (expression -> simple_expression relation_operator simple_expression .)
+    RPAREN          reduce using rule 35 (expression -> simple_expression relation_operator simple_expression .)
+    PLUS            shift and go to state 77
+    MINUS           shift and go to state 78
+
+    sum_operator                   shift and go to state 68
+
+state 93
+
+    (45) simple_expression -> simple_expression sum_operator term .
+    (49) term -> term . mult_operator factor
+    (51) mult_operator -> . TIMES
+    (52) mult_operator -> . DIVIDE
+    (53) mult_operator -> . MODULE
+
+    EQ              reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    DIFF            reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    LESST           reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    LESSTEQ         reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    GREATT          reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    GREATTEQ        reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    AND             reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    OR              reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    PLUS            reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    MINUS           reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    PCOMMA          reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    RPAREN          reduce using rule 45 (simple_expression -> simple_expression sum_operator term .)
+    TIMES           shift and go to state 80
+    DIVIDE          shift and go to state 81
+    MODULE          shift and go to state 82
+
+    mult_operator                  shift and go to state 79
+
+state 94
+
+    (49) term -> term mult_operator factor .
+    (54) factor -> factor . pot_operator component
+    (56) pot_operator -> . POW
+
+    TIMES           reduce using rule 49 (term -> term mult_operator factor .)
+    DIVIDE          reduce using rule 49 (term -> term mult_operator factor .)
+    MODULE          reduce using rule 49 (term -> term mult_operator factor .)
+    EQ              reduce using rule 49 (term -> term mult_operator factor .)
+    DIFF            reduce using rule 49 (term -> term mult_operator factor .)
+    LESST           reduce using rule 49 (term -> term mult_operator factor .)
+    LESSTEQ         reduce using rule 49 (term -> term mult_operator factor .)
+    GREATT          reduce using rule 49 (term -> term mult_operator factor .)
+    GREATTEQ        reduce using rule 49 (term -> term mult_operator factor .)
+    AND             reduce using rule 49 (term -> term mult_operator factor .)
+    OR              reduce using rule 49 (term -> term mult_operator factor .)
+    PLUS            reduce using rule 49 (term -> term mult_operator factor .)
+    MINUS           reduce using rule 49 (term -> term mult_operator factor .)
+    PCOMMA          reduce using rule 49 (term -> term mult_operator factor .)
+    RPAREN          reduce using rule 49 (term -> term mult_operator factor .)
+    POW             shift and go to state 84
+
+    pot_operator                   shift and go to state 83
+
+state 95
+
+    (54) factor -> factor pot_operator component .
+
+    POW             reduce using rule 54 (factor -> factor pot_operator component .)
+    TIMES           reduce using rule 54 (factor -> factor pot_operator component .)
+    DIVIDE          reduce using rule 54 (factor -> factor pot_operator component .)
+    MODULE          reduce using rule 54 (factor -> factor pot_operator component .)
+    EQ              reduce using rule 54 (factor -> factor pot_operator component .)
+    DIFF            reduce using rule 54 (factor -> factor pot_operator component .)
+    LESST           reduce using rule 54 (factor -> factor pot_operator component .)
+    LESSTEQ         reduce using rule 54 (factor -> factor pot_operator component .)
+    GREATT          reduce using rule 54 (factor -> factor pot_operator component .)
+    GREATTEQ        reduce using rule 54 (factor -> factor pot_operator component .)
+    AND             reduce using rule 54 (factor -> factor pot_operator component .)
+    OR              reduce using rule 54 (factor -> factor pot_operator component .)
+    PLUS            reduce using rule 54 (factor -> factor pot_operator component .)
+    MINUS           reduce using rule 54 (factor -> factor pot_operator component .)
+    PCOMMA          reduce using rule 54 (factor -> factor pot_operator component .)
+    RPAREN          reduce using rule 54 (factor -> factor pot_operator component .)
+
+
+state 96
+
+    (59) component -> LPAREN expression RPAREN .
+
+    POW             reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    MODULE          reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    EQ              reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    DIFF            reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    LESST           reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    LESSTEQ         reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    GREATT          reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    GREATTEQ        reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    AND             reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    OR              reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    PCOMMA          reduce using rule 59 (component -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 59 (component -> LPAREN expression RPAREN .)
+
+
+state 97
+
+    (29) switch_statement -> SWITCH LPAREN expression RPAREN . LKEY case_list RKEY
+
+    LKEY            shift and go to state 101
+
+
+state 98
+
+    (25) select_statement -> IF LPAREN expression RPAREN compound_statement .
+    (26) select_statement -> IF LPAREN expression RPAREN compound_statement . ELSE compound_statement
+
+    RKEY            reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    INT             reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    DOUBLE          reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    STRINGKY        reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    LKEY            reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    ID              reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    IF              reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    WHILE           reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    DO              reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    CIN             reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    COUT            reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    SWITCH          reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    BREAK           reduce using rule 25 (select_statement -> IF LPAREN expression RPAREN compound_statement .)
+    ELSE            shift and go to state 102
+
+
+state 99
+
+    (27) iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .
+
+    RKEY            reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    INT             reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    DOUBLE          reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    STRINGKY        reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    LKEY            reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    ID              reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    IF              reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    WHILE           reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    DO              reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    CIN             reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    COUT            reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    SWITCH          reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+    BREAK           reduce using rule 27 (iteration_statement -> WHILE LPAREN expression RPAREN compound_statement .)
+
+
+state 100
+
+    (28) iteration_statement -> DO compound_statement WHILE LPAREN expression . RPAREN PCOMMA
+
+    RPAREN          shift and go to state 103
+
+
+state 101
+
+    (29) switch_statement -> SWITCH LPAREN expression RPAREN LKEY . case_list RKEY
+    (30) case_list -> . case_list case_statement
+    (31) case_list -> . case_statement
+    (32) case_statement -> . CASE facts PEPE statements BREAK PCOMMA
+
+    CASE            shift and go to state 106
+
+    case_list                      shift and go to state 104
+    case_statement                 shift and go to state 105
+
+state 102
+
+    (26) select_statement -> IF LPAREN expression RPAREN compound_statement ELSE . compound_statement
+    (23) compound_statement -> . LKEY statements RKEY
+
+    LKEY            shift and go to state 5
+
+    compound_statement             shift and go to state 107
+
+state 103
+
+    (28) iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN . PCOMMA
+
+    PCOMMA          shift and go to state 108
+
+
+state 104
+
+    (29) switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list . RKEY
+    (30) case_list -> case_list . case_statement
+    (32) case_statement -> . CASE facts PEPE statements BREAK PCOMMA
+
+    RKEY            shift and go to state 109
+    CASE            shift and go to state 106
+
+    case_statement                 shift and go to state 110
+
+state 105
+
+    (31) case_list -> case_statement .
+
+    RKEY            reduce using rule 31 (case_list -> case_statement .)
+    CASE            reduce using rule 31 (case_list -> case_statement .)
+
+
+state 106
+
+    (32) case_statement -> CASE . facts PEPE statements BREAK PCOMMA
+    (63) facts -> . NUMBER
+    (64) facts -> . REALNUMBER
+    (65) facts -> . STRING
+
+    NUMBER          shift and go to state 51
+    REALNUMBER      shift and go to state 52
+    STRING          shift and go to state 53
+
+    facts                          shift and go to state 111
+
+state 107
+
+    (26) select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .
+
+    RKEY            reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    INT             reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    DOUBLE          reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    STRINGKY        reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    LKEY            reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    ID              reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    IF              reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    WHILE           reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    DO              reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    CIN             reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    COUT            reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    SWITCH          reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+    BREAK           reduce using rule 26 (select_statement -> IF LPAREN expression RPAREN compound_statement ELSE compound_statement .)
+
+
+state 108
+
+    (28) iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .
+
+    RKEY            reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    INT             reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    DOUBLE          reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    STRINGKY        reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    LKEY            reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    ID              reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    IF              reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    WHILE           reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    DO              reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    CIN             reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    COUT            reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    SWITCH          reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+    BREAK           reduce using rule 28 (iteration_statement -> DO compound_statement WHILE LPAREN expression RPAREN PCOMMA .)
+
+
+state 109
+
+    (29) switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .
+
+    RKEY            reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    INT             reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    DOUBLE          reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    STRINGKY        reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    LKEY            reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    ID              reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    IF              reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    WHILE           reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    DO              reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    CIN             reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    COUT            reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    SWITCH          reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+    BREAK           reduce using rule 29 (switch_statement -> SWITCH LPAREN expression RPAREN LKEY case_list RKEY .)
+
+
+state 110
+
+    (30) case_list -> case_list case_statement .
+
+    RKEY            reduce using rule 30 (case_list -> case_list case_statement .)
+    CASE            reduce using rule 30 (case_list -> case_list case_statement .)
+
+
+state 111
+
+    (32) case_statement -> CASE facts . PEPE statements BREAK PCOMMA
+
+    PEPE            shift and go to state 112
+
+
+state 112
+
+    (32) case_statement -> CASE facts PEPE . statements BREAK PCOMMA
+    (13) statements -> . statements statement
+    (14) statements -> . statement
+    (15) statement -> . compound_statement
+    (16) statement -> . assign_statement
+    (17) statement -> . select_statement
+    (18) statement -> . iteration_statement
+    (19) statement -> . cin_statement
+    (20) statement -> . cout_statement
+    (21) statement -> . switch_statement
+    (22) statement -> . doublefacts
+    (23) compound_statement -> . LKEY statements RKEY
+    (24) assign_statement -> . ID ASSIGN expression PCOMMA
+    (25) select_statement -> . IF LPAREN expression RPAREN compound_statement
+    (26) select_statement -> . IF LPAREN expression RPAREN compound_statement ELSE compound_statement
+    (27) iteration_statement -> . WHILE LPAREN expression RPAREN compound_statement
+    (28) iteration_statement -> . DO compound_statement WHILE LPAREN expression RPAREN PCOMMA
+    (33) cin_statement -> . CIN ID PCOMMA
+    (34) cout_statement -> . COUT expression PCOMMA
+    (29) switch_statement -> . SWITCH LPAREN expression RPAREN LKEY case_list RKEY
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    LKEY            shift and go to state 5
+    ID              shift and go to state 22
+    IF              shift and go to state 23
+    WHILE           shift and go to state 24
+    DO              shift and go to state 25
+    CIN             shift and go to state 26
+    COUT            shift and go to state 27
+    SWITCH          shift and go to state 28
+
+    statements                     shift and go to state 113
+    statement                      shift and go to state 30
+    compound_statement             shift and go to state 11
+    assign_statement               shift and go to state 12
+    select_statement               shift and go to state 13
+    iteration_statement            shift and go to state 14
+    cin_statement                  shift and go to state 15
+    cout_statement                 shift and go to state 16
+    switch_statement               shift and go to state 17
+    doublefacts                    shift and go to state 18
+
+state 113
+
+    (32) case_statement -> CASE facts PEPE statements . BREAK PCOMMA
+    (13) statements -> statements . statement
+    (15) statement -> . compound_statement
+    (16) statement -> . assign_statement
+    (17) statement -> . select_statement
+    (18) statement -> . iteration_statement
+    (19) statement -> . cin_statement
+    (20) statement -> . cout_statement
+    (21) statement -> . switch_statement
+    (22) statement -> . doublefacts
+    (23) compound_statement -> . LKEY statements RKEY
+    (24) assign_statement -> . ID ASSIGN expression PCOMMA
+    (25) select_statement -> . IF LPAREN expression RPAREN compound_statement
+    (26) select_statement -> . IF LPAREN expression RPAREN compound_statement ELSE compound_statement
+    (27) iteration_statement -> . WHILE LPAREN expression RPAREN compound_statement
+    (28) iteration_statement -> . DO compound_statement WHILE LPAREN expression RPAREN PCOMMA
+    (33) cin_statement -> . CIN ID PCOMMA
+    (34) cout_statement -> . COUT expression PCOMMA
+    (29) switch_statement -> . SWITCH LPAREN expression RPAREN LKEY case_list RKEY
+    (57) doublefacts -> . ID PLUSPLUS PCOMMA
+    (58) doublefacts -> . ID MINUSMINUS PCOMMA
+
+    BREAK           shift and go to state 114
+    LKEY            shift and go to state 5
+    ID              shift and go to state 22
+    IF              shift and go to state 23
+    WHILE           shift and go to state 24
+    DO              shift and go to state 25
+    CIN             shift and go to state 26
+    COUT            shift and go to state 27
+    SWITCH          shift and go to state 28
+
+    statement                      shift and go to state 56
+    compound_statement             shift and go to state 11
+    assign_statement               shift and go to state 12
+    select_statement               shift and go to state 13
+    iteration_statement            shift and go to state 14
+    cin_statement                  shift and go to state 15
+    cout_statement                 shift and go to state 16
+    switch_statement               shift and go to state 17
+    doublefacts                    shift and go to state 18
+
+state 114
+
+    (32) case_statement -> CASE facts PEPE statements BREAK . PCOMMA
+
+    PCOMMA          shift and go to state 115
+
+
+state 115
+
+    (32) case_statement -> CASE facts PEPE statements BREAK PCOMMA .
+
+    RKEY            reduce using rule 32 (case_statement -> CASE facts PEPE statements BREAK PCOMMA .)
+    CASE            reduce using rule 32 (case_statement -> CASE facts PEPE statements BREAK PCOMMA .)
+
