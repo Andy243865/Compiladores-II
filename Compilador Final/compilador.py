@@ -245,7 +245,7 @@ label_col.pack()
 def open_file():
     global path
     global nombre_archivo
-    path=askopenfilename(filetypes=[('Kodiak Files','*.kd')])
+    path=askopenfilename(filetypes=[('Compilador Files','*.cm')])
     #print(path)
 
     nom = path.split("/")
@@ -264,7 +264,7 @@ def open_file():
     nombres()
 
 def save_as():
-    path=asksaveasfilename(filetypes=[('Kodiak Files','*.kd')])
+    path=asksaveasfilename(filetypes=[('Compilador Files','*.cm')])
     with open(path, 'w') as file:
         code=editor.get('1.0',tk.END)
         file.write(code)
@@ -286,7 +286,7 @@ def nombres():
     if nombre_archivo!='':
         nom_arch.add(nom, text=nombre_archivo)
     else:
-        nom_arch.add(nom, text="Sin titulo.kd")
+        nom_arch.add(nom, text="Sin titulo.cm")
     nom_arch.pack(fill=tk.BOTH, expand=True)
 
 def seleccionar_opcion(opcion):
@@ -309,16 +309,16 @@ def close():
     nom_arch.destroy()
     nom_arch = ttk.Notebook(nombre)
     nom = ttk.Frame(nom_arch)
-    nom_arch.add(nom, text="Sin titulo.kd")
+    nom_arch.add(nom, text="Sin titulo.com")
     nom_arch.pack(fill=tk.BOTH, expand=True)
 
 
 nom_arch = ttk.Notebook(nombre)
 nom = ttk.Frame(nom_arch)
 if nombre_archivo!='':
-    nom_arch.add(nom, text=nombre_archivo+".kd")
+    nom_arch.add(nom, text=nombre_archivo+".cm")
 else:
-    nom_arch.add(nom, text="Sin titulo.kd")
+    nom_arch.add(nom, text="Sin titulo.cm")
 nom_arch.pack(fill=tk.BOTH, expand=True)
 
 analisis = ttk.Notebook(frame2, width=200)
