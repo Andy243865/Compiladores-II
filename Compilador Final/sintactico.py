@@ -118,16 +118,24 @@ def t_NUMBER(t):
     t.value = int(t.value)
     return t
 
+
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value, 'ID')
+    
+    print("Alv")
+    print(t)
+
     global simbolos
     #if t.value not in reserved:
     if t.value in simbolos:
         # Accedemos a la entrada correspondiente en la tabla de símbolos
         variable = simbolos[t.value]
-        if t.lineno not in variable['lineas']:
-            variable['lineas'].append(t.lineno)
+        print("Lineo")
+        print(t.lineno)
+        print("var")
+        print(variable['lineas'])
+        variable['lineas'].append(t.lineno)
     else:
         if t.type == "ID":
         # Si no está en la tabla de símbolos, lo agregamos
@@ -136,7 +144,6 @@ def t_ID(t):
                 'valor': t.value,
                 'lineas': [t.lineno]  # Usamos t.lineno
             }
-
     
     return t
 
@@ -625,7 +632,22 @@ def setup_syntax_analysis(tab2, code):
         widget.destroy()
     result = sint_analyzer(code)
     parser_app = ParserApp(tab2, result)
+    generate_intermediate_code(result)
     fn_reset()
+
+def generate_intermediate_code(ast_root):
+    codegen = IntermediateCodeGenerator()
+    codegen.generate(ast_root)
+    instructions = codegen.get_instructions()
+    # Guardar las instrucciones en un archivo
+    with open("codigo_intermedio.txt", "w", encoding="utf-8") as f:
+        for instr in instructions:
+            f.write(instr + "\n")
+    # También puedes imprimirlas en la consola si lo deseas
+    print("Código Intermedio Generado:")
+    for instr in instructions:
+        print(instr)
+    return instructions
 
     
 class ParserApp:
@@ -658,4 +680,220 @@ class ParserApp:
             self.tree.item(node_id, open=True)
             for child in node.children:
                 self.build_tree(node_id, child)
+    
 
+class IntermediateCodeGenerator:
+    def __init__(self):
+        self.instructions = []  # Lista para almacenar las instrucciones
+        self.temp_counter = 0   # Contador para variables temporales
+        self.label_counter = 0  # Contador para etiquetas
+
+    def new_temp(self):
+        """Genera un nuevo nombre temporal."""
+        temp = f"t{self.temp_counter}"
+        self.temp_counter += 1
+        return temp
+
+    def new_label(self):
+        """Genera una nueva etiqueta."""
+        label = f"L{self.label_counter}"
+        self.label_counter += 1
+        return label
+
+    def generate(self, node):
+        """Genera código intermedio a partir del nodo del AST."""
+        if node is None:
+            return None
+        
+        # Si el nodo es un número o identificador, devuelve su valor directamente
+        if hasattr(node, 'tipo') and node.tipo == 'numero':
+            return node.name  # Por ejemplo, '5', '10'
+        elif hasattr(node, 'tipo') and node.tipo == 'identificador':
+            return node.name  # Por ejemplo, 'x', 'y'
+
+        node_type = node.name
+
+        if node_type == 'Asignacion':
+            # Lado izquierdo: Nombre de la variable
+            var_name = node.children[0].name
+
+            # Lado derecho: Procesar la expresión
+            expr_node = node.children[1]
+            if hasattr(expr_node, 'name') and expr_node.name in ['+', '-', '*', '/', '%', '^']:
+                # Si es una operación, procesar recursivamente
+                expr_result = self.generate(expr_node)
+            elif hasattr(expr_node, 'valor'):
+                # Si es un valor directo
+                expr_result = expr_node.valor
+            else:
+                # Procesar recursivamente cualquier otro tipo de nodo
+                expr_result = self.generate(expr_node)
+
+            # Generar la instrucción de asignación
+            self.instructions.append(f"{var_name} = {expr_result}")
+            return var_name
+
+        elif node_type in ['+', '-', '*', '/', '%', '^']:
+            # Extraer valor del hijo izquierdo
+            left_node = node.children[0]
+            left = left_node.valor if hasattr(left_node, 'valor') else self.generate(left_node)
+
+             # Extraer valor del hijo derecho
+            right_node = node.children[1]
+            right = right_node.valor if hasattr(right_node, 'valor') else self.generate(right_node)
+
+            # Generar un nuevo temporal y la instrucción
+            temp = self.new_temp()
+            self.instructions.append(f"{temp} = {left} {node_type} {right}")
+            return temp
+
+
+        elif hasattr(node_type, 'cop') and node_type.cop in ['==', '!=', '<', '<=', '>', '>=']:
+            # Obtener los nodos hijos (operandos izquierdo y derecho)
+            left_node = node.children[0]
+            right_node = node.children[1]
+
+            print(f"DEBUG: Operando izquierdo - {left_node}")  # Para depuración
+
+            # Procesar el operando izquierdo (si es una variable, tomar su nombre)
+            if hasattr(left_node, 'name'):  # Si es una variable, tomar su nombre
+                left = left_node.name
+            else:
+                left = left_node.valor if hasattr(left_node, 'valor') else self.generate(left_node)
+            
+            # Procesar el operando derecho (igual que el izquierdo)
+            right = right_node.valor if hasattr(right_node, 'valor') else self.generate(right_node)
+
+            # Generar un temporal para el resultado de la comparación
+            temp = self.new_temp()
+            self.instructions.append(f"{temp} = {left} {node_type.cop} {right}")
+            return temp
+
+
+
+
+
+        elif node_type == 'If':
+            condition = self.generate(node.children[0])
+            true_label = self.new_label()
+            end_label = self.new_label()
+            self.instructions.append(f"IF {condition} GOTO {true_label}"+"Hola")
+            self.instructions.append(f"GOTO {end_label}")
+            self.instructions.append(f"{true_label}:")
+            self.generate(node.children[1])  # Bloque `if`
+            if len(node.children) > 2:  # Bloque `else`
+                else_label = self.new_label()
+                self.instructions.append(f"GOTO {else_label}")
+                self.instructions.append(f"{end_label}:")
+                self.instructions.append(f"{else_label}:")
+                self.generate(node.children[2])
+                self.instructions.append(f"{end_label}:")
+            else:
+                self.instructions.append(f"{end_label}:")
+            return None
+
+        elif node_type == 'If-Else':
+            # Nodo de la condición
+            condition_node = node.children[0]
+            
+            # Procesar la condición para generar un temporal con el resultado
+            condition = self.generate(condition_node)  # Este debe generar el temporal para la comparación
+
+            true_label = self.new_label()
+            false_label = self.new_label()
+            end_label = self.new_label()
+
+            # Instrucciones para manejar la condición y saltos
+            self.instructions.append(f"IF {condition} GOTO {true_label}")
+            self.instructions.append(f"GOTO {false_label}")
+
+            # Bloque `if`
+            self.instructions.append(f"{true_label}:")
+            self.generate(node.children[1])  # Procesar el bloque `if`
+            self.instructions.append(f"GOTO {end_label}")
+
+            # Bloque `else`
+            self.instructions.append(f"{false_label}:")
+            self.generate(node.children[2])  # Procesar el bloque `else`
+
+            # Etiqueta de fin
+            self.instructions.append(f"{end_label}:")
+            return None
+
+
+        elif node_type == 'While':
+            start_label = self.new_label()
+            condition_label = self.new_label()
+            end_label = self.new_label()
+            self.instructions.append(f"{start_label}:")
+            condition = self.generate(node.children[0])
+            self.instructions.append(f"IF NOT {condition} GOTO {end_label}")
+            self.generate(node.children[1])  # Bloque `while`
+            self.instructions.append(f"GOTO {start_label}")
+            self.instructions.append(f"{end_label}:")
+            return None
+
+        elif node_type == 'Do-While':
+            start_label = self.new_label()
+            self.instructions.append(f"{start_label}:")
+            self.generate(node.children[0])  # Bloque `do`
+            condition = self.generate(node.children[1])
+            self.instructions.append(f"IF {condition} GOTO {start_label}")
+            return None
+
+        elif node_type == 'CIN':
+            var_name = node.children[0].name
+            self.instructions.append(f"READ {var_name}")
+            return None
+
+        elif node_type == 'COUT':
+            expr = self.generate(node.children[0])
+            self.instructions.append(f"WRITE {expr}")
+            return None
+
+        elif node_type == 'Switch':
+            expr = self.generate(node.children[0])
+            end_label = self.new_label()
+            case_labels = []
+            for case in node.children[1:]:
+                case_val = self.generate(case.children[0])
+                case_label = self.new_label()
+                self.instructions.append(f"IF {expr} == {case_val} GOTO {case_label}")
+                case_labels.append(case_label)
+                self.instructions.append(f"{case_label}:")
+                self.generate(case.children[1])  # Bloque del `case`
+            self.instructions.append(f"{end_label}:")
+            return None
+
+        elif node_type == 'PlusPlus' or node_type == 'MinusMinus':
+            var_name = node.children[0].name
+            operation = '+' if node_type == 'PlusPlus' else '-'
+            self.instructions.append(f"{var_name} = {var_name} {operation} 1")
+            return var_name
+
+        elif node_type == 'Declaracion':
+            var_type = node.children[0].name
+            var_names = [child.name for child in node.children[1].children]
+            for var in var_names:
+                self.instructions.append(f"DECLARE {var} : {var_type}")
+            return None
+
+        elif node_type == 'Codigo' or node_type == 'Bloque' or node_type == 'Declaraciones' or node_type == 'Statements':
+            for child in node.children:
+                self.generate(child)
+            return None
+
+        else:
+            # Para nodos no manejados específicamente
+            for child in node.children:
+                self.generate(child)
+            return None
+
+    def print_instructions(self):
+        """Imprime las instrucciones generadas."""
+        for instr in self.instructions:
+            print(instr)
+
+    def get_instructions(self):
+        """Retorna las instrucciones generadas."""
+        return self.instructions

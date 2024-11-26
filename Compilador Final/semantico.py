@@ -27,6 +27,8 @@ def mostrar_tabla_simbolos():
     # Crear la tabla
     tabla = PrettyTable()
     tabla.field_names = ["Locacion", "Variable", "Tipo", "Valor", "Líneas"]
+    print("putiblanca")
+    print(tabla_simbolos)
 
     if not tabla_errores:
         for var, info in tabla_simbolos.items():
