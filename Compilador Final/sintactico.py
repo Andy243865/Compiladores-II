@@ -704,48 +704,83 @@ class IntermediateCodeGenerator:
         """Genera código intermedio a partir del nodo del AST."""
         if node is None:
             return None
-        
-        # Si el nodo es un número o identificador, devuelve su valor directamente
-        if hasattr(node, 'tipo') and node.tipo == 'numero':
-            return node.name  # Por ejemplo, '5', '10'
+        print("Hola")
+        print(node)
+        # Si el nodo es un número, cargarlo como constante
+
+        if hasattr(node, 'name') and node.name is not None and isinstance(node.name, str) and re.search(r'\d$', node.name):
+            print()
+            #self.instructions.append(f"ldc {node.name}\t # Cargar constante {node.name}")
+            #return node.name
+
+        # Si el nodo es un identificador, devolver su nombre
         elif hasattr(node, 'tipo') and node.tipo == 'identificador':
-            return node.name  # Por ejemplo, 'x', 'y'
+            return node.name
 
         node_type = node.name
 
+       
         if node_type == 'Asignacion':
+            print(node.children[0])
             # Lado izquierdo: Nombre de la variable
             var_name = node.children[0].name
 
             # Lado derecho: Procesar la expresión
             expr_node = node.children[1]
-            if hasattr(expr_node, 'name') and expr_node.name in ['+', '-', '*', '/', '%', '^']:
-                # Si es una operación, procesar recursivamente
-                expr_result = self.generate(expr_node)
-            elif hasattr(expr_node, 'valor'):
-                # Si es un valor directo
-                expr_result = expr_node.valor
-            else:
-                # Procesar recursivamente cualquier otro tipo de nodo
-                expr_result = self.generate(expr_node)
+            expr_result = self.generate(expr_node)
 
-            # Generar la instrucción de asignación
-            self.instructions.append(f"{var_name} = {expr_result}")
+            # Verificar si el valor del nodo es un número (de tipo 'int')
+            if hasattr(expr_node, 'name') and expr_node.name.isdigit():
+                self.instructions.append(f"ldc {expr_node.name}\t # Cargar constante {expr_node.name}")
+
+
+            # Almacenar el resultado en la variable
+            self.instructions.append(f"sta {var_name}\t # Almacenar valor en {var_name}")
             return var_name
 
+
         elif node_type in ['+', '-', '*', '/', '%', '^']:
-            # Extraer valor del hijo izquierdo
+            # Extraer y procesar los operandos izquierdo y derecho
             left_node = node.children[0]
-            left = left_node.valor if hasattr(left_node, 'valor') else self.generate(left_node)
-
-             # Extraer valor del hijo derecho
             right_node = node.children[1]
-            right = right_node.valor if hasattr(right_node, 'valor') else self.generate(right_node)
+            
+            
+            name_left = left_node.name
+            name_right = right_node.name
 
-            # Generar un nuevo temporal y la instrucción
-            temp = self.new_temp()
-            self.instructions.append(f"{temp} = {left} {node_type} {right}")
-            return temp
+            left = self.generate(left_node)
+            right = self.generate(right_node)
+
+            # Seleccionar la operación correspondiente
+            op_map = {
+                '+': 'adi',
+                '-': 'sub',
+                '*': 'mul',
+                '/': 'div',
+                '%': 'mod',
+                '^': 'pow',
+            }
+            op_instruction = op_map.get(node_type, 'unknown')
+            
+            if name_left not in op_map:
+                if name_left.isalpha():  # Verificar si name_left es una letra
+                    self.instructions.append(f"lod {name_left}\t # Cargar valor de {name_left}")
+                    
+                else:
+                    print(name_left)
+                    self.instructions.append(f"ldc {name_left}\t # Cargar constante {name_left}")
+
+            if name_right not in op_map:
+                if name_right.isalpha():  # Verificar si name_right es una letra
+                    
+                    self.instructions.append(f"lod {name_right}\t # Cargar valor de {name_right}")
+                else:
+                    print(name_right)
+                    self.instructions.append(f"ldc {name_right}\t # Cargar constante {name_right}")
+
+            
+            self.instructions.append(f"{op_instruction}\t # Operación {node_type}")
+            return None
 
 
         elif hasattr(node_type, 'cop') and node_type.cop in ['==', '!=', '<', '<=', '>', '>=']:
@@ -753,24 +788,45 @@ class IntermediateCodeGenerator:
             left_node = node.children[0]
             right_node = node.children[1]
 
-            print(f"DEBUG: Operando izquierdo - {left_node}")  # Para depuración
-
-            # Procesar el operando izquierdo (si es una variable, tomar su nombre)
-            if hasattr(left_node, 'name'):  # Si es una variable, tomar su nombre
-                left = left_node.name
-            else:
-                left = left_node.valor if hasattr(left_node, 'valor') else self.generate(left_node)
+            name_left = right_node.name
+            name_right = left_node.name
             
-            # Procesar el operando derecho (igual que el izquierdo)
-            right = right_node.valor if hasattr(right_node, 'valor') else self.generate(right_node)
 
-            # Generar un temporal para el resultado de la comparación
-            temp = self.new_temp()
-            self.instructions.append(f"{temp} = {left} {node_type.cop} {right}")
-            return temp
+            left = self.generate(left_node)
+            right = self.generate(right_node)
+
+            op_map = {
+                "<": "les",
+                "<=": "leq",
+                ">": "grt",
+                ">=": "geq",
+                "==": "equ",
+                "!=": "neq",
+                "and": "and",
+                "or": "or",
+            }
+            op_instruction = op_map.get(node_type.name, 'unknown')
 
 
+            if name_right not in op_map:
+                if name_right.isalpha():  # Verificar si name_right es una letra
+                    
+                    self.instructions.append(f"lod {name_right}\t # Cargar valor de {name_right}")
+                else:
+                    print(name_right)
+                    self.instructions.append(f"ldc {name_right}\t # Cargar constante {name_right}")
+                    
+            if name_left not in op_map:
+                if name_left.isalpha():  # Verificar si name_left es una letra
+                    self.instructions.append(f"lod {name_left}\t # Cargar valor de {name_left}")
+                    
+                else:
+                    print(name_left)
+                    self.instructions.append(f"ldc {name_left}\t # Cargar constante {name_left}")
 
+            
+            self.instructions.append(f"{op_instruction}\t # Operación {node_type.name}")
+            return None
 
 
         elif node_type == 'If':
@@ -873,12 +929,12 @@ class IntermediateCodeGenerator:
             self.instructions.append(f"{var_name} = {var_name} {operation} 1")
             return var_name
 
-        elif node_type == 'Declaracion':
-            var_type = node.children[0].name
-            var_names = [child.name for child in node.children[1].children]
-            for var in var_names:
-                self.instructions.append(f"DECLARE {var} : {var_type}")
-            return None
+        #elif node_type == 'Declaracion':
+            #var_type = node.children[0].name
+            #var_names = [child.name for child in node.children[1].children]
+            #for var in var_names:
+            #   self.instructions.append(f"DECLARE {var} : {var_type}")
+            #return None
 
         elif node_type == 'Codigo' or node_type == 'Bloque' or node_type == 'Declaraciones' or node_type == 'Statements':
             for child in node.children:
