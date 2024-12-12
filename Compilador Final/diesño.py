@@ -108,6 +108,7 @@ def lexico():
     sintactico()
     fn_reset()
     semantico()
+    mostrar_codigo_intermedio()
 
 def sintactico():
     content = editor.get("1.0", tk.END)
@@ -140,10 +141,14 @@ def mostrar_tabla_valores():
 
 # Función para mostrar código intermedio
 def mostrar_codigo_intermedio():
-    # Aquí deberías incluir el análisis que genera el código intermedio
-    codigo_intermedio = "Código intermedio generado..."  # Sustituye con la lógica real
+    # Lee el contenido del archivo de texto
+    with open('codigo_intermedio.txt', 'r') as archivo:
+        codigo_intermedio = archivo.read()
+    
+    # Borra el contenido anterior del label y agrega el nuevo código intermedio
     label_codigo_intermedio.delete('1.0', tk.END)
     label_codigo_intermedio.insert('1.0', codigo_intermedio)
+
 
 # Configuración principal de la ventana
 root = tk.Tk()

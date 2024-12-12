@@ -847,7 +847,9 @@ class IntermediateCodeGenerator:
             return None
 
         elif node_type == 'COUT':
-            expr = self.generate(node.children[0])
+            print("Hola")
+            print(node.children[0])
+            expr = node.children[0].name
             self.instructions.append(f"WRITE {expr}")
             return None
 

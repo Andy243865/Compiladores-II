@@ -1,13 +1,8 @@
 DECLARE x : int
-DECLARE y : int
-t0 = 2 + 3
-x = t0
-t1 = x > 7
-IF t1 GOTO L0
-GOTO L1
+x = 12
+READ x
+WRITE x
 L0:
-y = 10
-GOTO L2
-L1:
-y = 20
-L2:
+WRITE x
+t0 = x < 2
+IF t0 GOTO L0
