@@ -908,8 +908,7 @@ class IntermediateCodeGenerator:
             print("Hola")
             print(node.children[0])
             expr = node.children[0].name
-            self.instructions.append(f"lod {expr}")
-            self.instructions.append(f"wri")
+            self.instructions.append(f"WRITE {expr}")
             return None
 
         elif node_type == 'Switch':

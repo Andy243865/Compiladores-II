@@ -1,12 +1,4 @@
-ldc 12	 # Cargar constante 12
-sta y	 # Almacenar valor en y
-ldc 1	 # Cargar constante 1
-sta z	 # Almacenar valor en z
 ldc 10	 # Cargar constante 10
-lod y	 # Cargar valor de y
-adi	 # Operación +
-lod z	 # Cargar valor de z
-adi	 # Operación +
 sta x	 # Almacenar valor en x
 lod x	 # Cargar valor de x
 ldc 5	 # Cargar constante 5
@@ -14,5 +6,6 @@ les	 # Operación <
 IF None GOTO L0Hola
 GOTO L1
 L0:
-WRITE x
+lod x
+wri
 L1:
