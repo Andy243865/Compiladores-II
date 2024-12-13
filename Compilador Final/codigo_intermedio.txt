@@ -1,11 +1,44 @@
-ldc 10	 # Cargar constante 10
-sta x	 # Almacenar valor en x
-lod x	 # Cargar valor de x
-ldc 5	 # Cargar constante 5
-les	 # Operación <
-IF None GOTO L0Hola
-GOTO L1
-L0:
-lod x
+ldc 1	 # Cargar constante 1
+sta numero	 # Almacenar valor en numero
+ldc 1	 # Cargar constante 1
+sta numeros	 # Almacenar valor en numeros
+ldc 1	 # Cargar constante 1
+sta modulo	 # Almacenar valor en modulo
+lda numeros
+rdi numeros
+lab L0 	 # Etiqueta de inicio del while
+lod numeros	 # Cargar valor de numeros
+ldc 1	 # Cargar constante 1
+neq	 # Operación !=
+fjp L1 	 # Saltar si la condición es falsa
+lod numeros	 # Cargar valor de numeros
+ldc 2	 # Cargar constante 2
+mod	 # Operación %
+sta modulo	 # Almacenar valor en modulo
+lod modulo	 # Cargar valor de modulo
+ldc 0	 # Cargar constante 0
+equ	 # Operación ==
+fjp L3 	 # Saltar si la condición es falsa
+lod numeros	 # Cargar valor de numeros
+ldc 2	 # Cargar constante 2
+dvi	 # Operación /
+sta numeros	 # Almacenar valor en numeros
+lab L3 	 # Etiqueta de salida del if
+lod modulo	 # Cargar valor de modulo
+ldc 1	 # Cargar constante 1
+equ	 # Operación ==
+fjp L5 	 # Saltar si la condición es falsa
+lod numeros	 # Cargar valor de numeros
+ldc 3	 # Cargar constante 3
+mpi	 # Operación *
+sta numero	 # Almacenar valor en numero
+lod numero	 # Cargar valor de numero
+ldc 1	 # Cargar constante 1
+adi	 # Operación +
+sta numeros	 # Almacenar valor en numeros
+lab L5 	 # Etiqueta de salida del if
+lod numeros
 wri
-L1:
+ujp L0 	 # Volver al inicio del while
+lab L1 	 # Etiqueta de salida del while
+stp	 # Detener ejecución

@@ -754,9 +754,9 @@ class IntermediateCodeGenerator:
             # Seleccionar la operación correspondiente
             op_map = {
                 '+': 'adi',
-                '-': 'sub',
-                '*': 'mul',
-                '/': 'div',
+                '-': 'sbi',
+                '*': 'mpi',
+                '/': 'dvi',
                 '%': 'mod',
                 '^': 'pow',
             }
@@ -835,20 +835,33 @@ class IntermediateCodeGenerator:
             condition = self.generate(node.children[0])
             true_label = self.new_label()
             end_label = self.new_label()
-            self.instructions.append(f"IF {condition} GOTO {true_label}"+"Hola")
-            self.instructions.append(f"GOTO {end_label}")
-            self.instructions.append(f"{true_label}:")
-            self.generate(node.children[1])  # Bloque `if`
+            
+            # Generar la instrucción para saltar si la condición es falsa
+            self.instructions.append(f"fjp {end_label} \t # Saltar si la condición es falsa")
+            
+            # Generar el bloque 'if'
+            self.generate(node.children[1])  
+            
             if len(node.children) > 2:  # Bloque `else`
                 else_label = self.new_label()
+                
+                # Generar salto al final después del bloque 'if'
                 self.instructions.append(f"GOTO {else_label}")
-                self.instructions.append(f"{end_label}:")
-                self.instructions.append(f"{else_label}:")
+                
+                # Etiqueta del final del bloque 'if'
+                self.instructions.append(f"lab {end_label} \t # Etiqueta de salida del if")
+                
+                # Generar el bloque 'else'
                 self.generate(node.children[2])
-                self.instructions.append(f"{end_label}:")
+                
+                # Etiqueta del final del bloque 'else'
+                self.instructions.append(f"lab {else_label} \t # Etiqueta de salida del else")
             else:
-                self.instructions.append(f"{end_label}:")
+                # Etiqueta del final si no hay bloque 'else'
+                self.instructions.append(f"lab {end_label} \t # Etiqueta de salida del if")
+            
             return None
+
 
         elif node_type == 'If-Else':
             # Nodo de la condición
@@ -880,16 +893,30 @@ class IntermediateCodeGenerator:
 
 
         elif node_type == 'While':
+            # Generar etiquetas
             start_label = self.new_label()
-            condition_label = self.new_label()
             end_label = self.new_label()
-            self.instructions.append(f"{start_label}:")
+            
+            # Etiqueta de inicio del bucle while
+            self.instructions.append(f"lab {start_label} \t # Etiqueta de inicio del while")
+            
+            # Generar la condición
             condition = self.generate(node.children[0])
-            self.instructions.append(f"IF NOT {condition} GOTO {end_label}")
-            self.generate(node.children[1])  # Bloque `while`
-            self.instructions.append(f"GOTO {start_label}")
-            self.instructions.append(f"{end_label}:")
+            
+            # Saltar al final si la condición es falsa
+            self.instructions.append(f"fjp {end_label} \t # Saltar si la condición es falsa")
+            
+            # Generar el bloque del while
+            self.generate(node.children[1])
+            
+            # Instrucción para volver al inicio del bucle
+            self.instructions.append(f"ujp {start_label} \t # Volver al inicio del while")
+            
+            # Etiqueta de salida del bucle
+            self.instructions.append(f"lab {end_label} \t # Etiqueta de salida del while")
+            
             return None
+
 
         elif node_type == 'Do-While':
             start_label = self.new_label()
@@ -901,7 +928,8 @@ class IntermediateCodeGenerator:
 
         elif node_type == 'CIN':
             var_name = node.children[0].name
-            self.instructions.append(f"READ {var_name}")
+            self.instructions.append(f"lda {var_name}")
+            self.instructions.append(f"rdi {var_name}")
             return None
 
         elif node_type == 'COUT':
@@ -952,9 +980,11 @@ class IntermediateCodeGenerator:
 
     def print_instructions(self):
         """Imprime las instrucciones generadas."""
+        self.instructions.append("stp\t # Detener ejecución")
         for instr in self.instructions:
             print(instr)
 
     def get_instructions(self):
         """Retorna las instrucciones generadas."""
+        self.instructions.append("stp\t # Detener ejecución")
         return self.instructions

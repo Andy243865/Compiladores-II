@@ -7,6 +7,8 @@ from analisis_de_tokens import *
 from sintactico import setup_syntax_analysis, sint_analyzer,semantic_analyzer
 from semantico import mostrar_tabla_simbolos, hash_table, fn_reset
 import re
+from limpiador import *
+from traductor_tiny import *
 
 # Funciones de menú
 def open_file():
@@ -109,6 +111,8 @@ def lexico():
     fn_reset()
     semantico()
     mostrar_codigo_intermedio()
+    clean_comments("codigo_intermedio.txt", "codigo_P.txt")
+    traducir_a_tiny()
 
 def sintactico():
     content = editor.get("1.0", tk.END)

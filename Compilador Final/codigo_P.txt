@@ -1,0 +1,44 @@
+ldc 1
+sta numero
+ldc 1
+sta numeros
+ldc 1
+sta modulo
+lda numeros
+rdi numeros
+lab L0
+lod numeros
+ldc 1
+neq
+fjp L1
+lod numeros
+ldc 2
+mod
+sta modulo
+lod modulo
+ldc 0
+equ
+fjp L3
+lod numeros
+ldc 2
+dvi
+sta numeros
+lab L3
+lod modulo
+ldc 1
+equ
+fjp L5
+lod numeros
+ldc 3
+mpi
+sta numero
+lod numero
+ldc 1
+adi
+sta numeros
+lab L5
+lod numeros
+wri
+ujp L0
+lab L1
+stp

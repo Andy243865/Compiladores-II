@@ -1,0 +1,3 @@
+Error: La variable 'numero' ya ha sido declarada.
+Error: La variable 'modulo' ya ha sido declarada.
+Error: La variable 'numeros' ya ha sido declarada.

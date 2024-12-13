@@ -1,0 +1,44 @@
+LDI 1
+ST numero
+LDI 1
+ST numeros
+LDI 1
+ST modulo
+LD numeros
+IN numeros
+LABEL L0
+LD numeros
+LDI 1
+NE 
+JZ L1
+LD numeros
+LDI 2
+MOD 
+ST modulo
+LD modulo
+LDI 0
+EQ 
+JZ L3
+LD numeros
+LDI 2
+DIV 
+ST numeros
+LABEL L3
+LD modulo
+LDI 1
+EQ 
+JZ L5
+LD numeros
+LDI 3
+MUL 
+ST numero
+LD numero
+LDI 1
+ADD 
+ST numeros
+LABEL L5
+LD numeros
+OUT 
+JMP L0
+LABEL L1
+HALT 
